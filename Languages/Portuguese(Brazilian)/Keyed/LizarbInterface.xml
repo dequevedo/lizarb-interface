@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <LizarbInterface.Enabled>Estilizar janelas, painéis, botões e abas</LizarbInterface.Enabled>
   <LizarbInterface.Inset>Folga entre elementos: {0} px</LizarbInterface.Inset>
   <LizarbInterface.PointFilter>Texturas pixeladas (filtro point)</LizarbInterface.PointFilter>
   <LizarbInterface.PointFilter.Tip>Amostra as texturas por vizinho mais próximo em vez de suavizar. Só fica bom em escala de UI 1x ou 2x: em 1.25x um texel cobre 1,25 pixel de tela, então o contorno sai grosso em partes e fino em outras.</LizarbInterface.PointFilter.Tip>
@@ -26,6 +25,7 @@
   <LizarbInterface.Pattern.Hatch>Hachura</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSection>Tema</LizarbInterface.ThemeSection>
+  <LizarbInterface.Theme.Default>Padrão do RimWorld</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Latão</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Ferro</LizarbInterface.Theme.Iron>
   <LizarbInterface.Theme.Royal>Real</LizarbInterface.Theme.Royal>

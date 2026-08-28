@@ -230,6 +230,8 @@ namespace LizarbInterface
 
         internal static float Scale { get; private set; } = 1f;
 
+        internal static bool Bypass;
+
         private static void ReadScale()
         {
             Scale = 1f;
@@ -389,6 +391,11 @@ namespace LizarbInterface
     {
         private static bool Prefix(Rect rect, Texture2D atlas, bool drawTop)
         {
+            if (AtlasSwap.Bypass)
+            {
+                return true;
+            }
+
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
             if (settings == null || !settings.enabled || !settings.skinButtons)
             {

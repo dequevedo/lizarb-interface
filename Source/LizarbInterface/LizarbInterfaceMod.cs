@@ -247,14 +247,11 @@ namespace LizarbInterface
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            var header = new Rect(inRect.x, inRect.y, inRect.width, 24f);
-            Widgets.CheckboxLabeled(header, "LizarbInterface.Enabled".Translate(), ref Settings.enabled);
-
             var body = new Rect(
                 inRect.x,
-                inRect.y + header.height + TabDrawer.TabHeight,
+                inRect.y + TabDrawer.TabHeight,
                 inRect.width,
-                inRect.height - header.height - TabDrawer.TabHeight);
+                inRect.height - TabDrawer.TabHeight);
 
             Widgets.DrawMenuSection(body);
 
@@ -345,12 +342,13 @@ namespace LizarbInterface
 
             const float SwatchHeight = 74f;
             const int PerRow = 4;
-            int rows = Mathf.CeilToInt(Themes.Length / (float)PerRow);
+            int count = Themes.Length + 1;
+            int rows = Mathf.CeilToInt(count / (float)PerRow);
 
             Rect block = listing.GetRect(rows * (SwatchHeight + 6f));
             float cell = block.width / PerRow;
 
-            for (int i = 0; i < Themes.Length; i++)
+            for (int i = 0; i < count; i++)
             {
                 var area = new Rect(
                     block.x + (i % PerRow) * cell,
@@ -358,30 +356,38 @@ namespace LizarbInterface
                     cell - 8f,
                     SwatchHeight);
 
-                DrawThemeSwatch(area, Themes[i].Id);
+                DrawThemeSwatch(area, i == 0 ? null : Themes[i - 1].Id);
             }
         }
 
         private void DrawThemeSwatch(Rect area, string theme)
         {
-            bool selected = Settings.theme == theme;
+            bool vanilla = theme == null;
+            bool selected = vanilla ? !Settings.enabled : Settings.enabled && Settings.theme == theme;
 
-            Texture2D frame = AtlasSwap.Preview(theme, "WindowAtlas");
-            Texture2D button = AtlasSwap.Preview(theme, "ButtonBG");
-
-            if (frame != null)
+            if (vanilla)
             {
-                Widgets.DrawAtlas(area, frame);
+                DrawVanillaPreview(area);
             }
-
-            if (button != null)
+            else
             {
-                Widgets.DrawAtlas(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f), button);
+                Texture2D frame = AtlasSwap.Preview(theme, "WindowAtlas");
+                Texture2D button = AtlasSwap.Preview(theme, "ButtonBG");
+
+                if (frame != null)
+                {
+                    Widgets.DrawAtlas(area, frame);
+                }
+
+                if (button != null)
+                {
+                    Widgets.DrawAtlas(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f), button);
+                }
             }
 
             Text.Anchor = TextAnchor.UpperCenter;
             Widgets.Label(new Rect(area.x, area.y + 8f, area.width, 24f),
-                          ("LizarbInterface.Theme." + theme).Translate());
+                          ("LizarbInterface.Theme." + (vanilla ? "Default" : theme)).Translate());
             Text.Anchor = TextAnchor.UpperLeft;
 
             if (selected)
@@ -397,18 +403,55 @@ namespace LizarbInterface
 
             if (Widgets.ButtonInvisible(area))
             {
-                Settings.theme = theme;
-
-                foreach (var entry in Themes)
+                if (vanilla)
                 {
-                    if (entry.Id == theme)
+                    Settings.enabled = false;
+                }
+                else
+                {
+                    Settings.enabled = true;
+                    Settings.theme = theme;
+
+                    foreach (var entry in Themes)
                     {
-                        Settings.backgroundPattern = entry.Pattern;
-                        break;
+                        if (entry.Id == theme)
+                        {
+                            Settings.backgroundPattern = entry.Pattern;
+                            break;
+                        }
                     }
                 }
 
+                FontEngine.Apply();
                 RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+            }
+        }
+
+        private static Color vanillaBorder = new ColorInt(97, 108, 122).ToColor;
+
+        private static void DrawVanillaPreview(Rect area)
+        {
+            Widgets.DrawBoxSolid(area, Widgets.WindowBGFillColor);
+
+            Color previous = GUI.color;
+            GUI.color = vanillaBorder;
+            Widgets.DrawBox(area);
+            GUI.color = previous;
+
+            Texture2D button = Widgets.ButtonBGAtlas;
+            if (button == null)
+            {
+                return;
+            }
+
+            AtlasSwap.Bypass = true;
+            try
+            {
+                Widgets.DrawAtlas(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f), button);
+            }
+            finally
+            {
+                AtlasSwap.Bypass = false;
             }
         }
 

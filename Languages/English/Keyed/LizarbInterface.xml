@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <LizarbInterface.Enabled>Skin windows, panels, buttons and tabs</LizarbInterface.Enabled>
   <LizarbInterface.Inset>Gap between elements: {0} px</LizarbInterface.Inset>
   <LizarbInterface.PointFilter>Pixelated textures (point filtering)</LizarbInterface.PointFilter>
   <LizarbInterface.PointFilter.Tip>Samples the skin textures nearest-neighbour instead of smoothing them. Only looks right at a UI scale of 1x or 2x: at 1.25x a texel covers 1.25 screen pixels, so the outline comes out thick in places and thin in others.</LizarbInterface.PointFilter.Tip>
@@ -26,6 +25,7 @@
   <LizarbInterface.Pattern.Hatch>Hatch</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSection>Theme</LizarbInterface.ThemeSection>
+  <LizarbInterface.Theme.Default>RimWorld default</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Iron</LizarbInterface.Theme.Iron>
   <LizarbInterface.Theme.Royal>Royal</LizarbInterface.Theme.Royal>

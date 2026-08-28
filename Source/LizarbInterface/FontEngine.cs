@@ -198,11 +198,13 @@ namespace LizarbInterface
             }
 
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            bool custom = settings != null && !settings.fontName.NullOrEmpty();
+            bool on = settings != null && settings.enabled;
+            bool custom = on && !settings.fontName.NullOrEmpty();
 
             for (int i = 0; i < Count; i++)
             {
-                int size = vanillaSize[i] + (settings == null ? 0 : settings.FontSizeOffset(i));
+                int offset = on ? settings.FontSizeOffset(i) : 0;
+                int size = vanillaSize[i] + offset;
                 if (size < 6)
                 {
                     size = 6;
@@ -214,7 +216,7 @@ namespace LizarbInterface
                     font = Resolve(settings.fontName, size) ?? vanillaFont[i];
                 }
 
-                bool untouched = !custom && (settings == null || settings.FontSizeOffset(i) == 0);
+                bool untouched = !custom && offset == 0;
                 int styleSize = untouched ? 0 : size;
 
                 ApplyTo(Text.fontStyles, i, font, styleSize);
