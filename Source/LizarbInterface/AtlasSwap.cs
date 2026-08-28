@@ -128,7 +128,26 @@ namespace LizarbInterface
             {
                 slot.Ours = Build(slot);
             }
+
+            // filterMode is mutable on a live texture, so switching it costs no
+            // rebuild. Compared first because the setter is a native call.
+            if (slot.Ours != null)
+            {
+                FilterMode want = DesiredFilter;
+                if (slot.Ours.filterMode != want)
+                {
+                    slot.Ours.filterMode = want;
+                }
+            }
         }
+
+        /// <summary>
+        /// Point is offered but is only honest at an integer UIScale. At 1.25 a texel
+        /// covers 1.25 screen pixels, so nearest sampling duplicates every fourth one
+        /// and the 1px outline comes out thick in places and thin in others.
+        /// </summary>
+        private static FilterMode DesiredFilter =>
+            LizarbInterfaceMod.Settings?.pointFilter == true ? FilterMode.Point : FilterMode.Bilinear;
 
         private static byte[] ReadSkinFile(string fileName, string theme = null)
         {
@@ -275,7 +294,7 @@ namespace LizarbInterface
             var tex = new Texture2D(2, 2, TextureFormat.RGBA32, mipChain: false);
             tex.LoadImage(slot.Png);
             tex.name = slot.Name;
-            tex.filterMode = FilterMode.Bilinear;
+            tex.filterMode = DesiredFilter;
             tex.anisoLevel = 0;
             tex.wrapMode = slot.Tiling ? TextureWrapMode.Repeat : TextureWrapMode.Clamp;
             tex.Apply(updateMipmaps: false, makeNoLongerReadable: false);

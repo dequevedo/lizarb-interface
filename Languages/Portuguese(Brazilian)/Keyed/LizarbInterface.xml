@@ -2,6 +2,8 @@
 <LanguageData>
   <LizarbInterface.Enabled>Estilizar janelas, painéis, botões e abas</LizarbInterface.Enabled>
   <LizarbInterface.Inset>Folga entre elementos: {0} px</LizarbInterface.Inset>
+  <LizarbInterface.PointFilter>Texturas pixeladas (filtro point)</LizarbInterface.PointFilter>
+  <LizarbInterface.PointFilter.Tip>Amostra as texturas por vizinho mais próximo em vez de suavizar. Só fica bom em escala de UI 1x ou 2x: em 1.25x um texel cobre 1,25 pixel de tela, então o contorno sai grosso em partes e fino em outras.</LizarbInterface.PointFilter.Tip>
   <LizarbInterface.Inset.Tip>Pinta cada elemento um pouco para dentro da própria área, para que botões vizinhos deixem de se encostar. Nada no layout se move, então textos e ícones ficam exatamente onde o jogo os colocou.</LizarbInterface.Inset.Tip>
   <LizarbInterface.FontSection>Fonte</LizarbInterface.FontSection>
   <LizarbInterface.FontVanilla>Padrão do jogo</LizarbInterface.FontVanilla>
@@ -104,4 +106,14 @@
   <LizarbInterface.Architect.PlateStyle.Frame>Moldura</LizarbInterface.Architect.PlateStyle.Frame>
   <LizarbInterface.Architect.PlateStyle.Frame.Tip>Cor em volta da borda, com o centro limpo.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
   <LizarbInterface.Architect.PlateStyle.Flat>Chapado</LizarbInterface.Architect.PlateStyle.Flat>
-  <LizarbInterface.Architect.PlateStyle.Flat.Tip>Um retangulo simples, ignorando o formato do tema.</LizarbInterface.Architect.PlateStyle.Flat.Tip></LanguageData>
+  <LizarbInterface.Architect.PlateStyle.Flat.Tip>Um retangulo simples, ignorando o formato do tema.</LizarbInterface.Architect.PlateStyle.Flat.Tip>  <LizarbInterface.Theme.Grimoire>Grimório</LizarbInterface.Theme.Grimoire>
+  <LizarbInterface.Theme.Grimoire.Tip>Couro cor de vinho com douração. A cantoneira é a peça de metal pregada numa encadernação de verdade, e a borda leva o filete triplo gravado a seco que corre em volta da capa.</LizarbInterface.Theme.Grimoire.Tip>
+  <LizarbInterface.Theme.Circuit>Circuito</LizarbInterface.Theme.Circuit>
+  <LizarbInterface.Theme.Circuit.Tip>Placa impressa: quase preto, trilhas ciano e uma via em cada canto. O único tema aqui que não finge ser um material que dá para segurar.</LizarbInterface.Theme.Circuit.Tip>
+  <LizarbInterface.Theme.Porcelain>Porcelana</LizarbInterface.Theme.Porcelain>
+  <LizarbInterface.Theme.Porcelain.Tip>Vitrificado branco, borda recortada em lóbulos e moldura côncava, ambas tiradas de louça e não de ferragem. O único tema claro, o que o afasta mais dos outros do que qualquer mudança de cor conseguiria.</LizarbInterface.Theme.Porcelain.Tip>
+  <LizarbInterface.Theme.Foundry>Fundição</LizarbInterface.Theme.Foundry>
+  <LizarbInterface.Theme.Foundry.Tip>Chapa laminada a quente, ainda com o laranja dentro. Degraus largos e três rebites por canto: a leitura inteira é peso.</LizarbInterface.Theme.Foundry.Tip>
+  <LizarbInterface.Theme.Lacquer>Laca</LizarbInterface.Theme.Lacquer>
+  <LizarbInterface.Theme.Lacquer.Tip>Fundo preto, vermelhão e folha de ouro. O leque do canto é assimétrico de propósito, para ler como floreio pintado e não como peça aparafusada.</LizarbInterface.Theme.Lacquer.Tip>
+</LanguageData>
