@@ -101,8 +101,6 @@
   <LizarbInterface.Architect.PlateStyle>Colour shape</LizarbInterface.Architect.PlateStyle>
   <LizarbInterface.Architect.PlateStyle.Plate>Plate</LizarbInterface.Architect.PlateStyle.Plate>
   <LizarbInterface.Architect.PlateStyle.Plate.Tip>Fills the button, following the theme corner radius, and deepens towards the bottom.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
-  <LizarbInterface.Architect.PlateStyle.Bar>Edge bar</LizarbInterface.Architect.PlateStyle.Bar>
-  <LizarbInterface.Architect.PlateStyle.Bar.Tip>A stripe down the left edge only. The quietest option.</LizarbInterface.Architect.PlateStyle.Bar.Tip>
   <LizarbInterface.Architect.PlateStyle.Frame>Border</LizarbInterface.Architect.PlateStyle.Frame>
   <LizarbInterface.Architect.PlateStyle.Frame.Tip>Colour around the rim, centre left clear.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
   <LizarbInterface.Architect.PlateStyle.Flat>Flat</LizarbInterface.Architect.PlateStyle.Flat>
@@ -114,4 +112,24 @@
   <LizarbInterface.GrainOnButtons.Tip>Tiles the same pattern across button, tooltip and menu faces, not just window backgrounds. With the Grimoire skin this is what gives the buttons their parchment.</LizarbInterface.GrainOnButtons.Tip>
   <LizarbInterface.Architect.AutoWidth>Widen the menu to fit the labels</LizarbInterface.Architect.AutoWidth>
   <LizarbInterface.Architect.AutoWidth.Tip>Vanilla fixes the Architect menu at 200px, which fits the stock font and the English Core names and nothing else. This measures the longest category name in the font you actually chose and widens the menu until it fits. It never makes the menu narrower.</LizarbInterface.Architect.AutoWidth.Tip>
+  <LizarbInterface.Architect.PlateStyle.Square>Square</LizarbInterface.Architect.PlateStyle.Square>
+  <LizarbInterface.Architect.PlateStyle.Square.Tip>A square under the icon.</LizarbInterface.Architect.PlateStyle.Square.Tip>
+  <LizarbInterface.Architect.PlateStyle.Circle>Circle</LizarbInterface.Architect.PlateStyle.Circle>
+  <LizarbInterface.Architect.PlateStyle.Circle.Tip>A disc under the icon.</LizarbInterface.Architect.PlateStyle.Circle.Tip>
+  <LizarbInterface.Architect.PlateStyle.Diamond>Diamond</LizarbInterface.Architect.PlateStyle.Diamond>
+  <LizarbInterface.Architect.PlateStyle.Diamond.Tip>A diamond with rounded points.</LizarbInterface.Architect.PlateStyle.Diamond.Tip>
+  <LizarbInterface.Architect.PlateStyle.Tag>Tag</LizarbInterface.Architect.PlateStyle.Tag>
+  <LizarbInterface.Architect.PlateStyle.Tag.Tip>A label with a point on its right.</LizarbInterface.Architect.PlateStyle.Tag.Tip>
+  <LizarbInterface.Architect.PlateStyle.Shield>Shield</LizarbInterface.Architect.PlateStyle.Shield>
+  <LizarbInterface.Architect.PlateStyle.Shield.Tip>A shield, heavier at the top.</LizarbInterface.Architect.PlateStyle.Shield.Tip>
+  <LizarbInterface.Architect.PlateStyle.Hex>Hexagon</LizarbInterface.Architect.PlateStyle.Hex>
+  <LizarbInterface.Architect.PlateStyle.Hex.Tip>A flat-topped hexagon.</LizarbInterface.Architect.PlateStyle.Hex.Tip>
+  <LizarbInterface.Architect.PlateStyle.Chip>Chip</LizarbInterface.Architect.PlateStyle.Chip>
+  <LizarbInterface.Architect.PlateStyle.Chip.Tip>A chip with pins on two sides.</LizarbInterface.Architect.PlateStyle.Chip.Tip>
+  <LizarbInterface.Architect.PlateStyle.Cascade>Cascade</LizarbInterface.Architect.PlateStyle.Cascade>
+  <LizarbInterface.Architect.PlateStyle.Cascade.Tip>A square, then bars stepping down to its right.</LizarbInterface.Architect.PlateStyle.Cascade.Tip>
+  <LizarbInterface.Architect.PlateStyle.Underline>Underline</LizarbInterface.Architect.PlateStyle.Underline>
+  <LizarbInterface.Architect.PlateStyle.Underline.Tip>A rule along the bottom of the button.</LizarbInterface.Architect.PlateStyle.Underline.Tip>
+  <LizarbInterface.Architect.ShapeOutline>Black outline on the shape</LizarbInterface.Architect.ShapeOutline>
+  <LizarbInterface.Architect.ShapeOutline.Tip>Rings the shape in black, which keeps it separate from the button underneath. Painted as the same shape one pixel larger behind, so it follows whatever shape is chosen.</LizarbInterface.Architect.ShapeOutline.Tip>
 </LanguageData>

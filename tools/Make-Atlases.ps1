@@ -1,4 +1,4 @@
-﻿<#
+<#
   Generates every UI texture in Skins/.
 
   VISUAL LANGUAGE
@@ -1216,7 +1216,7 @@ $Themes = @{
     # Flesh. Greyed pink with red veining and nodules at the corners. The most
     # uncomfortable of the set, on purpose.
     'Flesh' = @{
-        Ornament = 'Studs'; Pattern = 'Veins'
+        Ornament = 'Studs'; Pattern = 'Hatch'
         Radius = @{ Button = 14; Tab = 12; Window = 26; Section = 12 }
         Fillet = @{ Thin = 3; Fat = 5; WindowThin = 3; WindowFat = 6 }
         Button  = @{ Light = @(206, 132, 126); Dark = @(96, 48, 48);   Fill = @(122, 68, 66) }
@@ -1243,7 +1243,7 @@ $Themes = @{
     # Thin == Fat: stone moulding has constant thickness. A thickening fillet is
     # beaten metal, which is the wrong vocabulary.
     'Gothic' = @{
-        Ornament = 'Gothic'; Pattern = 'Tracery'
+        Ornament = 'Gothic'; Pattern = 'Medieval'
         Radius = @{ Button = 4; Tab = 4; Window = 8; Section = 4 }
         Fillet = @{ Thin = 2; Fat = 2; WindowThin = 3; WindowFat = 3 }
         Button  = @{ Light = @(178, 172, 158); Dark = @(38, 37, 41);   Fill = @(28, 27, 32) }
@@ -1404,6 +1404,7 @@ function New-Plate {
     @('box',  x0,y0,x1,y1,round)
     @('tri',  x0,y0,x1,y1,x2,y2) convex, via half-planes
     @('ering',cx,cy,a,b,w,deg)   elliptical ring, rotated (a planet ring)
+    @('diam', cx,cy,r,round)     diamond with rounded points
 
   Prefix a type with '-' to SUBTRACT it, e.g. @('-disc', 32, 32, 5) punches a
   hole. Without this the field is a pure union, and any shape drawn inside
@@ -1471,6 +1472,14 @@ function Sd-Shape {
             [Math]::Abs($l - $s[3]) - $s[4] * 0.5
         }
         'box'  { Sd-Box $px $py $s[1] $s[2] $s[3] $s[4] $s[5] }
+        'diam' {
+            # Distance to an L1 ball, then pushed out by the rounding radius.
+            # Putting discs on the vertices instead does NOT work: a disc at the
+            # vertex of a convex shape bulges past both edges, and a diamond comes
+            # out as a plus sign.
+            $l1 = [Math]::Abs($px - $s[1]) + [Math]::Abs($py - $s[2])
+            (($l1 - $s[3]) / 1.4142) - $s[4]
+        }
         'ering' {
             # The tilt is the whole point: a level ring around a disc reads as an
             # eye, not as a planet.
@@ -1541,6 +1550,10 @@ function New-Icon {
             }
             'box' {
                 $x0 = ($s[1] - $pad); $y0 = ($s[2] - $pad); $x1 = ($s[3] + $pad); $y1 = ($s[4] + $pad)
+            }
+            'diam' {
+                $g = $s[3] + ($s[4] * 1.4142) + $pad
+                $x0 = ($s[1] - $g); $y0 = ($s[2] - $g); $x1 = ($s[1] + $g); $y1 = ($s[2] + $g)
             }
             'ering' {
                 # Conservative once rotated: the major axis can point either way.
@@ -1708,6 +1721,28 @@ $Icons = @{
                       @('-disc', 25, 32, 4.5))
 }
 
+<#
+  Badge shapes for the architect colour plate. Greyscale like the icons, and for
+  the same reason: the category colour arrives as GUI.color at draw time.
+
+  These are NOT 9-slice. A 9-slice edge band is stretched along its run, so a
+  circle or a diamond drawn into one would smear; these are drawn into a rect of
+  their own instead, at a fixed aspect.
+
+  The outline is NOT baked in. It is a toggle, and the draw gets it by painting
+  the same texture black one pixel larger underneath, which works for any convex
+  shape and costs one extra call instead of a second set of files.
+#>
+$Shapes = @{
+    'Square'  = @(, @('box', 4, 4, 60, 60, 9))
+    'Circle'  = @(, @('disc', 32, 32, 27))
+    'Tag'     = @( @('box', 3, 7, 42, 57, 7), @('tri', 42, 7, 42, 57, 62, 32) )
+    'Shield'  = @( @('box', 5, 5, 59, 38, 8), @('tri', 5, 34, 59, 34, 32, 62) )
+    'Hex'     = @( @('box', 16, 6, 48, 58, 3), @('tri', 16, 6, 16, 58, 3, 32), @('tri', 48, 6, 48, 58, 61, 32) )
+    'Chip'    = @( @('box', 6, 12, 58, 52, 5), @('box', 14, 4, 22, 60, 2), @('box', 42, 4, 50, 60, 2) )
+}
+
+$Shapes['Diamond'] = @(, @('diam', 32, 32, 22, 5))
 $SkinsRoot = Join-Path $PSScriptRoot '..\Skins'
 
 # The scale is written next to the skins and read back by AtlasSwap, so the two
@@ -1795,7 +1830,6 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     # Architect category plates. Greyscale: the category colour arrives as
     # GUI.color, so one set of three serves every category.
     New-Plate -Name 'Plate'      -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Plate'
-    New-Plate -Name 'PlateBar'   -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Bar'
     New-Plate -Name 'PlateFrame' -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Frame'
 
     # Progress bar: fill lit at the top, dark track behind it.
@@ -1816,7 +1850,7 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     # Pattern inks come from the theme itself: the line mixes the panel highlight
     # with the tab highlight, and the wash uses the window highlight. That is what
     # makes the background BELONG to the skin instead of being stamped over it.
-    foreach ($k in @('Hatch', 'Medieval', 'Scales', 'Bricks', 'Dots', 'Chevron', 'Woodgrain', 'Veins', 'Tracery')) {
+    foreach ($k in @('Hatch', 'Medieval', 'Scales', 'Bricks', 'Dots', 'Chevron', 'Woodgrain')) {
         New-Pattern -Kind $k -InkA $t.Section.Light -InkB $t.Tab.Light -Wash $t.Window.Light
     }
 }
@@ -1828,6 +1862,11 @@ Write-Host ""
 Write-Host "=== icons -> $OutDir ===" -ForegroundColor Cyan
 foreach ($name in ($(if ($DefineOnly) { @() } else { $Icons.Keys | Sort-Object }))) {
     New-Icon -Name "Icon$name" -Shapes $Icons[$name]
+}
+
+# Outline 0: a borda preta destas e opcional e vem do desenho, nao do arquivo.
+foreach ($name in ($(if ($DefineOnly) { @() } else { $Shapes.Keys | Sort-Object }))) {
+    New-Icon -Name "Shape$name" -Shapes $Shapes[$name] -Outline 0.0
 }
 
 Write-Host ""

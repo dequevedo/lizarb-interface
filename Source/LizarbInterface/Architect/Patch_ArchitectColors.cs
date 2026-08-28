@@ -116,56 +116,13 @@ namespace LizarbInterface
             Rect plate = rect.ContractedBy(3f);
             Color tint = ArchitectColorContext.Current.Value.ToTransparent(alpha);
 
-            string style = LizarbInterfaceMod.Settings.architectPlateStyle;
-            Texture2D shape = ShapeFor(style);
-            if (shape == null)
-            {
-                Widgets.DrawBoxSolid(plate, tint);
-                return;
-            }
-
-            Color old = GUI.color;
-            GUI.color = tint;
-
-            // Painting guards the re-entry: this DrawAtlas would otherwise land back
-            // in this same postfix.
+            // Painting guards the re-entry: a 9-slice style draws through DrawAtlas
+            // and would otherwise land back in this same postfix.
             ArchitectColorContext.Painting = true;
-            AtlasSwap.DrawScaled(PlateRect(plate, style), shape, true);
+            ArchitectPlate.Draw(plate, LizarbInterfaceMod.Settings.architectPlateStyle, tint);
             ArchitectColorContext.Painting = false;
-
-            GUI.color = old;
         }
 
-        /// <summary>Null for the flat style, or when the skin has no plate texture.</summary>
-        /// <summary>
-        /// Bar gets a square of its own at the left, sized to the button height, so
-        /// it sits under the icon.
-        ///
-        /// It cannot be done in the texture: the left band of a 9-slice is fixed at
-        /// atlas.width/4, and widening it would push the bar into the centre slice,
-        /// which is stretched across the whole button.
-        /// </summary>
-        private static Rect PlateRect(Rect plate, string style)
-        {
-            if (style != "Bar")
-            {
-                return plate;
-            }
-
-            float side = Mathf.Min(plate.height, plate.width);
-            return new Rect(plate.x, plate.y, side, side);
-        }
-
-        private static Texture2D ShapeFor(string style)
-        {
-            switch (style)
-            {
-                case "Bar":   return AtlasSwap.Own("PlateBar");
-                case "Frame": return AtlasSwap.Own("PlateFrame");
-                case "Flat":  return null;
-                default:      return AtlasSwap.Own("Plate");
-            }
-        }
     }
 
     /// <summary>
@@ -206,7 +163,7 @@ namespace LizarbInterface
         }
 
         /// <summary>Caps saturation and floors brightness so the hue stays legible as text.</summary>
-        private static Color Readable(Color color)
+        internal static Color Readable(Color color)
         {
             Color.RGBToHSV(color, out float h, out float s, out float v);
             return Color.HSVToRGB(h, Mathf.Min(s, 0.70f), Mathf.Max(v, 0.95f));

@@ -15,7 +15,7 @@ namespace LizarbInterface
         public bool enabled = true;
 
         /// <summary>Skin folder under Skins/. Changing it reloads every texture.</summary>
-        public string theme = "Brass";
+        public string theme = "Foundry";
 
         /// <summary>
         /// Pixels shaved off every skinned element on all four sides. Vanilla draws
@@ -26,7 +26,7 @@ namespace LizarbInterface
 
         /// <summary>Empty means the game's own fonts.</summary>
         /// <summary>Family name as the AssetBundle reports it.</summary>
-        public const string DefaultFont = "Amaranth";
+        public const string DefaultFont = "Bungee";
 
         /// <summary>
         /// Ships in Fonts/. Falls back to the vanilla font when it is not installed,
@@ -35,7 +35,7 @@ namespace LizarbInterface
         public string fontName = DefaultFont;
 
         public int fontOffsetTiny;
-        public int fontOffsetSmall = 1;
+        public int fontOffsetSmall;
         public int fontOffsetMedium;
 
         /// <summary>Black outline behind every label. On by default.</summary>
@@ -48,7 +48,7 @@ namespace LizarbInterface
         /// Multiplies the outline alpha. The label's own alpha is still inherited on
         /// top of this, so faded text keeps a faded outline rather than a hard ghost.
         /// </summary>
-        public float outlineOpacity = 1f;
+        public float outlineOpacity = 0.7f;
 
         /// <summary>
         /// Outline the smallest font too. Off by default: at ~10px the ring closes the
@@ -130,6 +130,9 @@ namespace LizarbInterface
         /// <summary>Widen the Architect menu until the longest category name fits.</summary>
         public bool architectAutoWidth = true;
 
+        /// <summary>Black outline around the badge shapes.</summary>
+        public bool architectShapeOutline = true;
+
         public int FontSizeOffset(int gameFontIndex)
         {
             switch (gameFontIndex)
@@ -143,15 +146,15 @@ namespace LizarbInterface
         public override void ExposeData()
         {
             Scribe_Values.Look(ref enabled, "enabled", defaultValue: true);
-            Scribe_Values.Look(ref theme, "theme", "Brass");
+            Scribe_Values.Look(ref theme, "theme", "Foundry");
             Scribe_Values.Look(ref inset, "inset", 1f);
             Scribe_Values.Look(ref fontName, "fontName", DefaultFont);
             Scribe_Values.Look(ref fontOffsetTiny, "fontOffsetTiny", 0);
-            Scribe_Values.Look(ref fontOffsetSmall, "fontOffsetSmall", 1);
+            Scribe_Values.Look(ref fontOffsetSmall, "fontOffsetSmall", 0);
             Scribe_Values.Look(ref fontOffsetMedium, "fontOffsetMedium", 0);
             Scribe_Values.Look(ref textOutline, "textOutline", defaultValue: true);
             Scribe_Values.Look(ref outlineThickness, "outlineThickness", 2f);
-            Scribe_Values.Look(ref outlineOpacity, "outlineOpacity", 1f);
+            Scribe_Values.Look(ref outlineOpacity, "outlineOpacity", 0.7f);
             Scribe_Values.Look(ref outlineTinyText, "outlineTinyText", defaultValue: false);
             Scribe_Values.Look(ref showAllFonts, "showAllFonts", defaultValue: false);
             Scribe_Values.Look(ref texturedBackground, "texturedBackground", defaultValue: true);
@@ -174,6 +177,15 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectPlateStyle, "architectPlateStyle", "Plate");
             Scribe_Values.Look(ref architectIcons, "architectIcons", defaultValue: true);
             Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
+            Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
+
+            // "Bar" was renamed when the style grew a shape of its own. Without this
+            // an existing profile lands on a style that no longer exists and the
+            // colour silently stops being drawn.
+            if (Scribe.mode == LoadSaveMode.LoadingVars && architectPlateStyle == "Bar")
+            {
+                architectPlateStyle = "Square";
+            }
             base.ExposeData();
         }
     }
@@ -207,8 +219,8 @@ namespace LizarbInterface
             ("Crimson",  "Scales",   new Color(0.11f, 0.04f, 0.04f)),
             ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f)),
             ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f)),
-            ("Flesh",    "Veins",     new Color(0.10f, 0.04f, 0.04f)),
-            ("Gothic",   "Tracery",   new Color(0.03f, 0.03f, 0.03f)),
+            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f)),
+            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f)),
             ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f)),
             ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f)),
             ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f)),
@@ -237,8 +249,7 @@ namespace LizarbInterface
         /// <summary>Must match the Pattern_*.png files the generator writes.</summary>
         private static readonly string[] Patterns =
         {
-            "Hatch", "Medieval", "Scales", "Bricks", "Dots", "Chevron",
-            "Woodgrain", "Veins", "Tracery",
+            "Hatch", "Medieval", "Scales", "Bricks", "Dots", "Chevron", "Woodgrain",
         };
 
         public LizarbInterfaceMod(ModContentPack content) : base(content)
@@ -554,7 +565,7 @@ namespace LizarbInterface
             if (listing.ButtonText("LizarbInterface.FontReset".Translate(), null, 0.35f))
             {
                 Settings.fontOffsetTiny = 0;
-                Settings.fontOffsetSmall = 1;
+                Settings.fontOffsetSmall = 0;
                 Settings.fontOffsetMedium = 0;
                 SetFont(LizarbInterfaceSettings.DefaultFont);
             }
@@ -681,6 +692,11 @@ namespace LizarbInterface
                 DoPlateStyleRow(listing, style);
             }
 
+            listing.CheckboxLabeled(
+                "LizarbInterface.Architect.ShapeOutline".Translate(),
+                ref Settings.architectShapeOutline,
+                "LizarbInterface.Architect.ShapeOutline.Tip".Translate());
+
             listing.Gap();
             listing.Label("LizarbInterface.Architect.PlateAlpha".Translate(
                 Settings.architectPlateAlpha.ToStringPercent()));
@@ -697,7 +713,7 @@ namespace LizarbInterface
                 "LizarbInterface.Architect.AutoColor.Tip".Translate());
         }
 
-        private static readonly string[] PlateStyles = { "Plate", "Bar", "Frame", "Flat" };
+        private static string[] PlateStyles => ArchitectPlate.Styles;
 
         /// <summary>
         /// One row of the shape picker, drawn as a real architect button rather than
@@ -741,9 +757,8 @@ namespace LizarbInterface
         }
 
         /// <summary>
-        /// Mirrors what Patch_ArchitectPlate does: same atlas, same inset, same
-        /// square-rect rule for Bar. If the two ever drift, the preview becomes a
-        /// lie, which is worse than no preview.
+        /// <summary>
+        /// Calls the same draw the game uses, so the two cannot drift.
         /// </summary>
         private void DrawPlateSample(Rect rect, string style)
         {
@@ -762,34 +777,8 @@ namespace LizarbInterface
                 AtlasSwap.DrawScaled(rect, button, true);
             }
 
-            // A recognisable category colour, so the sample reads as the real thing.
             Color tint = new Color(205f / 255f, 137f / 255f, 95f / 255f, Settings.architectPlateAlpha);
-            Rect plate = rect.ContractedBy(3f);
-
-            Texture2D shape =
-                style == "Flat" ? null :
-                style == "Bar" ? AtlasSwap.Own("PlateBar") :
-                style == "Frame" ? AtlasSwap.Own("PlateFrame") : AtlasSwap.Own("Plate");
-
-            Color previous = GUI.color;
-            GUI.color = tint;
-            if (shape == null)
-            {
-                GUI.color = previous;
-                Widgets.DrawBoxSolid(plate, tint);
-            }
-            else
-            {
-                Rect target = plate;
-                if (style == "Bar")
-                {
-                    float side = Mathf.Min(plate.height, plate.width);
-                    target = new Rect(plate.x, plate.y, side, side);
-                }
-
-                AtlasSwap.DrawScaled(target, shape, true);
-                GUI.color = previous;
-            }
+            ArchitectPlate.Draw(rect.ContractedBy(3f), style, tint);
 
             Texture2D icon = AtlasSwap.Shared("IconProduction");
             if (icon != null)
@@ -798,11 +787,19 @@ namespace LizarbInterface
                 GUI.DrawTexture(new Rect(rect.x + 5f, rect.y + (rect.height - size) / 2f, size, size), icon);
             }
 
+            // The label uses the SAME rule the real button does, so ticking "colour
+            // the button text" shows its effect here before it is applied anywhere.
+            Color label = Settings.architectColorLabels
+                ? Patch_ButtonTextSubtle.Readable(tint)
+                : Color.white;
+
+            Color previous = GUI.color;
+            GUI.color = label;
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(new Rect(rect.x + 36f, rect.y, rect.width - 40f, rect.height), "Production");
             Text.Anchor = TextAnchor.UpperLeft;
+            GUI.color = previous;
         }
-
         /// <summary>
         /// Architect Icons draws its own icon in the same place ours goes, so the
         /// settings page says so rather than letting the player find two overlapping.
