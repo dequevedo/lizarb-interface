@@ -8,16 +8,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Logs every other mod that patches a method this mod also patches, so a conflict
-    /// report is one line in the log instead of guesswork.
-    ///
-    /// Reading it: a transpiler alongside our prefix/postfix composes fine. Another
-    /// PREFIX on TabRecord.Draw, DrawWindowBackground or DrawMenuSection is the one to
-    /// watch, since ours returns false and the first to do so suppresses the rest.
-    ///
-    /// Runs at StaticConstructorOnStartup, so it misses mods that patch later.
-    /// </summary>
     [StaticConstructorOnStartup]
     internal static class PatchAudit
     {
@@ -25,13 +15,17 @@ namespace LizarbInterface
 
         static PatchAudit()
         {
+            if (!Prefs.DevMode)
+            {
+                return;
+            }
+
             try
             {
                 Report();
             }
             catch (Exception e)
             {
-                // A diagnostic must never be what breaks startup.
                 Log.Warning("[LizarbInterface] patch audit failed: " + e.Message);
             }
         }
@@ -60,7 +54,6 @@ namespace LizarbInterface
 
             if (shared.Count == 0)
             {
-                Log.Message("[LizarbInterface] patch audit: no other mod patches anything this mod patches.");
                 return;
             }
 
@@ -72,11 +65,9 @@ namespace LizarbInterface
                 text.AppendLine(line);
             }
 
-            // Message, not Warning: sharing a method is normal and usually harmless.
             Log.Message(text.ToString().TrimEnd());
         }
 
-        /// <summary>Owners other than us, tagged with the kind of patch each one is.</summary>
         private static string Describe(Patches info)
         {
             var owners = new Dictionary<string, HashSet<string>>();

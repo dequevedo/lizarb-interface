@@ -5,25 +5,15 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Lets any DesignationCategoryDef declare how it is coloured, including
-    /// categories added by other mods. See Patches/ArchitectPalette.xml.
-    /// </summary>
     public class ArchitectColorExtension : DefModExtension
     {
-        /// <summary>Family name from CategoryPalette.Families. The normal way to do this.</summary>
         public string family;
 
-        // ParseHelper.ParseColor reads "(230,180,60)" as 0-255 and "(0.9,0.7,0.2)" as
-        // 0-1: if any component exceeds 1 the whole string is treated as 0-255.
-        /// <summary>Exact colour, overriding the family's. For one-off tuning.</summary>
         public Color? color;
 
-        /// <summary>Icon name, overriding the family's.</summary>
         public string icon;
     }
 
-    /// <summary>A group of categories that share a colour, and the icon that fits them.</summary>
     internal sealed class CategoryFamily
     {
         public readonly string Name;
@@ -40,18 +30,8 @@ namespace LizarbInterface
         }
     }
 
-    /// <summary>
-    /// Colour and icon for an architect category.
-    ///
-    /// The point of the family table is restraint. Sampling the hue circle gives
-    /// every modded category an unrelated colour, and thirty unrelated colours read
-    /// as noise however pretty each one is. Everything lands in one of twelve
-    /// entries at a matched saturation instead, so the menu groups by meaning.
-    /// </summary>
     public static class CategoryPalette
     {
-        // Categories that do related jobs deliberately share a hue: that
-        // similarity IS the grouping.
         private static readonly CategoryFamily[] Families =
         {
             new CategoryFamily("Designate", 219, 178, 99, "Orders",
@@ -96,13 +76,6 @@ namespace LizarbInterface
                 "dev", "debug", "test", "tool", "utility", "other"),
         };
 
-        // A family carries one icon, so everything in it would otherwise share a
-        // picture: Orders and Blueprints both landed on the flag. These run first
-        // and only decide the icon; the colour still comes from the family, which
-        // is what keeps the grouping intact.
-        //
-        // Matched on a word boundary, not anywhere: "Designations" contains "sign",
-        // while "Technical vehicles" genuinely is about vehicles.
         private static readonly string[][] IconHints =
         {
             new[] { "Blueprint", "blueprint" },
@@ -125,11 +98,6 @@ namespace LizarbInterface
             new[] { "Misc",      "misc" },
         };
 
-        // Keyed on defName, which is the category identity and does not change.
-        // The XML extension is deliberately NOT cached, so "Hot reload Defs" still
-        // picks up palette edits; only the keyword scan is memoised, and that scan
-        // is the expensive half. It would otherwise run for every button of every
-        // repaint, allocating a lowercased string each time.
         private static readonly Dictionary<string, CategoryFamily> guessed =
             new Dictionary<string, CategoryFamily>();
 
@@ -149,7 +117,6 @@ namespace LizarbInterface
             return Resolve(def, ext)?.Color ?? Color.white;
         }
 
-        /// <summary>Icon name for a category, or null when it should not get one.</summary>
         public static string IconFor(DesignationCategoryDef def)
         {
             if (def == null)
@@ -172,10 +139,6 @@ namespace LizarbInterface
             return def != null && settings != null && settings.enabled && settings.architectColors;
         }
 
-        /// <summary>
-        /// Explicit family, else a keyword in the defName or label, else a stable
-        /// pick from the table.
-        /// </summary>
         private static CategoryFamily Resolve(DesignationCategoryDef def, ArchitectColorExtension ext)
         {
             if (!string.IsNullOrEmpty(ext?.family))
@@ -207,8 +170,6 @@ namespace LizarbInterface
                 return null;
             }
 
-            // Nothing matched: a stable pick keeps the category constant across
-            // sessions, which matters more than which entry it lands on.
             int hash = Mathf.Abs(GenText.StableStringHash(def.defName));
             return Families[hash % Families.Length];
         }
@@ -270,7 +231,6 @@ namespace LizarbInterface
             return null;
         }
 
-        /// <summary>True when the keyword begins a word in the text.</summary>
         private static bool StartsWord(string text, string keyword)
         {
             int at = 0;

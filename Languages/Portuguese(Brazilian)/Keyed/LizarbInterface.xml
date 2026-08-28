@@ -41,8 +41,6 @@
   <LizarbInterface.Pattern.Bricks>Tijolo</LizarbInterface.Pattern.Bricks>
   <LizarbInterface.Pattern.Dots>Pontos</LizarbInterface.Pattern.Dots>
   <LizarbInterface.Pattern.Chevron>Espinha</LizarbInterface.Pattern.Chevron>
-  <LizarbInterface.WindowSection>Janelas</LizarbInterface.WindowSection>
-  <LizarbInterface.WindowOpacity>Opacidade dos diálogos: {0}</LizarbInterface.WindowOpacity>
   <LizarbInterface.WindowAnimation>Animar abertura de diálogos</LizarbInterface.WindowAnimation>
   <LizarbInterface.WindowAnimation.Tip>Uma escala e fade rápidos. Pulado no menu Arquiteto, na aba de trabalho e nos outros painéis principais, que são a mobília do jogo, não diálogos, e abrem o tempo todo.</LizarbInterface.WindowAnimation.Tip>
   <LizarbInterface.Theme.Wood>Madeira</LizarbInterface.Theme.Wood>
@@ -52,14 +50,11 @@
   <LizarbInterface.Theme.Copper>Cobre</LizarbInterface.Theme.Copper>
   <LizarbInterface.Theme.Ash>Cinza</LizarbInterface.Theme.Ash>
   <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
-  <LizarbInterface.Pattern.Veins>Veias</LizarbInterface.Pattern.Veins>
-  <LizarbInterface.Pattern.Tracery>Rendilhado</LizarbInterface.Pattern.Tracery>
   <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Texto</LizarbInterface.Tab.Text>
   <LizarbInterface.Tab.Surfaces>Superfícies</LizarbInterface.Tab.Surfaces>
   <LizarbInterface.Tab.Windows>Janelas</LizarbInterface.Tab.Windows>
   <LizarbInterface.Tab.Components>Componentes</LizarbInterface.Tab.Components>
-  <LizarbInterface.WindowOpacity.Tip>Só diálogos. Os painéis principais ficam sólidos: você lê eles jogando, e uma aba de trabalho translúcida é uma aba de trabalho pior.</LizarbInterface.WindowOpacity.Tip>
   <LizarbInterface.AnimationDuration>Duração da animação: {0} ms</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Quais superfícies este mod pode retexturizar. Desligue uma para devolvê-la ao jogo, ou a outro mod, sem abrir mão do resto.</LizarbInterface.ComponentsSection>
   <LizarbInterface.SkinButtons>Botões, dicas e menus</LizarbInterface.SkinButtons>
@@ -120,12 +115,10 @@
   <LizarbInterface.AnimateOther.Tip>Qualquer janela numa camada que os três acima não cobrem.</LizarbInterface.AnimateOther.Tip>
   <LizarbInterface.AnimationStyle>Estilo da animação (clique para rever)</LizarbInterface.AnimationStyle>
   <LizarbInterface.Animation.Scale>Escala</LizarbInterface.Animation.Scale>
-  <LizarbInterface.Animation.Pop>Salto</LizarbInterface.Animation.Pop>
   <LizarbInterface.Animation.Zoom>Recuo</LizarbInterface.Animation.Zoom>
   <LizarbInterface.Animation.Rise>Subida</LizarbInterface.Animation.Rise>
   <LizarbInterface.Animation.Slide>Deslize</LizarbInterface.Animation.Slide>
   <LizarbInterface.Animation.Unfold>Desdobra</LizarbInterface.Animation.Unfold>
   <LizarbInterface.Animation.Flip>Virada</LizarbInterface.Animation.Flip>
   <LizarbInterface.Animation.Tilt>Inclinada</LizarbInterface.Animation.Tilt>
-  <LizarbInterface.Animation.Fade>Esmaece</LizarbInterface.Animation.Fade>
 </LanguageData>

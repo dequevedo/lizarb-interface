@@ -4,15 +4,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Fonts loaded from an AssetBundle shipped with the mod. This is the only way to
-    /// give players a font without asking them to install one.
-    ///
-    /// Building the bundle needs the Unity Editor at the exact version RimWorld runs
-    /// (2022.3.35f1 for 1.6). Until one is present this finds nothing and the mod falls
-    /// back to fonts installed on the machine; adding the bundle later needs no code
-    /// change. Naming: no extension, optional "_win"/"_mac"/"_linux" suffix.
-    /// </summary>
     internal static class FontBundle
     {
         private static Dictionary<string, Font> byName;
@@ -58,8 +49,6 @@ namespace LizarbInterface
                         continue;
                     }
 
-                    // fontNames[0] is the family Unity reports; prefer it over the asset
-                    // name so the picker shows the same string as an OS-installed font.
                     string family = font.fontNames != null && font.fontNames.Length > 0
                         ? font.fontNames[0]
                         : font.name;
@@ -68,14 +57,11 @@ namespace LizarbInterface
                 }
             }
 
-            if (byName.Count == 0)
+            if (byName.Count == 0 || !Prefs.DevMode)
             {
                 return;
             }
 
-            // The family names matter, not just the count: they are the keys the
-            // picker and the saved fontName are matched against, and Unity decides
-            // them - "Amaranth" and "Amaranth Regular" would behave very differently.
             var names = new List<string>(byName.Keys);
             names.Sort(System.StringComparer.OrdinalIgnoreCase);
             Log.Message(

@@ -16,17 +16,19 @@
   </modDependencies>
   <loadAfter>
     <li>brrainz.harmony</li>
-    <!-- Architect Icons transpiles a method this mod prefixes. They compose, but
-         loading after it keeps the patch order predictable. -->
     <li>com.bymarcin.architecticons</li>
   </loadAfter>
   <description>A complete reskin of RimWorld's interface.
 
-- 14 themes, each with its own palette, corner geometry and ornament
-- 9 tileable background patterns
+- 16 themes, each with its own palette, corner geometry and ornament
+- 7 tileable background patterns
 - Font selection with a real text outline
 - Window frames, tabs, buttons, tooltips, checkboxes, gizmos, scrollbars
 - Colours every Architect category button by what the category is for
 
-Every surface can be turned off on its own, so it can share the screen with other UI mods. Load it last if you want its look to win.</description>
+Compatibility: this mod replaces the drawing of tabs, window backgrounds and menu sections rather than adding to them. Another mod that redraws those same surfaces will lose whichever of the two loads first, so load this one last if you want its look to win. Buttons, windows, tabs, widgets and scrollbars can each be turned off on their own, so a clash costs one checkbox instead of the whole skin.
+
+Twenty-eight fonts ship with the mod under the SIL Open Font License. Full credits and licence files are included.
+
+Source: https://github.com/dequevedo/lizarb-interface</description>
 </ModMetaData>

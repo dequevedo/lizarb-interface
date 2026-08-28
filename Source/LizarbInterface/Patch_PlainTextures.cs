@@ -6,14 +6,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Swaps the widgets drawn as a single stretched image, which the DrawAtlas hook
-    /// misses: checkboxes, radios, the slider knob, gizmo plates, bar fills.
-    ///
-    /// Matched by REFERENCE against the vanilla instance, never by texture.name -
-    /// Object.name is a native call that allocates, and this runs hundreds of times
-    /// a frame.
-    /// </summary>
     internal static class PlainTextures
     {
         private sealed class Entry
@@ -37,12 +29,8 @@ namespace LizarbInterface
                 Make(typeof(Widgets), "RadioButOnTex", "RadioButOn"),
                 Make(typeof(Widgets), "RadioButOffTex", "RadioButOff"),
                 Make(typeof(Widgets), "SliderHandle", "SliderHandle"),
-                // ColonistBar.BGTex is the SAME instance as Command.BGTex, so the
-                // colonist bar comes along with the gizmo plate for free.
                 Make(typeof(Command), "BGTex", "GizmoBG"),
 
-                // Default progress bar fill. Bars that pass their own texture (mood,
-                // health, research) are left alone: that colour is information.
                 Make(typeof(Widgets), "BarFullTexHor", "BarFill"),
             };
         }
@@ -61,14 +49,12 @@ namespace LizarbInterface
             }
             catch (Exception e)
             {
-                // A renamed field in a future game build must not take the mod down.
                 Log.Warning("[LizarbInterface] could not read " + owner.Name + "." + field + ": " + e.Message);
             }
 
             return new Entry { Vanilla = vanilla, File = file };
         }
 
-        /// <summary>Replacement for this texture, or null to leave it alone.</summary>
         internal static Texture2D For(Texture original)
         {
             if (original == null || entries.Length == 0)
@@ -108,7 +94,6 @@ namespace LizarbInterface
         }
     }
 
-    /// <summary>Gizmos route through GenUI instead. Same swap, different door.</summary>
     [HarmonyPatch(typeof(GenUI), nameof(GenUI.DrawTextureWithMaterial))]
     internal static class Patch_DrawTextureWithMaterial
     {
