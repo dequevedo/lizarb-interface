@@ -27,24 +27,16 @@
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSection>Theme</LizarbInterface.ThemeSection>
   <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>
-  <LizarbInterface.Theme.Brass.Tip>Dark wood and brass. Warm, round corners, generous fillet.</LizarbInterface.Theme.Brass.Tip>
   <LizarbInterface.Theme.Iron>Iron</LizarbInterface.Theme.Iron>
-  <LizarbInterface.Theme.Iron.Tip>Cold steel. Nearly square corners and a thin fillet - austere on purpose, the geometry does half the work.</LizarbInterface.Theme.Iron.Tip>
   <LizarbInterface.Theme.Royal>Royal</LizarbInterface.Theme.Royal>
-  <LizarbInterface.Theme.Royal.Tip>Deep indigo and gold. Wide corners and a heavy fillet - the exact opposite of Iron on the same structure.</LizarbInterface.Theme.Royal.Tip>
   <LizarbInterface.SectionFailed>(the "{0}" section failed - see the log)</LizarbInterface.SectionFailed>
   <LizarbInterface.OutlineTiny>Outline the smallest text too</LizarbInterface.OutlineTiny>
   <LizarbInterface.OutlineTiny.Tip>Off by default. At around 10px the black ring closes the holes in a, e and g and the word turns into a smudge - most visible on the backstory titles in the character tab.</LizarbInterface.OutlineTiny.Tip>
   <LizarbInterface.Theme.Obsidian>Obsidian</LizarbInterface.Theme.Obsidian>
-  <LizarbInterface.Theme.Obsidian.Tip>Volcanic glass. Corners cut at 45 degrees, an ice-pale hairline, no warmth anywhere - the opposite of Brass on every axis.</LizarbInterface.Theme.Obsidian.Tip>
   <LizarbInterface.Theme.Verdant>Verdant</LizarbInterface.Theme.Verdant>
-  <LizarbInterface.Theme.Verdant.Tip>Forest and aged bronze. Rivets at the corners over a scale backdrop: studded leather rather than polished metal.</LizarbInterface.Theme.Verdant.Tip>
   <LizarbInterface.Theme.Bone>Bone</LizarbInterface.Theme.Bone>
-  <LizarbInterface.Theme.Bone.Tip>Yellowed ivory over charcoal. Each corner swells into two round condyles, the way the end of a long bone does - the shape, not the colour, is what makes it read as bone.</LizarbInterface.Theme.Bone.Tip>
   <LizarbInterface.Theme.Crimson>Crimson</LizarbInterface.Theme.Crimson>
-  <LizarbInterface.Theme.Crimson.Tip>Oxblood and iron. Dark brackets over deep wine, scales behind.</LizarbInterface.Theme.Crimson.Tip>
   <LizarbInterface.Theme.Arcane>Arcane</LizarbInterface.Theme.Arcane>
-  <LizarbInterface.Theme.Arcane.Tip>Deep violet with a luminous double frame. The only theme that imitates no material at all - arcane on purpose, not forged.</LizarbInterface.Theme.Arcane.Tip>
   <LizarbInterface.Pattern.Scales>Scales</LizarbInterface.Pattern.Scales>
   <LizarbInterface.Pattern.Bricks>Brick</LizarbInterface.Pattern.Bricks>
   <LizarbInterface.Pattern.Dots>Dots</LizarbInterface.Pattern.Dots>
@@ -54,17 +46,11 @@
   <LizarbInterface.WindowAnimation>Animate dialogs opening</LizarbInterface.WindowAnimation>
   <LizarbInterface.WindowAnimation.Tip>A quick scale and fade. Skipped for the architect menu, the work tab and other main panels - those are the game furniture, not dialogs, and they open constantly.</LizarbInterface.WindowAnimation.Tip>
   <LizarbInterface.Theme.Wood>Wood</LizarbInterface.Theme.Wood>
-  <LizarbInterface.Theme.Wood.Tip>Plank and ironwork. The grain lives in the background pattern, not the button texture - a 9-slice centre is stretched and would smear it into streaks.</LizarbInterface.Theme.Wood.Tip>
   <LizarbInterface.Theme.Flesh>Flesh</LizarbInterface.Theme.Flesh>
-  <LizarbInterface.Theme.Flesh.Tip>Greyed pink with red veining and nodules at the corners. The most uncomfortable of the set, on purpose.</LizarbInterface.Theme.Flesh.Tip>
   <LizarbInterface.Theme.Gothic>Gothic</LizarbInterface.Theme.Gothic>
-  <LizarbInterface.Theme.Gothic.Tip>Cathedral stone. A double moulding runs the whole way round and every corner carries a trefoil. A pointed arch still cannot fit a square corner, so that part comes from the tracery behind.</LizarbInterface.Theme.Gothic.Tip>
   <LizarbInterface.Theme.Aero>Aero</LizarbInterface.Theme.Aero>
-  <LizarbInterface.Theme.Aero.Tip>Glass bubble. No ornament and no black outline - both fight what glass is. The interior is translucent so the map shows through; the pale rim stays opaque, because without it the piece has no edge at all.</LizarbInterface.Theme.Aero.Tip>
   <LizarbInterface.Theme.Copper>Copper</LizarbInterface.Theme.Copper>
-  <LizarbInterface.Theme.Copper.Tip>Copper with patina. Burnt orange against oxidised verdigris - the two halves of the same plate ageing.</LizarbInterface.Theme.Copper.Tip>
   <LizarbInterface.Theme.Ash>Ash</LizarbInterface.Theme.Ash>
-  <LizarbInterface.Theme.Ash.Tip>Volcanic ash. The quietest of the set: no colour at all and the thinnest fillet, for anyone who wants the frame and nothing else.</LizarbInterface.Theme.Ash.Tip>
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Pattern.Veins>Veins</LizarbInterface.Pattern.Veins>
   <LizarbInterface.Pattern.Tracery>Tracery</LizarbInterface.Pattern.Tracery>
@@ -105,9 +91,7 @@
   <LizarbInterface.Architect.PlateStyle.Frame.Tip>Colour around the rim, centre left clear.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
   <LizarbInterface.Architect.PlateStyle.Flat>Flat</LizarbInterface.Architect.PlateStyle.Flat>
   <LizarbInterface.Architect.PlateStyle.Flat.Tip>A plain rectangle, ignoring the theme shape.</LizarbInterface.Architect.PlateStyle.Flat.Tip>  <LizarbInterface.Theme.Grimoire>Grimoire</LizarbInterface.Theme.Grimoire>
-  <LizarbInterface.Theme.Grimoire.Tip>Oxblood leather boards with gilt tooling. The corner is the metal piece nailed to a real binding, and the border carries the blind-tooled triple rule that runs around a cover.</LizarbInterface.Theme.Grimoire.Tip>
   <LizarbInterface.Theme.Foundry>Foundry</LizarbInterface.Theme.Foundry>
-  <LizarbInterface.Theme.Foundry.Tip>Hot-rolled plate with the orange still in it. Wide stepped shoulders and three rivets to a corner: mass is the whole read.</LizarbInterface.Theme.Foundry.Tip>
   <LizarbInterface.GrainOnButtons>Texture on buttons too</LizarbInterface.GrainOnButtons>
   <LizarbInterface.GrainOnButtons.Tip>Tiles the same pattern across button, tooltip and menu faces, not just window backgrounds. With the Grimoire skin this is what gives the buttons their parchment.</LizarbInterface.GrainOnButtons.Tip>
   <LizarbInterface.Architect.AutoWidth>Widen the menu to fit the labels</LizarbInterface.Architect.AutoWidth>
