@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  THE PALETTE LIVES HERE, not in C#.
+
+  XML is reloadable at runtime: with dev mode on, edit this file and use
+  Debug Actions > General > "Hot reload Defs" to apply new colours without
+  restarting. Anything in C# would need a restart.
+
+  Categories declare a FAMILY, not a colour. The family carries both the hue and
+  the icon, and families are shared on purpose - categories doing related jobs
+  look related, which is what keeps thirty buttons from reading as noise.
+  Family names are listed in Architect/CategoryPalette.cs.
+
+  A category may still override with <color>(r,g,b)</color> or <icon>Name</icon>.
+  Mods that add their own categories need no patch: they are matched on keywords
+  in their defName and label, so Storage lands in Storage and Genetics in Life.
+
+  success=Always: DLC categories do not exist when the DLC is off, and without
+  this each missing one becomes a red error in the log.
+-->
+<Patch>
+
+  <!-- Designation and planning -->
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Orders"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Designate</family></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Misc"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Designate</family><icon>Misc</icon></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Zone"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Zone</family></li></value>
+  </Operation>
+
+  <!-- Building the colony -->
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Structure"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Build</family></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Floors"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Floor</family></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Furniture"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Comfort</family></li></value>
+  </Operation>
+
+  <!-- The Recreation button has defName Joy -->
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Joy"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Comfort</family><icon>Joy</icon></li></value>
+  </Operation>
+
+  <!-- Work and infrastructure -->
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Production"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Industry</family></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Power"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Industry</family><icon>Power</icon></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Temperature"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Climate</family></li></value>
+  </Operation>
+
+  <!-- Defence -->
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Security"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Defence</family></li></value>
+  </Operation>
+
+  <!-- Endgame, travel and the DLCs -->
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Ship"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Beyond</family><icon>Ship</icon></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Ideology"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Beyond</family><icon>Ideology</icon></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Anomaly"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Beyond</family><icon>Anomaly</icon></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Odyssey"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Beyond</family><icon>Odyssey</icon></li></value>
+  </Operation>
+  <Operation Class="PatchOperationAddModExtension">
+    <success>Always</success>
+    <xpath>/Defs/DesignationCategoryDef[defName="Biotech"]</xpath>
+    <value><li Class="LizarbInterface.ArchitectColorExtension"><family>Life</family><icon>Biotech</icon></li></value>
+  </Operation>
+
+</Patch>

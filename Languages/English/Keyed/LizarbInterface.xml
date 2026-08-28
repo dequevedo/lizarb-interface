@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <LizarbInterface.Enabled>Skin windows, panels, buttons and tabs</LizarbInterface.Enabled>
+  <LizarbInterface.Inset>Gap between elements: {0} px</LizarbInterface.Inset>
+  <LizarbInterface.Inset.Tip>Paints each element slightly inside its own area so neighbouring buttons no longer touch. Nothing in the layout moves, so labels and icons stay exactly where the game put them.</LizarbInterface.Inset.Tip>
+  <LizarbInterface.FontSection>Font</LizarbInterface.FontSection>
+  <LizarbInterface.FontVanilla>Game default</LizarbInterface.FontVanilla>
+  <LizarbInterface.FontGroup.Shipped>Included with this mod</LizarbInterface.FontGroup.Shipped>
+  <LizarbInterface.FontGroup.Local>Found on this PC</LizarbInterface.FontGroup.Local>
+  <LizarbInterface.FontSize.Tiny>Tiny text size: {0}</LizarbInterface.FontSize.Tiny>
+  <LizarbInterface.FontSize.Small>Normal text size: {0}</LizarbInterface.FontSize.Small>
+  <LizarbInterface.FontSize.Medium>Heading text size: {0}</LizarbInterface.FontSize.Medium>
+  <LizarbInterface.FontReset>Reset font</LizarbInterface.FontReset>
+  <LizarbInterface.BackgroundSection>Background</LizarbInterface.BackgroundSection>
+  <LizarbInterface.TexturedBackground>Textured background</LizarbInterface.TexturedBackground>
+  <LizarbInterface.TexturedBackground.Tip>Lays a tiling two-tone grunge over window and panel interiors instead of a flat colour. It repeats at its own size rather than stretching, so it looks the same in a small panel and a full-screen window.</LizarbInterface.TexturedBackground.Tip>
+  <LizarbInterface.BackgroundGrain>Texture strength: {0}</LizarbInterface.BackgroundGrain>
+  <LizarbInterface.ShowAllFonts>Show every installed font</LizarbInterface.ShowAllFonts>
+  <LizarbInterface.ShowAllFonts.Tip>Off by default. The short list holds only serif faces that stay readable at the sizes RimWorld draws at - blackletter is left out on purpose, it is the most medieval thing on the machine and the least legible in a colonist list.</LizarbInterface.ShowAllFonts.Tip>
+  <LizarbInterface.TextOutline>Black outline on text</LizarbInterface.TextOutline>
+  <LizarbInterface.TextOutline.Tip>Draws each label eight more times underneath the real one, offset by exactly one screen pixel in each direction, in a very dark shade of the current theme. Costs a little performance on text-heavy screens.</LizarbInterface.TextOutline.Tip>
+  <LizarbInterface.OutlineThickness>Outline thickness: {0} px</LizarbInterface.OutlineThickness>
+  <LizarbInterface.OutlineOpacity>Outline opacity: {0}</LizarbInterface.OutlineOpacity>
+  <LizarbInterface.Pattern.Hatch>Hatch</LizarbInterface.Pattern.Hatch>
+  <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
+  <LizarbInterface.ThemeSection>Theme</LizarbInterface.ThemeSection>
+  <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>
+  <LizarbInterface.Theme.Brass.Tip>Dark wood and brass. Warm, round corners, generous fillet.</LizarbInterface.Theme.Brass.Tip>
+  <LizarbInterface.Theme.Iron>Iron</LizarbInterface.Theme.Iron>
+  <LizarbInterface.Theme.Iron.Tip>Cold steel. Nearly square corners and a thin fillet - austere on purpose, the geometry does half the work.</LizarbInterface.Theme.Iron.Tip>
+  <LizarbInterface.Theme.Royal>Royal</LizarbInterface.Theme.Royal>
+  <LizarbInterface.Theme.Royal.Tip>Deep indigo and gold. Wide corners and a heavy fillet - the exact opposite of Iron on the same structure.</LizarbInterface.Theme.Royal.Tip>
+  <LizarbInterface.SectionFailed>(the "{0}" section failed - see the log)</LizarbInterface.SectionFailed>
+  <LizarbInterface.OutlineTiny>Outline the smallest text too</LizarbInterface.OutlineTiny>
+  <LizarbInterface.OutlineTiny.Tip>Off by default. At around 10px the black ring closes the holes in a, e and g and the word turns into a smudge - most visible on the backstory titles in the character tab.</LizarbInterface.OutlineTiny.Tip>
+  <LizarbInterface.Theme.Obsidian>Obsidian</LizarbInterface.Theme.Obsidian>
+  <LizarbInterface.Theme.Obsidian.Tip>Volcanic glass. Corners cut at 45 degrees, an ice-pale hairline, no warmth anywhere - the opposite of Brass on every axis.</LizarbInterface.Theme.Obsidian.Tip>
+  <LizarbInterface.Theme.Verdant>Verdant</LizarbInterface.Theme.Verdant>
+  <LizarbInterface.Theme.Verdant.Tip>Forest and aged bronze. Rivets at the corners over a scale backdrop: studded leather rather than polished metal.</LizarbInterface.Theme.Verdant.Tip>
+  <LizarbInterface.Theme.Bone>Bone</LizarbInterface.Theme.Bone>
+  <LizarbInterface.Theme.Bone.Tip>Yellowed ivory over charcoal. Each corner swells into two round condyles, the way the end of a long bone does - the shape, not the colour, is what makes it read as bone.</LizarbInterface.Theme.Bone.Tip>
+  <LizarbInterface.Theme.Crimson>Crimson</LizarbInterface.Theme.Crimson>
+  <LizarbInterface.Theme.Crimson.Tip>Oxblood and iron. Dark brackets over deep wine, scales behind.</LizarbInterface.Theme.Crimson.Tip>
+  <LizarbInterface.Theme.Arcane>Arcane</LizarbInterface.Theme.Arcane>
+  <LizarbInterface.Theme.Arcane.Tip>Deep violet with a luminous double frame. The only theme that imitates no material at all - arcane on purpose, not forged.</LizarbInterface.Theme.Arcane.Tip>
+  <LizarbInterface.Pattern.Scales>Scales</LizarbInterface.Pattern.Scales>
+  <LizarbInterface.Pattern.Bricks>Brick</LizarbInterface.Pattern.Bricks>
+  <LizarbInterface.Pattern.Dots>Dots</LizarbInterface.Pattern.Dots>
+  <LizarbInterface.Pattern.Chevron>Chevron</LizarbInterface.Pattern.Chevron>
+  <LizarbInterface.WindowSection>Windows</LizarbInterface.WindowSection>
+  <LizarbInterface.WindowOpacity>Dialog opacity: {0}</LizarbInterface.WindowOpacity>
+  <LizarbInterface.WindowAnimation>Animate dialogs opening</LizarbInterface.WindowAnimation>
+  <LizarbInterface.WindowAnimation.Tip>A quick scale and fade. Skipped for the architect menu, the work tab and other main panels - those are the game furniture, not dialogs, and they open constantly.</LizarbInterface.WindowAnimation.Tip>
+  <LizarbInterface.Theme.Wood>Wood</LizarbInterface.Theme.Wood>
+  <LizarbInterface.Theme.Wood.Tip>Plank and ironwork. The grain lives in the background pattern, not the button texture - a 9-slice centre is stretched and would smear it into streaks.</LizarbInterface.Theme.Wood.Tip>
+  <LizarbInterface.Theme.Flesh>Flesh</LizarbInterface.Theme.Flesh>
+  <LizarbInterface.Theme.Flesh.Tip>Greyed pink with red veining and nodules at the corners. The most uncomfortable of the set, on purpose.</LizarbInterface.Theme.Flesh.Tip>
+  <LizarbInterface.Theme.Gothic>Gothic</LizarbInterface.Theme.Gothic>
+  <LizarbInterface.Theme.Gothic.Tip>Cathedral stone. A double moulding runs the whole way round and every corner carries a trefoil. A pointed arch still cannot fit a square corner, so that part comes from the tracery behind.</LizarbInterface.Theme.Gothic.Tip>
+  <LizarbInterface.Theme.Aero>Aero</LizarbInterface.Theme.Aero>
+  <LizarbInterface.Theme.Aero.Tip>Glass bubble. No ornament and no black outline - both fight what glass is. The interior is translucent so the map shows through; the pale rim stays opaque, because without it the piece has no edge at all.</LizarbInterface.Theme.Aero.Tip>
+  <LizarbInterface.Theme.Copper>Copper</LizarbInterface.Theme.Copper>
+  <LizarbInterface.Theme.Copper.Tip>Copper with patina. Burnt orange against oxidised verdigris - the two halves of the same plate ageing.</LizarbInterface.Theme.Copper.Tip>
+  <LizarbInterface.Theme.Ash>Ash</LizarbInterface.Theme.Ash>
+  <LizarbInterface.Theme.Ash.Tip>Volcanic ash. The quietest of the set: no colour at all and the thinnest fillet, for anyone who wants the frame and nothing else.</LizarbInterface.Theme.Ash.Tip>
+  <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
+  <LizarbInterface.Pattern.Veins>Veins</LizarbInterface.Pattern.Veins>
+  <LizarbInterface.Pattern.Tracery>Tracery</LizarbInterface.Pattern.Tracery>
+  <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
+  <LizarbInterface.Tab.Text>Text</LizarbInterface.Tab.Text>
+  <LizarbInterface.Tab.Surfaces>Surfaces</LizarbInterface.Tab.Surfaces>
+  <LizarbInterface.Tab.Windows>Windows</LizarbInterface.Tab.Windows>
+  <LizarbInterface.Tab.Components>Components</LizarbInterface.Tab.Components>
+  <LizarbInterface.WindowOpacity.Tip>Dialogs only. Main panels are left solid: you read them while playing, and a translucent work tab is a worse work tab.</LizarbInterface.WindowOpacity.Tip>
+  <LizarbInterface.AnimationDuration>Animation length: {0} ms</LizarbInterface.AnimationDuration>
+  <LizarbInterface.ComponentsSection>Which surfaces this mod is allowed to reskin. Turn one off to hand it back to the game, or to another mod, without giving up the rest.</LizarbInterface.ComponentsSection>
+  <LizarbInterface.SkinButtons>Buttons, tooltips and menus</LizarbInterface.SkinButtons>
+  <LizarbInterface.SkinButtons.Tip>Every button, the main bottom bar, tooltips, float menu rows and the slider rail. They all share one draw call, so they share one switch.</LizarbInterface.SkinButtons.Tip>
+  <LizarbInterface.SkinWindows>Window and panel frames</LizarbInterface.SkinWindows>
+  <LizarbInterface.SkinWindows.Tip>The 9-sliced frame that replaces vanilla's flat box, and the background pattern that goes inside it.</LizarbInterface.SkinWindows.Tip>
+  <LizarbInterface.SkinTabs>Rounded tabs</LizarbInterface.SkinTabs>
+  <LizarbInterface.SkinTabs.Tip>Tabs are the one surface drawn by replacing the game's own method rather than swapping a texture, so this is the switch to try first against another UI mod.</LizarbInterface.SkinTabs.Tip>
+  <LizarbInterface.SkinWidgets>Checkboxes, gizmos and bars</LizarbInterface.SkinWidgets>
+  <LizarbInterface.SkinWidgets.Tip>Checkboxes, radio buttons, the slider knob, command gizmos, the colonist bar plate and progress bar fills. Bars that carry their own colour - mood, health, research - are never touched: that colour is information, not style.</LizarbInterface.SkinWidgets.Tip>
+  <LizarbInterface.SkinScrollbars>Scrollbars</LizarbInterface.SkinScrollbars>
+  <LizarbInterface.SkinScrollbars.Tip>Drawn by Unity from shared styles rather than from a texture, so this one is applied by changing those styles. Turning it off puts them back immediately.</LizarbInterface.SkinScrollbars.Tip>
+  <LizarbInterface.ResetAll>Reset everything</LizarbInterface.ResetAll>
+  <LizarbInterface.Tab.Architect>Architect</LizarbInterface.Tab.Architect>
+  <LizarbInterface.Architect.Section>Colours each category button in the Architect menu by what the category is for. Categories from other mods get a stable colour of their own.</LizarbInterface.Architect.Section>
+  <LizarbInterface.Architect.Enabled>Colour the architect category buttons</LizarbInterface.Architect.Enabled>
+  <LizarbInterface.Architect.PlateAlpha>Button colour strength: {0}</LizarbInterface.Architect.PlateAlpha>
+  <LizarbInterface.Architect.ColorLabels>Colour the button text too</LizarbInterface.Architect.ColorLabels>
+  <LizarbInterface.Architect.ColorLabels.Tip>Off by default: against a coloured button, text in the same hue loses contrast. Turn it on if you set the button colour strength to zero.</LizarbInterface.Architect.ColorLabels.Tip>
+  <LizarbInterface.Architect.AutoColor>Auto-colour unknown categories</LizarbInterface.Architect.AutoColor>
+  <LizarbInterface.Architect.AutoColor.Tip>Categories added by other mods get a stable colour generated from their defName instead of staying grey.</LizarbInterface.Architect.AutoColor.Tip>
+  <LizarbInterface.Architect.Icons>Use this mod own category icons</LizarbInterface.Architect.Icons>
+  <LizarbInterface.Architect.Icons.Tip>Draws a white glyph with a black outline on the left of every category button. Categories from other mods are matched on their name, so Storage gets a crate and Genetics gets a cross.</LizarbInterface.Architect.Icons.Tip>
+  <LizarbInterface.Architect.Icons.Clash>Architect Icons is active and draws its own icon in the same place. Turn one of the two off.</LizarbInterface.Architect.Icons.Clash>
+  <LizarbInterface.Architect.PlateStyle>Colour shape</LizarbInterface.Architect.PlateStyle>
+  <LizarbInterface.Architect.PlateStyle.Plate>Plate</LizarbInterface.Architect.PlateStyle.Plate>
+  <LizarbInterface.Architect.PlateStyle.Plate.Tip>Fills the button, following the theme corner radius, and deepens towards the bottom.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
+  <LizarbInterface.Architect.PlateStyle.Bar>Edge bar</LizarbInterface.Architect.PlateStyle.Bar>
+  <LizarbInterface.Architect.PlateStyle.Bar.Tip>A stripe down the left edge only. The quietest option.</LizarbInterface.Architect.PlateStyle.Bar.Tip>
+  <LizarbInterface.Architect.PlateStyle.Frame>Border</LizarbInterface.Architect.PlateStyle.Frame>
+  <LizarbInterface.Architect.PlateStyle.Frame.Tip>Colour around the rim, centre left clear.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
+  <LizarbInterface.Architect.PlateStyle.Flat>Flat</LizarbInterface.Architect.PlateStyle.Flat>
+  <LizarbInterface.Architect.PlateStyle.Flat.Tip>A plain rectangle, ignoring the theme shape.</LizarbInterface.Architect.PlateStyle.Flat.Tip></LanguageData>

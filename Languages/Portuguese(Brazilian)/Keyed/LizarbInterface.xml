@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <LizarbInterface.Enabled>Estilizar janelas, painéis, botões e abas</LizarbInterface.Enabled>
+  <LizarbInterface.Inset>Folga entre elementos: {0} px</LizarbInterface.Inset>
+  <LizarbInterface.Inset.Tip>Pinta cada elemento um pouco para dentro da própria área, para que botões vizinhos deixem de se encostar. Nada no layout se move, então textos e ícones ficam exatamente onde o jogo os colocou.</LizarbInterface.Inset.Tip>
+  <LizarbInterface.FontSection>Fonte</LizarbInterface.FontSection>
+  <LizarbInterface.FontVanilla>Padrão do jogo</LizarbInterface.FontVanilla>
+  <LizarbInterface.FontGroup.Shipped>Inclusas no mod</LizarbInterface.FontGroup.Shipped>
+  <LizarbInterface.FontGroup.Local>Encontradas neste PC</LizarbInterface.FontGroup.Local>
+  <LizarbInterface.FontSize.Tiny>Tamanho do texto miúdo: {0}</LizarbInterface.FontSize.Tiny>
+  <LizarbInterface.FontSize.Small>Tamanho do texto normal: {0}</LizarbInterface.FontSize.Small>
+  <LizarbInterface.FontSize.Medium>Tamanho dos títulos: {0}</LizarbInterface.FontSize.Medium>
+  <LizarbInterface.FontReset>Restaurar fonte</LizarbInterface.FontReset>
+  <LizarbInterface.BackgroundSection>Fundo</LizarbInterface.BackgroundSection>
+  <LizarbInterface.TexturedBackground>Fundo com textura</LizarbInterface.TexturedBackground>
+  <LizarbInterface.TexturedBackground.Tip>Aplica um grunge ladrilhado de dois tons no interior de janelas e painéis, no lugar da cor chapada. Ele repete no tamanho próprio em vez de esticar, então fica igual num painel pequeno e numa janela de tela cheia.</LizarbInterface.TexturedBackground.Tip>
+  <LizarbInterface.BackgroundGrain>Força da textura: {0}</LizarbInterface.BackgroundGrain>
+  <LizarbInterface.ShowAllFonts>Mostrar todas as fontes instaladas</LizarbInterface.ShowAllFonts>
+  <LizarbInterface.ShowAllFonts.Tip>Desligado por padrão. A lista curta traz só fontes serifadas que continuam legíveis nos tamanhos que o RimWorld desenha. Góticas ficaram de fora de propósito: são o mais medieval que existe na máquina e o menos legível numa lista de colonos.</LizarbInterface.ShowAllFonts.Tip>
+  <LizarbInterface.TextOutline>Contorno preto no texto</LizarbInterface.TextOutline>
+  <LizarbInterface.TextOutline.Tip>Desenha cada texto mais oito vezes por baixo do original, deslocado exatamente um pixel de tela em cada direção, num tom bem escuro do tema atual. Custa um pouco de desempenho em telas cheias de texto.</LizarbInterface.TextOutline.Tip>
+  <LizarbInterface.OutlineThickness>Espessura do contorno: {0} px</LizarbInterface.OutlineThickness>
+  <LizarbInterface.OutlineOpacity>Opacidade do contorno: {0}</LizarbInterface.OutlineOpacity>
+  <LizarbInterface.Pattern.Hatch>Hachura</LizarbInterface.Pattern.Hatch>
+  <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
+  <LizarbInterface.ThemeSection>Tema</LizarbInterface.ThemeSection>
+  <LizarbInterface.Theme.Brass>Latão</LizarbInterface.Theme.Brass>
+  <LizarbInterface.Theme.Brass.Tip>Madeira escura e latão. Quente, cantos redondos, filete generoso.</LizarbInterface.Theme.Brass.Tip>
+  <LizarbInterface.Theme.Iron>Ferro</LizarbInterface.Theme.Iron>
+  <LizarbInterface.Theme.Iron.Tip>Aço frio. Canto quase reto e filete fino, austero de propósito. A geometria faz metade da leitura.</LizarbInterface.Theme.Iron.Tip>
+  <LizarbInterface.Theme.Royal>Real</LizarbInterface.Theme.Royal>
+  <LizarbInterface.Theme.Royal.Tip>Índigo profundo e ouro. Canto largo e filete grosso, o oposto exato do Ferro na mesma estrutura.</LizarbInterface.Theme.Royal.Tip>
+  <LizarbInterface.SectionFailed>(a seção "{0}" falhou, veja o log)</LizarbInterface.SectionFailed>
+  <LizarbInterface.OutlineTiny>Contornar também o texto miúdo</LizarbInterface.OutlineTiny>
+  <LizarbInterface.OutlineTiny.Tip>Desligado por padrão. Perto de 10px o anel preto fecha os buracos do a, e e g e a palavra vira borrão. Aparece primeiro nos títulos de história do aba de personagem.</LizarbInterface.OutlineTiny.Tip>
+  <LizarbInterface.Theme.Obsidian>Obsidiana</LizarbInterface.Theme.Obsidian>
+  <LizarbInterface.Theme.Obsidian.Tip>Vidro vulcânico. Cantos cortados a 45 graus, filete quase branco, nenhum calor: o oposto do Latão em todos os eixos.</LizarbInterface.Theme.Obsidian.Tip>
+  <LizarbInterface.Theme.Verdant>Verdejante</LizarbInterface.Theme.Verdant>
+  <LizarbInterface.Theme.Verdant.Tip>Floresta e bronze envelhecido. Rebites nos cantos sobre fundo de escamas: couro cravejado, não metal polido.</LizarbInterface.Theme.Verdant.Tip>
+  <LizarbInterface.Theme.Bone>Osso</LizarbInterface.Theme.Bone>
+  <LizarbInterface.Theme.Bone.Tip>Marfim amarelado sobre carvão. Cada canto abre em dois côndilos redondos, como a ponta de um osso longo. É a forma, não a cor, que faz ler como osso.</LizarbInterface.Theme.Bone.Tip>
+  <LizarbInterface.Theme.Crimson>Carmesim</LizarbInterface.Theme.Crimson>
+  <LizarbInterface.Theme.Crimson.Tip>Vinho e ferro. Cantoneira escura sobre oxblood profundo, escamas atrás.</LizarbInterface.Theme.Crimson.Tip>
+  <LizarbInterface.Theme.Arcane>Arcano</LizarbInterface.Theme.Arcane>
+  <LizarbInterface.Theme.Arcane.Tip>Violeta profundo com moldura dupla luminosa. O único tema que não imita material nenhum: arcano de propósito, não forjado.</LizarbInterface.Theme.Arcane.Tip>
+  <LizarbInterface.Pattern.Scales>Escamas</LizarbInterface.Pattern.Scales>
+  <LizarbInterface.Pattern.Bricks>Tijolo</LizarbInterface.Pattern.Bricks>
+  <LizarbInterface.Pattern.Dots>Pontos</LizarbInterface.Pattern.Dots>
+  <LizarbInterface.Pattern.Chevron>Espinha</LizarbInterface.Pattern.Chevron>
+  <LizarbInterface.WindowSection>Janelas</LizarbInterface.WindowSection>
+  <LizarbInterface.WindowOpacity>Opacidade dos diálogos: {0}</LizarbInterface.WindowOpacity>
+  <LizarbInterface.WindowAnimation>Animar abertura de diálogos</LizarbInterface.WindowAnimation>
+  <LizarbInterface.WindowAnimation.Tip>Uma escala e fade rápidos. Pulado no menu Arquiteto, na aba de trabalho e nos outros painéis principais, que são a mobília do jogo, não diálogos, e abrem o tempo todo.</LizarbInterface.WindowAnimation.Tip>
+  <LizarbInterface.Theme.Wood>Madeira</LizarbInterface.Theme.Wood>
+  <LizarbInterface.Theme.Wood.Tip>Tábua e ferragem. O veio mora no padrão de fundo, não na textura do botão, porque o miolo do 9-slice é esticado e o transformaria em listras.</LizarbInterface.Theme.Wood.Tip>
+  <LizarbInterface.Theme.Flesh>Carne</LizarbInterface.Theme.Flesh>
+  <LizarbInterface.Theme.Flesh.Tip>Rosa acinzentado com nervura vermelha e nódulos nos cantos. O mais desconfortável do conjunto, de propósito.</LizarbInterface.Theme.Flesh.Tip>
+  <LizarbInterface.Theme.Gothic>Gótico</LizarbInterface.Theme.Gothic>
+  <LizarbInterface.Theme.Gothic.Tip>Pedra de catedral. Uma moldagem dupla corre a volta inteira e cada canto carrega um trifólio. Arco em ogiva continua não cabendo num canto quadrado, então essa parte vem do rendilhado atrás.</LizarbInterface.Theme.Gothic.Tip>
+  <LizarbInterface.Theme.Aero>Aero</LizarbInterface.Theme.Aero>
+  <LizarbInterface.Theme.Aero.Tip>Bolha de vidro. Sem adorno e sem contorno preto, porque os dois brigam com o que vidro é. O miolo é translúcido e deixa o mapa aparecer; o aro claro continua opaco, porque sem ele a peça não tem borda nenhuma.</LizarbInterface.Theme.Aero.Tip>
+  <LizarbInterface.Theme.Copper>Cobre</LizarbInterface.Theme.Copper>
+  <LizarbInterface.Theme.Copper.Tip>Cobre com patina. Laranja queimado contra verde-água oxidado: as duas metades da mesma placa envelhecendo.</LizarbInterface.Theme.Copper.Tip>
+  <LizarbInterface.Theme.Ash>Cinza</LizarbInterface.Theme.Ash>
+  <LizarbInterface.Theme.Ash.Tip>Cinza vulcânica. O mais silencioso do conjunto: sem cor nenhuma e o filete mais fino, para quem quer a moldura e nada além.</LizarbInterface.Theme.Ash.Tip>
+  <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
+  <LizarbInterface.Pattern.Veins>Veias</LizarbInterface.Pattern.Veins>
+  <LizarbInterface.Pattern.Tracery>Rendilhado</LizarbInterface.Pattern.Tracery>
+  <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
+  <LizarbInterface.Tab.Text>Texto</LizarbInterface.Tab.Text>
+  <LizarbInterface.Tab.Surfaces>Superfícies</LizarbInterface.Tab.Surfaces>
+  <LizarbInterface.Tab.Windows>Janelas</LizarbInterface.Tab.Windows>
+  <LizarbInterface.Tab.Components>Componentes</LizarbInterface.Tab.Components>
+  <LizarbInterface.WindowOpacity.Tip>Só diálogos. Os painéis principais ficam sólidos: você lê eles jogando, e uma aba de trabalho translúcida é uma aba de trabalho pior.</LizarbInterface.WindowOpacity.Tip>
+  <LizarbInterface.AnimationDuration>Duração da animação: {0} ms</LizarbInterface.AnimationDuration>
+  <LizarbInterface.ComponentsSection>Quais superfícies este mod pode retexturizar. Desligue uma para devolvê-la ao jogo, ou a outro mod, sem abrir mão do resto.</LizarbInterface.ComponentsSection>
+  <LizarbInterface.SkinButtons>Botões, dicas e menus</LizarbInterface.SkinButtons>
+  <LizarbInterface.SkinButtons.Tip>Todo botão, a barra inferior, as dicas de contexto, as linhas de menu flutuante e o trilho do slider. Todos passam pela mesma chamada de desenho, então dividem o mesmo interruptor.</LizarbInterface.SkinButtons.Tip>
+  <LizarbInterface.SkinWindows>Moldura de janelas e painéis</LizarbInterface.SkinWindows>
+  <LizarbInterface.SkinWindows.Tip>A moldura 9-slice que substitui a caixa chapada do vanilla, e o padrão de fundo que vai dentro dela.</LizarbInterface.SkinWindows.Tip>
+  <LizarbInterface.SkinTabs>Abas arredondadas</LizarbInterface.SkinTabs>
+  <LizarbInterface.SkinTabs.Tip>As abas são a única superfície desenhada substituindo o método do jogo em vez de trocar uma textura, então é o primeiro interruptor a tentar contra outro mod de UI.</LizarbInterface.SkinTabs.Tip>
+  <LizarbInterface.SkinWidgets>Caixas, gizmos e barras</LizarbInterface.SkinWidgets>
+  <LizarbInterface.SkinWidgets.Tip>Caixas de marcação, botões de opção, a bolinha do slider, os gizmos de comando, a placa da barra de colonos e o preenchimento das barras de progresso. Barras que carregam a própria cor (humor, saúde, pesquisa) nunca são tocadas: aquela cor é informação, não estilo.</LizarbInterface.SkinWidgets.Tip>
+  <LizarbInterface.SkinScrollbars>Barras de rolagem</LizarbInterface.SkinScrollbars>
+  <LizarbInterface.SkinScrollbars.Tip>São desenhadas pela Unity a partir de estilos compartilhados, não de uma textura, então esta é aplicada alterando esses estilos. Desligar devolve o original na hora.</LizarbInterface.SkinScrollbars.Tip>
+  <LizarbInterface.ResetAll>Restaurar tudo</LizarbInterface.ResetAll>
+  <LizarbInterface.Tab.Architect>Arquiteto</LizarbInterface.Tab.Architect>
+  <LizarbInterface.Architect.Section>Dá uma cor a cada botão de categoria do menu Arquiteto, de acordo com a função da categoria. Categorias de outros mods ganham uma cor própria e estável.</LizarbInterface.Architect.Section>
+  <LizarbInterface.Architect.Enabled>Colorir os botões de categoria do Arquiteto</LizarbInterface.Architect.Enabled>
+  <LizarbInterface.Architect.PlateAlpha>Força da cor no botão: {0}</LizarbInterface.Architect.PlateAlpha>
+  <LizarbInterface.Architect.ColorLabels>Colorir o texto do botão também</LizarbInterface.Architect.ColorLabels>
+  <LizarbInterface.Architect.ColorLabels.Tip>Desligado por padrão: sobre um botão colorido, texto do mesmo tom perde contraste. Ligue se você zerar a força da cor no botão.</LizarbInterface.Architect.ColorLabels.Tip>
+  <LizarbInterface.Architect.AutoColor>Colorir automaticamente categorias desconhecidas</LizarbInterface.Architect.AutoColor>
+  <LizarbInterface.Architect.AutoColor.Tip>Categorias adicionadas por outros mods ganham uma cor estável gerada a partir do defName, em vez de ficarem cinzas.</LizarbInterface.Architect.AutoColor.Tip>
+  <LizarbInterface.Architect.Icons>Usar os icones proprios deste mod</LizarbInterface.Architect.Icons>
+  <LizarbInterface.Architect.Icons.Tip>Desenha um símbolo branco com contorno preto à esquerda de cada botão de categoria. Categorias de outros mods são reconhecidas pelo nome, então Storage ganha um engradado e Genetics ganha uma cruz.</LizarbInterface.Architect.Icons.Tip>
+  <LizarbInterface.Architect.Icons.Clash>O Architect Icons esta ativo e desenha o icone dele no mesmo lugar. Desligue um dos dois.</LizarbInterface.Architect.Icons.Clash>
+  <LizarbInterface.Architect.PlateStyle>Formato da cor</LizarbInterface.Architect.PlateStyle>
+  <LizarbInterface.Architect.PlateStyle.Plate>Placa</LizarbInterface.Architect.PlateStyle.Plate>
+  <LizarbInterface.Architect.PlateStyle.Plate.Tip>Preenche o botão seguindo o raio de canto do tema, escurecendo para baixo.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
+  <LizarbInterface.Architect.PlateStyle.Bar>Barra lateral</LizarbInterface.Architect.PlateStyle.Bar>
+  <LizarbInterface.Architect.PlateStyle.Bar.Tip>Uma faixa so na borda esquerda. A opcao mais discreta.</LizarbInterface.Architect.PlateStyle.Bar.Tip>
+  <LizarbInterface.Architect.PlateStyle.Frame>Moldura</LizarbInterface.Architect.PlateStyle.Frame>
+  <LizarbInterface.Architect.PlateStyle.Frame.Tip>Cor em volta da borda, com o centro limpo.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
+  <LizarbInterface.Architect.PlateStyle.Flat>Chapado</LizarbInterface.Architect.PlateStyle.Flat>
+  <LizarbInterface.Architect.PlateStyle.Flat.Tip>Um retangulo simples, ignorando o formato do tema.</LizarbInterface.Architect.PlateStyle.Flat.Tip></LanguageData>

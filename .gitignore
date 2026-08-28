@@ -1,0 +1,19 @@
+# Build output. Assemblies/*.dll IS committed on purpose: the repo root is the mod
+# folder, so a clone into RimWorld/Mods/ has to work without a build step.
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+
+# Local dev profiles: this machine's config, prefs and save games.
+dev/profile/
+dev/profile-conflict/
+
+# Working notes. Full of absolute paths from the machine they were written on.
+CLAUDE.md
+
+# Scratch
+*.log
+*.tmp
+dev/unity-fonts/
