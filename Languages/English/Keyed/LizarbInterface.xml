@@ -112,4 +112,6 @@
   <LizarbInterface.Theme.Foundry.Tip>Hot-rolled plate with the orange still in it. Wide stepped shoulders and three rivets to a corner: mass is the whole read.</LizarbInterface.Theme.Foundry.Tip>
   <LizarbInterface.GrainOnButtons>Texture on buttons too</LizarbInterface.GrainOnButtons>
   <LizarbInterface.GrainOnButtons.Tip>Tiles the same pattern across button, tooltip and menu faces, not just window backgrounds. With the Grimoire skin this is what gives the buttons their parchment.</LizarbInterface.GrainOnButtons.Tip>
+  <LizarbInterface.Architect.AutoWidth>Widen the menu to fit the labels</LizarbInterface.Architect.AutoWidth>
+  <LizarbInterface.Architect.AutoWidth.Tip>Vanilla fixes the Architect menu at 200px, which fits the stock font and the English Core names and nothing else. This measures the longest category name in the font you actually chose and widens the menu until it fits. It never makes the menu narrower.</LizarbInterface.Architect.AutoWidth.Tip>
 </LanguageData>

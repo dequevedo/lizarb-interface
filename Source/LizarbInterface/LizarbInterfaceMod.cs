@@ -127,6 +127,9 @@ namespace LizarbInterface
         /// <summary>Draw this mod own category icons instead of leaving the button text-only.</summary>
         public bool architectIcons = true;
 
+        /// <summary>Widen the Architect menu until the longest category name fits.</summary>
+        public bool architectAutoWidth = true;
+
         public int FontSizeOffset(int gameFontIndex)
         {
             switch (gameFontIndex)
@@ -170,6 +173,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectAutoColor, "architectAutoColor", defaultValue: true);
             Scribe_Values.Look(ref architectPlateStyle, "architectPlateStyle", "Plate");
             Scribe_Values.Look(ref architectIcons, "architectIcons", defaultValue: true);
+            Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
             base.ExposeData();
         }
     }
@@ -369,6 +373,10 @@ namespace LizarbInterface
             {
                 fontDirty = false;
                 FontEngine.Apply();
+
+                // The architect width is measured in the current font, so it has to
+                // be remeasured whenever that font changes.
+                ArchitectWidth.Invalidate();
             }
         }
 
@@ -640,6 +648,11 @@ namespace LizarbInterface
                 "LizarbInterface.Architect.Icons".Translate(),
                 ref Settings.architectIcons,
                 "LizarbInterface.Architect.Icons.Tip".Translate());
+
+            listing.CheckboxLabeled(
+                "LizarbInterface.Architect.AutoWidth".Translate(),
+                ref Settings.architectAutoWidth,
+                "LizarbInterface.Architect.AutoWidth.Tip".Translate());
 
             if (Settings.architectIcons && ArchitectIconsModPresent)
             {

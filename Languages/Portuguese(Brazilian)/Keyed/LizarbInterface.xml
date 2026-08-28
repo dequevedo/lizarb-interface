@@ -112,4 +112,6 @@
   <LizarbInterface.Theme.Foundry.Tip>Chapa laminada a quente, ainda com o laranja dentro. Degraus largos e três rebites por canto: a leitura inteira é peso.</LizarbInterface.Theme.Foundry.Tip>
   <LizarbInterface.GrainOnButtons>Textura nos botões também</LizarbInterface.GrainOnButtons>
   <LizarbInterface.GrainOnButtons.Tip>Ladrilha o mesmo padrão na face dos botões, dos tooltips e dos menus, não só no fundo das janelas. Com a pele Grimório é o que dá o pergaminho aos botões.</LizarbInterface.GrainOnButtons.Tip>
+  <LizarbInterface.Architect.AutoWidth>Alargar o menu para caber os rótulos</LizarbInterface.Architect.AutoWidth>
+  <LizarbInterface.Architect.AutoWidth.Tip>O vanilla fixa o menu Arquiteto em 200px, o que cabe a fonte padrão e os nomes do Core em inglês, e mais nada. Isto mede o nome de categoria mais longo na fonte que você escolheu e alarga o menu até caber. Nunca deixa o menu mais estreito.</LizarbInterface.Architect.AutoWidth.Tip>
 </LanguageData>
