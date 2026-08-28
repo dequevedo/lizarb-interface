@@ -5,16 +5,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Progress bar background. The FILL is handled by the PlainTextures registry;
-    /// bars passing their own fill (mood, health, research) keep it, since that colour
-    /// is information.
-    ///
-    /// The background needs this patch because DefaultBarBgTex is BaseContent.BlackTex,
-    /// used all over the game for things that must stay black. Swapping it by identity
-    /// would repaint half the UI, so it is swapped only here, where the black is known
-    /// to be a bar background.
-    /// </summary>
     [HarmonyPatch(typeof(Widgets), nameof(Widgets.FillableBar),
         typeof(Rect), typeof(float), typeof(Texture2D), typeof(Texture2D), typeof(bool))]
     internal static class Patch_FillableBar
@@ -41,24 +31,12 @@ namespace LizarbInterface
         }
     }
 
-    /// <summary>
-    /// Scrollbars: the one surface with no RimWorld texture behind it. Unity draws them
-    /// from GUI.skin styles, so the fix is to mutate those styles.
-    ///
-    /// GUI.skin only exists inside OnGUI, so this cannot run from a static constructor -
-    /// hence the lazy flag on the first scroll view of the session.
-    /// </summary>
     [HarmonyPatch(typeof(Widgets), nameof(Widgets.BeginScrollView))]
     internal static class Patch_ScrollbarSkin
     {
         private static bool applied;
         private static string appliedTheme;
 
-        /// <summary>
-        /// What each style looked like before we touched it. Needed because this is the
-        /// only surface skinned by MUTATING shared objects: a draw-time swap stops by
-        /// not swapping, a mutation has to be undone.
-        /// </summary>
         private sealed class Original
         {
             public GUIStyle Style;
@@ -122,7 +100,6 @@ namespace LizarbInterface
                 return;
             }
 
-            // Re-skin when the theme changes, same as the textures do.
             if (applied && appliedTheme == settings.theme)
             {
                 return;
@@ -135,8 +112,6 @@ namespace LizarbInterface
                 return;
             }
 
-            // Capture on the FIRST skin only. A theme change re-skins already-skinned
-            // styles, and recording those would save our own textures as the originals.
             if (!applied)
             {
                 Remember(GUI.skin.verticalScrollbar);
@@ -157,9 +132,6 @@ namespace LizarbInterface
             Skin(GUI.skin.verticalScrollbarThumb, thumb, vertical: true);
             Skin(GUI.skin.horizontalScrollbarThumb, thumb, vertical: false);
 
-            // The little arrow buttons at each end: RimWorld never shows them, but
-            // leaving them stock would put two vanilla squares on a themed bar if a
-            // future version turns them on.
             Blank(GUI.skin.verticalScrollbarUpButton);
             Blank(GUI.skin.verticalScrollbarDownButton);
             Blank(GUI.skin.horizontalScrollbarLeftButton);
@@ -178,10 +150,6 @@ namespace LizarbInterface
             style.active.background = tex;
             style.focused.background = tex;
 
-            // Only the axis the bar grows along may stretch; the ends stay put.
-            // Measured in TEXELS of the strip. The strips are still 1x, so this is
-            // not multiplied by AtlasSwap.Scale: they are drawn stretched rather than
-            // upscaled at the corner, which is the case 2x exists to fix.
             style.border = vertical
                 ? new RectOffset(0, 0, 6, 6)
                 : new RectOffset(6, 6, 0, 0);

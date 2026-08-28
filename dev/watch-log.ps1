@@ -1,23 +1,8 @@
-<#
-.SYNOPSIS
-  Reads RimWorld's Player.log looking for problems caused by this mod.
-
-.DESCRIPTION
-  Three modes:
-
-    .\dev\watch-log.ps1            analyse the session that just ended
-    .\dev\watch-log.ps1 -Prev      analyse the previous one (Player-prev.log)
-    .\dev\watch-log.ps1 -Follow    tail it live, with the game open
-
-  Player.log is NOT redirected by the dev profile's -savedatafolder: Unity always
-  writes to persistentDataPath. So this is the right file whether the session came
-  from the dev profile or from a full mod list.
-#>
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$Follow,
     [switch]$Prev,
-    [switch]$All      # show every exception, not only ours
+    [switch]$All
 )
 
 $ErrorActionPreference = 'Stop'
@@ -50,9 +35,6 @@ $lines = Get-Content -LiteralPath $log
 Write-Host "$log  ($($lines.Count) lines)" -ForegroundColor Yellow
 Write-Host ""
 
-# The patch audit the mod prints at startup.
-# @(...) matters: a pipeline with one match returns a scalar, and [0] on a string
-# is its first CHARACTER, so IndexOf would then fail to find it.
 $audit = @($lines | Where-Object { $_ -match 'patch audit' })
 if ($audit.Count -gt 0) {
     Write-Host "== patch audit ==" -ForegroundColor Green
@@ -64,8 +46,6 @@ if ($audit.Count -gt 0) {
     Write-Host ""
 }
 
-# A RimWorld exception starts on a header line and continues while the following
-# lines are stack frames.
 $blocks = @()
 $cur = $null
 foreach ($line in $lines) {
@@ -99,7 +79,6 @@ if ($mine.Count -gt 0) {
     }
 }
 
-# Grouped by message: one error repeating every frame would otherwise fill the screen.
 $others = @($blocks | Where-Object { $_ -notin $mine })
 if ($others.Count -gt 0) {
     Write-Host "-- OTHERS (grouped by message) --" -ForegroundColor DarkYellow

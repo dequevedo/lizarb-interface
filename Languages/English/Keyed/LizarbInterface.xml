@@ -18,7 +18,7 @@
   <LizarbInterface.TexturedBackground.Tip>Lays a tiling two-tone grunge over window and panel interiors instead of a flat colour. It repeats at its own size rather than stretching, so it looks the same in a small panel and a full-screen window.</LizarbInterface.TexturedBackground.Tip>
   <LizarbInterface.BackgroundGrain>Texture strength: {0}</LizarbInterface.BackgroundGrain>
   <LizarbInterface.ShowAllFonts>Show every installed font</LizarbInterface.ShowAllFonts>
-  <LizarbInterface.ShowAllFonts.Tip>Off by default. The short list holds only serif faces that stay readable at the sizes RimWorld draws at - blackletter is left out on purpose, it is the most medieval thing on the machine and the least legible in a colonist list.</LizarbInterface.ShowAllFonts.Tip>
+  <LizarbInterface.ShowAllFonts.Tip>Off by default. The short list holds only serif faces that stay readable at the sizes RimWorld draws at. Blackletter is left out on purpose: it is the most medieval thing on the machine and the least legible in a colonist list.</LizarbInterface.ShowAllFonts.Tip>
   <LizarbInterface.TextOutline>Black outline on text</LizarbInterface.TextOutline>
   <LizarbInterface.TextOutline.Tip>Draws each label eight more times underneath the real one, offset by exactly one screen pixel in each direction, in a very dark shade of the current theme. Costs a little performance on text-heavy screens.</LizarbInterface.TextOutline.Tip>
   <LizarbInterface.OutlineThickness>Outline thickness: {0} px</LizarbInterface.OutlineThickness>
@@ -29,9 +29,9 @@
   <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Iron</LizarbInterface.Theme.Iron>
   <LizarbInterface.Theme.Royal>Royal</LizarbInterface.Theme.Royal>
-  <LizarbInterface.SectionFailed>(the "{0}" section failed - see the log)</LizarbInterface.SectionFailed>
+  <LizarbInterface.SectionFailed>(the "{0}" section failed, see the log)</LizarbInterface.SectionFailed>
   <LizarbInterface.OutlineTiny>Outline the smallest text too</LizarbInterface.OutlineTiny>
-  <LizarbInterface.OutlineTiny.Tip>Off by default. At around 10px the black ring closes the holes in a, e and g and the word turns into a smudge - most visible on the backstory titles in the character tab.</LizarbInterface.OutlineTiny.Tip>
+  <LizarbInterface.OutlineTiny.Tip>Off by default. At around 10px the black ring closes the holes in a, e and g and the word turns into a smudge, most visible on the backstory titles in the character tab.</LizarbInterface.OutlineTiny.Tip>
   <LizarbInterface.Theme.Obsidian>Obsidian</LizarbInterface.Theme.Obsidian>
   <LizarbInterface.Theme.Verdant>Verdant</LizarbInterface.Theme.Verdant>
   <LizarbInterface.Theme.Bone>Bone</LizarbInterface.Theme.Bone>
@@ -41,10 +41,8 @@
   <LizarbInterface.Pattern.Bricks>Brick</LizarbInterface.Pattern.Bricks>
   <LizarbInterface.Pattern.Dots>Dots</LizarbInterface.Pattern.Dots>
   <LizarbInterface.Pattern.Chevron>Chevron</LizarbInterface.Pattern.Chevron>
-  <LizarbInterface.WindowSection>Windows</LizarbInterface.WindowSection>
-  <LizarbInterface.WindowOpacity>Dialog opacity: {0}</LizarbInterface.WindowOpacity>
   <LizarbInterface.WindowAnimation>Animate dialogs opening</LizarbInterface.WindowAnimation>
-  <LizarbInterface.WindowAnimation.Tip>A quick scale and fade. Skipped for the architect menu, the work tab and other main panels - those are the game furniture, not dialogs, and they open constantly.</LizarbInterface.WindowAnimation.Tip>
+  <LizarbInterface.WindowAnimation.Tip>A quick scale and fade. Skipped for the architect menu, the work tab and other main panels. Those are the game furniture, not dialogs, and they open constantly.</LizarbInterface.WindowAnimation.Tip>
   <LizarbInterface.Theme.Wood>Wood</LizarbInterface.Theme.Wood>
   <LizarbInterface.Theme.Flesh>Flesh</LizarbInterface.Theme.Flesh>
   <LizarbInterface.Theme.Gothic>Gothic</LizarbInterface.Theme.Gothic>
@@ -52,14 +50,11 @@
   <LizarbInterface.Theme.Copper>Copper</LizarbInterface.Theme.Copper>
   <LizarbInterface.Theme.Ash>Ash</LizarbInterface.Theme.Ash>
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
-  <LizarbInterface.Pattern.Veins>Veins</LizarbInterface.Pattern.Veins>
-  <LizarbInterface.Pattern.Tracery>Tracery</LizarbInterface.Pattern.Tracery>
   <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Text</LizarbInterface.Tab.Text>
   <LizarbInterface.Tab.Surfaces>Surfaces</LizarbInterface.Tab.Surfaces>
   <LizarbInterface.Tab.Windows>Windows</LizarbInterface.Tab.Windows>
   <LizarbInterface.Tab.Components>Components</LizarbInterface.Tab.Components>
-  <LizarbInterface.WindowOpacity.Tip>Dialogs only. Main panels are left solid: you read them while playing, and a translucent work tab is a worse work tab.</LizarbInterface.WindowOpacity.Tip>
   <LizarbInterface.AnimationDuration>Animation length: {0} ms</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Which surfaces this mod is allowed to reskin. Turn one off to hand it back to the game, or to another mod, without giving up the rest.</LizarbInterface.ComponentsSection>
   <LizarbInterface.SkinButtons>Buttons, tooltips and menus</LizarbInterface.SkinButtons>
@@ -69,7 +64,7 @@
   <LizarbInterface.SkinTabs>Rounded tabs</LizarbInterface.SkinTabs>
   <LizarbInterface.SkinTabs.Tip>Tabs are the one surface drawn by replacing the game's own method rather than swapping a texture, so this is the switch to try first against another UI mod.</LizarbInterface.SkinTabs.Tip>
   <LizarbInterface.SkinWidgets>Checkboxes, gizmos and bars</LizarbInterface.SkinWidgets>
-  <LizarbInterface.SkinWidgets.Tip>Checkboxes, radio buttons, the slider knob, command gizmos, the colonist bar plate and progress bar fills. Bars that carry their own colour - mood, health, research - are never touched: that colour is information, not style.</LizarbInterface.SkinWidgets.Tip>
+  <LizarbInterface.SkinWidgets.Tip>Checkboxes, radio buttons, the slider knob, command gizmos, the colonist bar plate and progress bar fills. Bars that carry their own colour (mood, health, research) are never touched: that colour is information, not style.</LizarbInterface.SkinWidgets.Tip>
   <LizarbInterface.SkinScrollbars>Scrollbars</LizarbInterface.SkinScrollbars>
   <LizarbInterface.SkinScrollbars.Tip>Drawn by Unity from shared styles rather than from a texture, so this one is applied by changing those styles. Turning it off puts them back immediately.</LizarbInterface.SkinScrollbars.Tip>
   <LizarbInterface.ResetAll>Reset everything</LizarbInterface.ResetAll>
@@ -120,12 +115,10 @@
   <LizarbInterface.AnimateOther.Tip>Any window on a layer the three above do not cover.</LizarbInterface.AnimateOther.Tip>
   <LizarbInterface.AnimationStyle>Animation style (click to replay)</LizarbInterface.AnimationStyle>
   <LizarbInterface.Animation.Scale>Scale</LizarbInterface.Animation.Scale>
-  <LizarbInterface.Animation.Pop>Pop</LizarbInterface.Animation.Pop>
   <LizarbInterface.Animation.Zoom>Zoom out</LizarbInterface.Animation.Zoom>
   <LizarbInterface.Animation.Rise>Rise</LizarbInterface.Animation.Rise>
   <LizarbInterface.Animation.Slide>Slide</LizarbInterface.Animation.Slide>
   <LizarbInterface.Animation.Unfold>Unfold</LizarbInterface.Animation.Unfold>
   <LizarbInterface.Animation.Flip>Flip</LizarbInterface.Animation.Flip>
   <LizarbInterface.Animation.Tilt>Tilt</LizarbInterface.Animation.Tilt>
-  <LizarbInterface.Animation.Fade>Fade</LizarbInterface.Animation.Fade>
 </LanguageData>

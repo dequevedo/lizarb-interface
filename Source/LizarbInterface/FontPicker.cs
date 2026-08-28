@@ -5,14 +5,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Font grid where every name is drawn in its own font, so a face can be judged
-    /// without selecting it first.
-    ///
-    /// A plain FloatMenu cannot do this: it draws its own label with the current
-    /// style, and there is no hook between the row and that draw. A window of our
-    /// own costs one class and no Harmony patch.
-    /// </summary>
     internal class Dialog_FontPicker : Window
     {
         private const float CellHeight = 38f;
@@ -30,9 +22,6 @@ namespace LizarbInterface
             this.selected = selected;
             this.onPick = onPick;
 
-            // Split so the answer to "will every player have this one?" is visible
-            // without asking. The bundled faces are identical for everyone; the rest
-            // are whatever this machine happens to have.
             foreach (string name in names)
             {
                 if (FontBundle.Get(name) != null)
@@ -87,7 +76,6 @@ namespace LizarbInterface
         private float viewWidth;
         private int columns;
 
-        /// <summary>Height a group needs, headers included. Nothing is drawn.</summary>
         private float Section(List<string> names, int cols, bool measureOnly)
         {
             if (names.Count == 0)
@@ -136,17 +124,11 @@ namespace LizarbInterface
             Text.Font = GameFont.Small;
         }
 
-        /// <summary>
-        /// Rows outside the scroll viewport are skipped before any font is resolved.
-        /// Without that, opening the grid with "show every installed font" on would
-        /// build a dynamic font for every family on the machine at once.
-        /// </summary>
         private bool Offscreen(Rect rect)
         {
             return rect.yMax < scroll.y || rect.yMin > scroll.y + InitialSize.y;
         }
 
-        /// <summary>previewName null draws with whatever font is already active.</summary>
         private void Cell(Rect rect, string value, string label, string previewName)
         {
             if (Offscreen(rect))
@@ -175,9 +157,6 @@ namespace LizarbInterface
             }
             else
             {
-                // Text.fontStyles holds shared GUIStyle objects; swapping the font on
-                // one for a single draw is the trick FontEngine uses globally. It MUST
-                // be restored, or every later label in this frame inherits it.
                 GUIStyle style = Text.CurFontStyle;
                 Font previousFont = style.font;
                 int previousSize = style.fontSize;

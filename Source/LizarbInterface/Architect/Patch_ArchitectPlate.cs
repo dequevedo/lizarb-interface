@@ -3,16 +3,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Every way the category colour can be shaped, and the one place that draws
-    /// them. The settings preview calls straight into this rather than mirroring it,
-    /// because a preview that drifts from the real draw is worse than none.
-    ///
-    /// Two families. Plate and Frame stretch across the button and are 9-slice, per
-    /// theme, so they pick up its corner radius. The badges are fixed-aspect masks
-    /// from Skins/Shared, drawn into a square of their own: a circle or a diamond
-    /// squeezed into a 9-slice edge band would be smeared along its run.
-    /// </summary>
     internal static class ArchitectPlate
     {
         internal static readonly string[] Styles =
@@ -50,7 +40,6 @@ namespace LizarbInterface
                     Widgets.DrawBoxSolid(plate, tint);
                     return;
 
-
                 case "Cascade":
                     Cascade(plate, tint);
                     return;
@@ -76,11 +65,6 @@ namespace LizarbInterface
             GUI.color = previous;
         }
 
-        /// <summary>
-        /// Square, then bars stepping down to its right. Programmatic rather than a
-        /// texture because the aspect depends on the button, and a wide mask squeezed
-        /// into a narrow button would change the spacing rather than clip it.
-        /// </summary>
         private static void Cascade(Rect plate, Color tint)
         {
             float side = Mathf.Min(plate.height, plate.width);
@@ -102,11 +86,6 @@ namespace LizarbInterface
             }
         }
 
-        /// <summary>
-        /// The outline is painted as the same mask, black, one pixel larger behind.
-        /// That works for any convex shape, keeps the toggle honest, and costs one
-        /// draw call instead of a second set of files with the ring baked in.
-        /// </summary>
         private static void Badge(Rect rect, string shapeName, Color tint)
         {
             Texture2D tex = AtlasSwap.Shared("Shape" + shapeName);

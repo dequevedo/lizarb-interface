@@ -17,3 +17,6 @@ CLAUDE.md
 *.log
 *.tmp
 dev/unity-fonts/
+
+# Release staging built by tools/Make-Release.ps1
+dist/

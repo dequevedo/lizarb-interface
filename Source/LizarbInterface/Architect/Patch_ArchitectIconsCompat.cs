@@ -7,21 +7,6 @@ using Verse;
 
 namespace LizarbInterface
 {
-    /// <summary>
-    /// Stops Architect Icons drawing its icon while this mod draws its own, so the
-    /// two do not stack in the same corner of the button.
-    ///
-    /// Architect Icons transpiles DoCategoryButton to route ButtonTextSubtle through
-    /// its own DoArchitectButton, which calls the real thing and then blits an icon.
-    /// Prefixing that wrapper reproduces the call and skips only the blit. The
-    /// button, the label and the return value stay exactly as that mod made them.
-    ///
-    /// Patched by hand rather than by attribute: the target type does not exist when
-    /// Architect Icons is absent, and an attribute patch on a missing type throws.
-    ///
-    /// Runs at StaticConstructorOnStartup, not from the Mod constructor: that other
-    /// assembly is only guaranteed to be loaded once every mod has been.
-    /// </summary>
     [StaticConstructorOnStartup]
     internal static class ArchitectIconsCompat
     {
@@ -45,7 +30,6 @@ namespace LizarbInterface
             }
             catch (Exception e)
             {
-                // Losing the compat patch costs a doubled icon, never a broken menu.
                 Log.Warning("[LizarbInterface] could not defer to Architect Icons: " + e.Message);
             }
         }
@@ -61,8 +45,6 @@ namespace LizarbInterface
                 return true;
             }
 
-            // textLeftMargin is passed through untouched: that mod adds 16f for its own
-            // icon, and ours reserves its own room in Patch_ButtonTextSubtle.
             __result = Widgets.ButtonTextSubtle(
                 rect, label, barPercent, textLeftMargin, mouseoverSound,
                 functionalSizeOffset, labelColor, highlight);
