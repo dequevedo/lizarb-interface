@@ -28,7 +28,19 @@
   UV rects are TOP-DOWN, same as the PNG: a light bevel at the top of the file comes
   out at the top of the screen.
 #>
-param([switch]$IconsOnly, [switch]$DefineOnly)
+param(
+    [switch]$IconsOnly,
+    [switch]$DefineOnly,
+    # Texel density of the 9-slice atlases, the tab and the plates. MUST match
+    # AtlasSwap.Scale in the C#: the draw divides the corner by it, which is what
+    # keeps the on-screen geometry identical while the texels double.
+    #
+    # Deliberately NOT applied to the patterns, the checkbox, the radio, the slider
+    # knob or the strips. Those are drawn at or below 1:1 already, so density buys
+    # them nothing, and the patterns hardcode feature periods that have to divide
+    # the tile for the tiling to close.
+    [int]$Scale = 2
+)
 
 Add-Type -AssemblyName System.Drawing
 
@@ -307,17 +319,17 @@ function New-RoundAtlas {
 function New-TabAtlas {
     param(
         [string]$Name, [int]$Radius, [double]$Thin, [double]$Fat,
-        [int[]]$Light, [int[]]$Dark, [int[]]$Fill
+        [int[]]$Light, [int[]]$Dark, [int[]]$Fill, [int]$Scale = 1
     )
 
-    $w = 64; $h = 32
+    $w = 64 * $Scale; $h = 32 * $Scale
     $bmp = New-Object System.Drawing.Bitmap($w, $h, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $clear = [System.Drawing.Color]::FromArgb(0, 0, 0, 0)
 
     for ($y = 0; $y -lt $h; $y++) {
         for ($x = 0; $x -lt $w; $x++) {
 
-            $isEnd = ($x -lt 30) -or ($x -ge 34)   # miolo tem de ser uniforme
+            $isEnd = ($x -lt (30 * $Scale)) -or ($x -ge (34 * $Scale))   # miolo uniforme
             $ex = [Math]::Min($x, $w - 1 - $x)     # distancia a lateral
 
             $db = $h - 1 - $y                      # distancia ate embaixo
@@ -376,7 +388,7 @@ function New-TabAtlas {
 
     $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
     $bmp.Dispose()
-    Write-Host "  $Name.png  (64 x 32 - largura obrigatoria, raio $Radius)"
+    Write-Host "  $Name.png  ($w x $h, raio $Radius)"
 }
 
 <#
@@ -1455,8 +1467,17 @@ $Icons = @{
 
 $SkinsRoot = Join-Path $PSScriptRoot '..\Skins'
 
+# The scale is written next to the skins and read back by AtlasSwap, so the two
+# can never disagree. They must not: the draw divides the 9-slice corner by this
+# number, and a mismatch changes every corner on screen without any error.
+if (-not $DefineOnly) {
+    if (-not (Test-Path $SkinsRoot)) { New-Item -ItemType Directory -Path $SkinsRoot -Force | Out-Null }
+    [IO.File]::WriteAllText((Join-Path $SkinsRoot 'atlas-scale.txt'), "$Scale", (New-Object Text.UTF8Encoding($false)))
+}
+
 foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } else { $Themes.Keys | Sort-Object }))) {
     $t = $Themes[$id]
+    $S = $Scale
 
     # FillAlpha and Gloss only exist on the themes that need them.
     $fa = 255; if ($t.ContainsKey('FillAlpha')) { $fa = $t.FillAlpha }
@@ -1469,51 +1490,51 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } else { $Themes.Keys |
     Write-Host ""
     Write-Host "=== theme $id -> $OutDir ===" -ForegroundColor Cyan
 
-    New-RoundAtlas -Name 'ButtonBG' -Size 64 -Radius $t.Radius.Button `
-        -Thin $t.Fillet.Thin -Fat $t.Fillet.Fat `
+    New-RoundAtlas -Name 'ButtonBG' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
         -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Button.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
-    New-RoundAtlas -Name 'ButtonBGMouseover' -Size 64 -Radius $t.Radius.Button `
-        -Thin $t.Fillet.Thin -Fat ($t.Fillet.Fat + 0.5) `
+    New-RoundAtlas -Name 'ButtonBGMouseover' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat (($t.Fillet.Fat + 0.5)*$S) `
         -Light $t.Hover.Light -Dark $t.Hover.Dark -Fill $t.Hover.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
-    New-RoundAtlas -Name 'ButtonBGClick' -Size 64 -Radius $t.Radius.Button `
-        -Thin $t.Fillet.Thin -Fat $t.Fillet.Fat `
+    New-RoundAtlas -Name 'ButtonBGClick' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
         -Light $t.Click.Light -Dark $t.Click.Dark -Fill $t.Click.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
-    New-RoundAtlas -Name 'ButtonSubtleAtlas' -Size 64 -Radius $t.Radius.Button `
-        -Thin $t.Fillet.Thin -Fat $t.Fillet.Fat `
+    New-RoundAtlas -Name 'ButtonSubtleAtlas' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
         -Light $t.Subtle.Light -Dark $t.Subtle.Dark -Fill $t.Subtle.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
-    New-TabAtlas -Name 'TabAtlas' -Radius $t.Radius.Tab `
-        -Thin $t.Fillet.Thin -Fat $t.Fillet.Fat `
+    New-TabAtlas -Name 'TabAtlas' -Scale $S -Radius ($t.Radius.Tab*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
         -Light $t.Tab.Light -Dark $t.Tab.Dark -Fill $t.Tab.Fill
 
     # Window at 128px: the 9-slice corner is width/4, so only here is there room
     # for a large radius without crushing the fillet.
-    New-RoundAtlas -Name 'WindowAtlas' -Size 128 -Radius $t.Radius.Window `
-        -Thin $t.Fillet.WindowThin -Fat $t.Fillet.WindowFat `
+    New-RoundAtlas -Name 'WindowAtlas' -Size (128*$S) -Radius ($t.Radius.Window*$S) `
+        -Thin ($t.Fillet.WindowThin*$S) -Fat ($t.Fillet.WindowFat*$S) `
         -Light $t.Window.Light -Dark $t.Window.Dark -Fill $t.Window.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
-    New-RoundAtlas -Name 'SectionAtlas' -Size 64 -Radius $t.Radius.Section `
-        -Thin $t.Fillet.Thin -Fat $t.Fillet.Fat `
+    New-RoundAtlas -Name 'SectionAtlas' -Size (64*$S) -Radius ($t.Radius.Section*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
         -Light $t.Section.Light -Dark $t.Section.Dark -Fill $t.Section.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
     # These also go through Widgets.DrawAtlas, so they are 9-slice like the buttons.
     # The slider rail is flat and dark on purpose - the knob is what must stand out.
-    New-RoundAtlas -Name 'SliderRail' -Size 64 -Radius 8 -Thin 2 -Fat 2 `
+    New-RoundAtlas -Name 'SliderRail' -Size (64*$S) -Radius (8*$S) -Thin (2*$S) -Fat (2*$S) `
         -Light $t.Section.Light -Dark $t.Section.Dark -Fill $t.Section.Fill -Ornament 'Fillet' -Outline $ol
 
-    New-RoundAtlas -Name 'TooltipBG' -Size 64 -Radius $t.Radius.Section `
-        -Thin $t.Fillet.Thin -Fat $t.Fillet.Fat `
+    New-RoundAtlas -Name 'TooltipBG' -Size (64*$S) -Radius ($t.Radius.Section*$S) `
+        -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
         -Light $t.Tab.Light -Dark $t.Tab.Dark -Fill $t.Window.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
-    New-RoundAtlas -Name 'FloatMenuOptionBG' -Size 64 -Radius 6 -Thin 1 -Fat 2 `
+    New-RoundAtlas -Name 'FloatMenuOptionBG' -Size (64*$S) -Radius (6*$S) -Thin (1*$S) -Fat (2*$S) `
         -Light $t.Subtle.Light -Dark $t.Subtle.Dark -Fill $t.Subtle.Fill -Ornament 'Fillet' -Outline $ol
 
     # Gizmo: the game STRETCHES the whole texture with no 9-slice, so keep the
     # radius small or the corner deforms on a 75px button.
-    New-RoundAtlas -Name 'GizmoBG' -Size 64 -Radius 6 -Thin 2 -Fat 3 `
+    New-RoundAtlas -Name 'GizmoBG' -Size (64*$S) -Radius (6*$S) -Thin (2*$S) -Fat (3*$S) `
         -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Button.Fill -Ornament $t.Ornament -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-Checkbox -Name 'CheckOn'      -State 'On'      -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Section.Fill -Mark $t.Tab.Light
@@ -1527,9 +1548,9 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } else { $Themes.Keys |
 
     # Architect category plates. Greyscale: the category colour arrives as
     # GUI.color, so one set of three serves every category.
-    New-Plate -Name 'Plate'      -Size 64 -Radius $t.Radius.Button -Style 'Plate'
-    New-Plate -Name 'PlateBar'   -Size 64 -Radius $t.Radius.Button -Style 'Bar'
-    New-Plate -Name 'PlateFrame' -Size 64 -Radius $t.Radius.Button -Style 'Frame'
+    New-Plate -Name 'Plate'      -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Plate'
+    New-Plate -Name 'PlateBar'   -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Bar'
+    New-Plate -Name 'PlateFrame' -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Frame'
 
     # Progress bar: fill lit at the top, dark track behind it.
     New-Strip -Name 'BarFill' -W 16 -H 32 `

@@ -179,6 +179,9 @@ namespace LizarbInterface
             style.focused.background = tex;
 
             // Only the axis the bar grows along may stretch; the ends stay put.
+            // Measured in TEXELS of the strip. The strips are still 1x, so this is
+            // not multiplied by AtlasSwap.Scale: they are drawn stretched rather than
+            // upscaled at the corner, which is the case 2x exists to fix.
             style.border = vertical
                 ? new RectOffset(0, 0, 6, 6)
                 : new RectOffset(6, 6, 0, 0);

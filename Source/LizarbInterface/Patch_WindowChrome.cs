@@ -98,11 +98,20 @@ namespace LizarbInterface
             }
 
             // IMGUI UVs run bottom-up while rects run top-down.
+            //
+            // NOT divided by AtlasSwap.Scale. The patterns are still authored at 1x:
+            // their feature periods are hardcoded and have to divide the tile size for
+            // the tiling to close, so doubling them is a rewrite rather than a
+            // multiply. Background at 5% opacity is the least resolution-sensitive
+            // surface here, so it waits.
+            float tileW = grain.width;
+            float tileH = grain.height;
+
             var uv = new Rect(
-                (band.x - interior.x) / grain.width,
-                (interior.yMax - band.yMax) / grain.height,
-                band.width / grain.width,
-                band.height / grain.height);
+                (band.x - interior.x) / tileW,
+                (interior.yMax - band.yMax) / tileH,
+                band.width / tileW,
+                band.height / tileH);
 
             GUI.DrawTextureWithTexCoords(band, grain, uv);
         }
@@ -125,7 +134,7 @@ namespace LizarbInterface
 
                 GUI.color = Color.white;
                 Rect area = LizarbInterfaceMod.Inset(rect);
-                Widgets.DrawAtlas(area, frame);
+                AtlasSwap.DrawScaled(area, frame, true);
                 DrawGrain(area, 5f, 22f);
                 return false;
             }
@@ -151,7 +160,7 @@ namespace LizarbInterface
                 Color previous = GUI.color;
                 GUI.color = colorFactor;
                 Rect area = LizarbInterfaceMod.Inset(rect);
-                Widgets.DrawAtlas(area, frame);
+                AtlasSwap.DrawScaled(area, frame, true);
                 DrawGrain(area, 5f, 22f);
                 GUI.color = previous;
                 return false;
@@ -176,7 +185,7 @@ namespace LizarbInterface
 
                 GUI.color = Color.white;
                 Rect area = LizarbInterfaceMod.Inset(rect);
-                Widgets.DrawAtlas(area, frame);
+                AtlasSwap.DrawScaled(area, frame, true);
                 DrawGrain(area, 3f, 10f);
                 return false;
             }

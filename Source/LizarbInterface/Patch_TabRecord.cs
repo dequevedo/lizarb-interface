@@ -37,7 +37,9 @@ namespace LizarbInterface
             Rect area = LizarbInterfaceMod.Inset(rect);
 
             // TabAtlas is NOT a 9-slice: vanilla cuts it in three with hard pixel
-            // offsets (0..30, 30..34 stretched, 34..64), so it must be exactly 64 wide.
+            // offsets. Since this reimplements Draw, the UVs below are proportional
+            // and the 64px width vanilla demands no longer binds us. EndWidth stays a
+            // DESTINATION size in GUI px, so it must not scale with the texture.
             Rect leftRect = new Rect(area) { width = EndWidth };
             Rect rightRect = new Rect(area) { width = EndWidth, x = area.x + area.width - EndWidth };
 
@@ -47,10 +49,12 @@ namespace LizarbInterface
             middleRect.xMin = UIScaling.AdjustCoordToUIScalingFloor(middleRect.xMin);
             middleRect.xMax = UIScaling.AdjustCoordToUIScalingCeil(middleRect.xMax);
 
-            float w = atlas.width;
-            var leftUV = new Rect(0f, 0f, 15f / 32f, 1f);
-            var middleUV = new Rect(EndWidth / w, 0f, MiddleGraphicWidth / w, 1f);
-            var rightUV = new Rect(17f / 32f, 0f, 15f / 32f, 1f);
+            // Proportional, never derived from atlas.width: the slices are a
+            // FRACTION of the texture, so the atlas resolution is free to change.
+            // Vanilla cuts a 64px atlas at 0..30 / 30..34 / 34..64.
+            var leftUV = new Rect(0f, 0f, 30f / 64f, 1f);
+            var middleUV = new Rect(30f / 64f, 0f, 4f / 64f, 1f);
+            var rightUV = new Rect(34f / 64f, 0f, 30f / 64f, 1f);
 
             Widgets.DrawTexturePart(leftRect, leftUV, atlas);
             Widgets.DrawTexturePart(middleRect, middleUV, atlas);

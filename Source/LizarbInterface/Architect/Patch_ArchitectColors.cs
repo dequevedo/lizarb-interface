@@ -129,7 +129,7 @@ namespace LizarbInterface
             // Painting guards the re-entry: this DrawAtlas would otherwise land back
             // in this same postfix.
             ArchitectColorContext.Painting = true;
-            Widgets.DrawAtlas(plate, shape);
+            AtlasSwap.DrawScaled(plate, shape, true);
             ArchitectColorContext.Painting = false;
 
             GUI.color = old;

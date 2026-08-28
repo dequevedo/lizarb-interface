@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using LudeonTK;
 using UnityEngine;
 using Verse;
 
@@ -178,6 +179,7 @@ namespace LizarbInterface
         internal static void Init(string rootDir)
         {
             root = rootDir;
+            ReadScale();
 
             RuntimeHelpers.RunClassConstructor(typeof(Widgets).TypeHandle);
             RuntimeHelpers.RunClassConstructor(typeof(TabRecord).TypeHandle);
@@ -281,6 +283,126 @@ namespace LizarbInterface
             return tex;
         }
 
+        /// <summary>
+        /// Texel density of the generated atlases relative to what RimWorld assumes.
+        /// The art is authored at this multiple so its curves survive a UIScale above
+        /// 1, where a 1x atlas is upscaled and the fillet turns to mush.
+        ///
+        /// READ from Skins/atlas-scale.txt, which the generator writes, rather than
+        /// being a constant here. The draw divides the 9-slice corner by this number,
+        /// so a value that disagrees with the art changes every corner on screen and
+        /// reports nothing. Making the generator the only source removes the chance.
+        /// </summary>
+        internal static float Scale { get; private set; } = 1f;
+
+        private static void ReadScale()
+        {
+            Scale = 1f;
+            if (root == null)
+            {
+                return;
+            }
+
+            string path = Path.Combine(root, "Skins/atlas-scale.txt");
+            if (!File.Exists(path))
+            {
+                return;
+            }
+
+            if (float.TryParse(File.ReadAllText(path).Trim(),
+                               System.Globalization.NumberStyles.Float,
+                               System.Globalization.CultureInfo.InvariantCulture,
+                               out float parsed) && parsed >= 1f && parsed <= 8f)
+            {
+                Scale = parsed;
+                return;
+            }
+
+            Log.Warning("[LizarbInterface] unreadable atlas scale in " + path + "; assuming 1.");
+        }
+
+        /// <summary>
+        /// Widgets.DrawAtlas with the 9-slice corner divided by Scale.
+        ///
+        /// This is the whole reason the mod draws its own atlases. Vanilla derives the
+        /// corner from the texture: a = atlas.width * 0.25, in GUI units. Doubling the
+        /// texture would therefore double the rounding on screen for anything the
+        /// clamp does not catch, so gizmos and windows would come out visibly rounder.
+        /// Dividing by Scale keeps the geometry identical and spends the extra texels
+        /// on density, which is the point.
+        ///
+        /// The body mirrors vanilla exactly otherwise, rounding and UI-scale snapping
+        /// included, so our atlases land on the same pixels as everyone else's.
+        /// </summary>
+        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop)
+        {
+            if (atlas == null || Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
+            rect.x = Mathf.Round(rect.x);
+            rect.y = Mathf.Round(rect.y);
+            rect.width = Mathf.Round(rect.width);
+            rect.height = Mathf.Round(rect.height);
+            rect = UIScaling.AdjustRectToUIScaling(rect);
+
+            float a = atlas.width * 0.25f / Scale;
+            a = UIScaling.AdjustCoordToUIScalingCeil(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
+
+            if (drawTop)
+            {
+                Part(new Rect(rect.x, rect.y, a, a), UvTopLeft, atlas);
+                Part(new Rect(rect.x + rect.width - a, rect.y, a, a), UvTopRight, atlas);
+            }
+
+            Part(new Rect(rect.x, rect.y + rect.height - a, a, a), UvBottomLeft, atlas);
+            Part(new Rect(rect.x + rect.width - a, rect.y + rect.height - a, a, a), UvBottomRight, atlas);
+
+            Rect middle = new Rect(rect.x + a, rect.y + a, rect.width - a * 2f, rect.height - a * 2f);
+            if (!drawTop)
+            {
+                middle.height += a;
+                middle.y -= a;
+            }
+
+            Part(middle, UvCenter, atlas);
+
+            if (drawTop)
+            {
+                Part(new Rect(rect.x + a, rect.y, rect.width - a * 2f, a), UvTop, atlas);
+            }
+
+            Part(new Rect(rect.x + a, rect.y + rect.height - a, rect.width - a * 2f, a), UvBottom, atlas);
+
+            Rect left = new Rect(rect.x, rect.y + a, a, rect.height - a * 2f);
+            Rect right = new Rect(rect.x + rect.width - a, rect.y + a, a, rect.height - a * 2f);
+            if (!drawTop)
+            {
+                left.height += a;  left.y -= a;
+                right.height += a; right.y -= a;
+            }
+
+            Part(left, UvLeft, atlas);
+            Part(right, UvRight, atlas);
+        }
+
+        private static void Part(Rect drawRect, Rect uv, Texture2D atlas)
+        {
+            Widgets.DrawTexturePart(drawRect, uv, atlas);
+        }
+
+        // Same nine constants Widgets uses; they are private there.
+        private static readonly Rect UvTopLeft     = new Rect(0f,    0f,    0.25f, 0.25f);
+        private static readonly Rect UvTopRight    = new Rect(0.75f, 0f,    0.25f, 0.25f);
+        private static readonly Rect UvBottomLeft  = new Rect(0f,    0.75f, 0.25f, 0.25f);
+        private static readonly Rect UvBottomRight = new Rect(0.75f, 0.75f, 0.25f, 0.25f);
+        private static readonly Rect UvTop         = new Rect(0.25f, 0f,    0.5f,  0.25f);
+        private static readonly Rect UvBottom      = new Rect(0.25f, 0.75f, 0.5f,  0.25f);
+        private static readonly Rect UvLeft        = new Rect(0f,    0.25f, 0.25f, 0.5f);
+        private static readonly Rect UvRight       = new Rect(0.75f, 0.25f, 0.25f, 0.5f);
+        private static readonly Rect UvCenter      = new Rect(0.25f, 0.25f, 0.5f,  0.5f);
+
         private static string Describe(Texture2D tex)
         {
             if (tex == null)
@@ -316,29 +438,31 @@ namespace LizarbInterface
     [HarmonyPatch(typeof(Widgets), nameof(Widgets.DrawAtlas), typeof(Rect), typeof(Texture2D), typeof(bool))]
     internal static class Patch_DrawAtlas_Swap
     {
-        [HarmonyPriority(Priority.First)]
-        private static void Prefix(ref Rect rect, ref Texture2D atlas)
+        // No HarmonyPriority on purpose: this now returns false, and the first prefix
+        // that does short-circuits the rest. Registering last means we yield.
+        private static bool Prefix(Rect rect, Texture2D atlas, bool drawTop)
         {
             // The gate lives here rather than inside AtlasSwap.For, so the theme
-            // preview swatches, which go through Preview() rather than For(), keep drawing
-            // while the skin is switched off.
+            // preview swatches, which go through Preview() rather than For(), keep
+            // drawing while the skin is switched off.
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
             if (settings == null || !settings.enabled || !settings.skinButtons)
             {
-                return;
+                return true;
             }
 
             Texture2D mine = AtlasSwap.For(atlas);
             if (mine == null)
             {
-                return;
+                return true;
             }
 
-            atlas = mine;
-
-            // Only inset what we skinned. Atlases we do not replace keep vanilla
-            // geometry, so nothing else in the game shifts.
-            rect = LizarbInterfaceMod.Inset(rect);
+            // Taking the draw over rather than swapping the argument, because the
+            // corner size has to come from AtlasSwap.Scale instead of the texture
+            // width. Only inset what we skinned: atlases we do not replace keep
+            // vanilla geometry, so nothing else in the game shifts.
+            AtlasSwap.DrawScaled(LizarbInterfaceMod.Inset(rect), mine, drawTop);
+            return false;
         }
     }
 
