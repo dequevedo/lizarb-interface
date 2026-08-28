@@ -225,7 +225,7 @@ function New-RoundAtlas {
                 # things a boolean cannot: an outline that follows the piece on the
                 # inside as well as the outside, and a relief that knows how far it
                 # is from either edge.
-                $reach = 10.5 * $scale
+                $reach = 13.5 * $scale
                 $diag = $cx + $cy
 
                 # Distance to the far side of the plate, measured perpendicular to
@@ -411,9 +411,10 @@ function New-RoundAtlas {
                 $c = if ($lit) { Blend $Light @(255, 240, 210) 0.4 } else { Blend $Dark $Black 0.3 }
             }
             elseif ($ornamentHit -and $Ornament -eq 'BookCorner') {
-                if ($plate -lt $ow) {
-                    # The inner outline. The outer one is the rim's own, so the piece
-                    # ends up ringed all the way round.
+                if ($toInner -lt $ow) {
+                    # ONLY the inner edge. The outer edge already sits against the
+                    # rim's own outline, and drawing another there stacks two black
+                    # texels into one line of twice the asked width.
                     $c = $Black
                 }
                 elseif ($Flat) {
