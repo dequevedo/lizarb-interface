@@ -292,5 +292,5 @@ Write-Host "Profile: $ProfileDir" -ForegroundColor DarkGray
 $p = Start-Process $GameExe -ArgumentList "-savedatafolder=$ProfileDir" -PassThru
 Write-Host "RimWorld started (PID $($p.Id))." -ForegroundColor Green
 Write-Host ""
-Write-Host "Player.log does NOT go to the profile - Unity always writes to persistentDataPath." -ForegroundColor DarkGray
+Write-Host "Player.log does NOT go to the profile. Unity always writes to persistentDataPath." -ForegroundColor DarkGray
 Write-Host "After closing:  .\dev\watch-log.ps1" -ForegroundColor Yellow

@@ -176,7 +176,7 @@ foreach ($b in $build) {
 
     Copy-Item $built (Join-Path $OutDir $name) -Force
     $size = [Math]::Round((Get-Item $built).Length / 1MB, 2)
-    Write-Host ("OK - AssetBundles\{0}  ({1} MB, {2} fonts)" -f $name, $size, $ttf.Count) -ForegroundColor Green
+    Write-Host ("OK: AssetBundles\{0}  ({1} MB, {2} fonts)" -f $name, $size, $ttf.Count) -ForegroundColor Green
 }
 
 if ($skipped.Count -gt 0) {

@@ -24,7 +24,7 @@ function Set-ModLink {
     if (Test-Path $link) {
         $item = Get-Item $link -Force
         if (-not $item.LinkType) {
-            throw "$link exists and is a real directory, not a link - remove it yourself"
+            throw "$link exists and is a real directory, not a link. remove it yourself"
         }
         [IO.Directory]::Delete($link, $false)
     }
@@ -86,7 +86,7 @@ foreach ($f in $ofl) { Copy-Item $f.FullName (Join-Path $licenceDir $f.Name) -Fo
 
 $ttfCount = @(Get-ChildItem (Join-Path $Repo 'Fonts') -Filter *.ttf).Count
 if ($ofl.Count -ne $ttfCount) {
-    Write-Host "WARNING: $ttfCount .ttf but $($ofl.Count) OFL-*.txt - a font may be shipping unlicensed" -ForegroundColor Red
+    Write-Host "WARNING: $ttfCount .ttf but $($ofl.Count) OFL-*.txt. A font may be shipping unlicensed" -ForegroundColor Red
 }
 
 $rootId = Join-Path $Repo 'About\PublishedFileId.txt'
@@ -108,14 +108,14 @@ $absent = @('_win', '_mac', '_linux') |
           Where-Object { $p = $_; -not @($bundles | Where-Object { $_.Name.EndsWith($p) }) }
 if ($absent.Count -gt 0) {
     $names = ($absent | ForEach-Object { $_.TrimStart('_') }) -join ', '
-    Write-Host "WARNING: no font bundle for $names - those players fall back to OS fonts" -ForegroundColor Yellow
+    Write-Host "WARNING: no font bundle for $names. Those players fall back to OS fonts" -ForegroundColor Yellow
 }
 
 $size = [Math]::Round((Get-ChildItem $Dist -Recurse -File | Measure-Object -Property Length -Sum).Sum / 1MB, 2)
 $count = @(Get-ChildItem $Dist -Recurse -File).Count
 
 Write-Host ""
-Write-Host "OK - $Dist" -ForegroundColor Green
+Write-Host "OK: $Dist" -ForegroundColor Green
 Write-Host "     $count files, $size MB" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -132,5 +132,5 @@ if ($Link) {
 
 Write-Host ""
 Write-Host "To publish: tools\Make-Release.ps1 -Link, then the in-game Mods screen." -ForegroundColor DarkGray
-Write-Host "The first upload writes About\PublishedFileId.txt - copy it back into the repo," -ForegroundColor DarkGray
-Write-Host "or the next release creates a second Workshop item instead of updating this one." -ForegroundColor DarkGray
+Write-Host "The first upload writes About\PublishedFileId.txt inside dist. Copy it back" -ForegroundColor DarkGray
+Write-Host "into the repo, or the next release creates a second Workshop item." -ForegroundColor DarkGray

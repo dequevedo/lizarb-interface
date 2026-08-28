@@ -1316,4 +1316,4 @@ if (-not $DefineOnly) {
 }
 
 Write-Host ""
-Write-Host "OK - $($Themes.Count) themes, $($Icons.Count) icons (scale ${Scale}x)" -ForegroundColor Green
+Write-Host "OK: $($Themes.Count) themes, $($Icons.Count) icons (scale ${Scale}x)" -ForegroundColor Green
