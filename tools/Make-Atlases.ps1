@@ -1360,11 +1360,12 @@ function New-Plate {
                     $a = $edge * (0.80 + 0.20 * $t)
                 }
                 'Bar' {
-                    # Left band only. Fixed 16px at Size 64, so it never stretches.
-                    $w = $band * 0.95
-                    $fade = [Math]::Min(1.0, [Math]::Max(0.0, ($w - $x) / 2.0))
-                    $edge = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.0))
-                    $a = $fade * $edge
+                    # A flat patch. This style is no longer squeezed into the left
+                    # band of the 9-slice, which is stuck at atlas.width/4 wide and
+                    # could never be widened without stretching into the centre. It
+                    # is drawn into a SQUARE rect of its own instead, so it needs no
+                    # gradient to fake depth and no fade to hide a hard edge.
+                    $a = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.5))
                 }
                 'Frame' {
                     # A ring hugging the outline: colour as a border, centre clear.

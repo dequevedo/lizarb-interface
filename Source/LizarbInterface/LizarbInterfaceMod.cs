@@ -665,13 +665,7 @@ namespace LizarbInterface
             listing.Label("LizarbInterface.Architect.PlateStyle".Translate());
             foreach (string style in PlateStyles)
             {
-                if (listing.RadioButton(
-                        ("LizarbInterface.Architect.PlateStyle." + style).Translate(),
-                        Settings.architectPlateStyle == style, 8f,
-                        ("LizarbInterface.Architect.PlateStyle." + style + ".Tip").Translate()))
-                {
-                    Settings.architectPlateStyle = style;
-                }
+                DoPlateStyleRow(listing, style);
             }
 
             listing.Gap();
@@ -691,6 +685,110 @@ namespace LizarbInterface
         }
 
         private static readonly string[] PlateStyles = { "Plate", "Bar", "Frame", "Flat" };
+
+        /// <summary>
+        /// One row of the shape picker, drawn as a real architect button rather than
+        /// described in words. The shapes differ by geometry, not by name, so a list
+        /// of labels hides most of what is being chosen.
+        /// </summary>
+        private void DoPlateStyleRow(Listing_Standard listing, string style)
+        {
+            const float RowHeight = 38f;
+            const float SampleWidth = 150f;
+
+            Rect row = listing.GetRect(RowHeight);
+            bool selected = Settings.architectPlateStyle == style;
+
+            if (selected)
+            {
+                Widgets.DrawHighlightSelected(row);
+            }
+            else if (Mouse.IsOver(row))
+            {
+                Widgets.DrawHighlight(row);
+            }
+
+            var sample = new Rect(row.x + 8f, row.y + 3f, SampleWidth, RowHeight - 6f);
+            DrawPlateSample(sample, style);
+
+            Rect label = row;
+            label.xMin = sample.xMax + 12f;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(label, ("LizarbInterface.Architect.PlateStyle." + style).Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            TooltipHandler.TipRegion(row,
+                ("LizarbInterface.Architect.PlateStyle." + style + ".Tip").Translate());
+
+            if (Widgets.ButtonInvisible(row))
+            {
+                Settings.architectPlateStyle = style;
+                RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+            }
+        }
+
+        /// <summary>
+        /// Mirrors what Patch_ArchitectPlate does: same atlas, same inset, same
+        /// square-rect rule for Bar. If the two ever drift, the preview becomes a
+        /// lie, which is worse than no preview.
+        /// </summary>
+        private void DrawPlateSample(Rect rect, string style)
+        {
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
+            Texture2D button = AtlasSwap.Own("ButtonSubtleAtlas");
+            if (button == null)
+            {
+                Widgets.DrawBoxSolid(rect, new Color(0.2f, 0.18f, 0.16f));
+            }
+            else
+            {
+                AtlasSwap.DrawScaled(rect, button, true);
+            }
+
+            // A recognisable category colour, so the sample reads as the real thing.
+            Color tint = new Color(205f / 255f, 137f / 255f, 95f / 255f, Settings.architectPlateAlpha);
+            Rect plate = rect.ContractedBy(3f);
+
+            Texture2D shape =
+                style == "Flat" ? null :
+                style == "Bar" ? AtlasSwap.Own("PlateBar") :
+                style == "Frame" ? AtlasSwap.Own("PlateFrame") : AtlasSwap.Own("Plate");
+
+            Color previous = GUI.color;
+            GUI.color = tint;
+            if (shape == null)
+            {
+                GUI.color = previous;
+                Widgets.DrawBoxSolid(plate, tint);
+            }
+            else
+            {
+                Rect target = plate;
+                if (style == "Bar")
+                {
+                    float side = Mathf.Min(plate.height, plate.width);
+                    target = new Rect(plate.x, plate.y, side, side);
+                }
+
+                AtlasSwap.DrawScaled(target, shape, true);
+                GUI.color = previous;
+            }
+
+            Texture2D icon = AtlasSwap.Shared("IconProduction");
+            if (icon != null)
+            {
+                float size = Mathf.Min(24f, rect.height - 8f);
+                GUI.DrawTexture(new Rect(rect.x + 5f, rect.y + (rect.height - size) / 2f, size, size), icon);
+            }
+
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(new Rect(rect.x + 36f, rect.y, rect.width - 40f, rect.height), "Production");
+            Text.Anchor = TextAnchor.UpperLeft;
+        }
 
         /// <summary>
         /// Architect Icons draws its own icon in the same place ours goes, so the
