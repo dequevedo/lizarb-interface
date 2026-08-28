@@ -18,8 +18,7 @@ namespace LizarbInterface
         internal static readonly string[] Styles =
         {
             "Plate", "Frame", "Flat",
-            "Square", "Circle", "Diamond", "Tag", "Shield", "Hex", "Chip",
-            "Cascade", "Underline",
+            "Square", "Circle", "Diamond", "Tag", "Shield", "Hex", "Cascade",
         };
 
         private static bool IsBadge(string style)
@@ -32,7 +31,6 @@ namespace LizarbInterface
                 case "Tag":
                 case "Shield":
                 case "Hex":
-                case "Chip":
                     return true;
                 default:
                     return false;
@@ -52,12 +50,6 @@ namespace LizarbInterface
                     Widgets.DrawBoxSolid(plate, tint);
                     return;
 
-                case "Underline":
-                    // A rule along the bottom, the full width of the button.
-                    float thickness = Mathf.Max(3f, plate.height * 0.18f);
-                    Badge(new Rect(plate.x, plate.yMax - thickness, plate.width, thickness),
-                          "Square", tint);
-                    return;
 
                 case "Cascade":
                     Cascade(plate, tint);

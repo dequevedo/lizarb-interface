@@ -124,12 +124,8 @@
   <LizarbInterface.Architect.PlateStyle.Shield.Tip>Um escudo, mais pesado em cima.</LizarbInterface.Architect.PlateStyle.Shield.Tip>
   <LizarbInterface.Architect.PlateStyle.Hex>Hexagono</LizarbInterface.Architect.PlateStyle.Hex>
   <LizarbInterface.Architect.PlateStyle.Hex.Tip>Um hexagono de topo reto.</LizarbInterface.Architect.PlateStyle.Hex.Tip>
-  <LizarbInterface.Architect.PlateStyle.Chip>Chip</LizarbInterface.Architect.PlateStyle.Chip>
-  <LizarbInterface.Architect.PlateStyle.Chip.Tip>Um chip com pinos dos dois lados.</LizarbInterface.Architect.PlateStyle.Chip.Tip>
   <LizarbInterface.Architect.PlateStyle.Cascade>Cascata</LizarbInterface.Architect.PlateStyle.Cascade>
   <LizarbInterface.Architect.PlateStyle.Cascade.Tip>Um quadrado e barras decrescentes a direita.</LizarbInterface.Architect.PlateStyle.Cascade.Tip>
-  <LizarbInterface.Architect.PlateStyle.Underline>Sublinhado</LizarbInterface.Architect.PlateStyle.Underline>
-  <LizarbInterface.Architect.PlateStyle.Underline.Tip>Um traco na base do botao.</LizarbInterface.Architect.PlateStyle.Underline.Tip>
   <LizarbInterface.Architect.ShapeOutline>Contorno preto na forma</LizarbInterface.Architect.ShapeOutline>
   <LizarbInterface.Architect.ShapeOutline.Tip>Cerca a forma de preto, o que a separa do botao embaixo. E pintado como a mesma forma um pixel maior atras, entao acompanha qualquer forma escolhida.</LizarbInterface.Architect.ShapeOutline.Tip>
 </LanguageData>

@@ -179,12 +179,20 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
             Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
 
-            // "Bar" was renamed when the style grew a shape of its own. Without this
-            // an existing profile lands on a style that no longer exists and the
-            // colour silently stops being drawn.
-            if (Scribe.mode == LoadSaveMode.LoadingVars && architectPlateStyle == "Bar")
+            // A saved style that no longer exists draws nothing, and draws nothing
+            // SILENTLY, which is the worst way for a setting to break. Renames get
+            // mapped; anything else unrecognised falls back rather than vanishing.
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                architectPlateStyle = "Square";
+                if (architectPlateStyle == "Bar")
+                {
+                    architectPlateStyle = "Square";
+                }
+
+                if (System.Array.IndexOf(ArchitectPlate.Styles, architectPlateStyle) < 0)
+                {
+                    architectPlateStyle = "Plate";
+                }
             }
             base.ExposeData();
         }
@@ -687,10 +695,7 @@ namespace LizarbInterface
 
             listing.Gap();
             listing.Label("LizarbInterface.Architect.PlateStyle".Translate());
-            foreach (string style in PlateStyles)
-            {
-                DoPlateStyleRow(listing, style);
-            }
+            DoPlateStyleGrid(listing);
 
             listing.CheckboxLabeled(
                 "LizarbInterface.Architect.ShapeOutline".Translate(),
@@ -716,46 +721,68 @@ namespace LizarbInterface
         private static string[] PlateStyles => ArchitectPlate.Styles;
 
         /// <summary>
-        /// One row of the shape picker, drawn as a real architect button rather than
-        /// described in words. The shapes differ by geometry, not by name, so a list
-        /// of labels hides most of what is being chosen.
+        /// The shape picker, as a grid of real architect buttons rather than a list
+        /// of names. The shapes differ by geometry, so words hide most of the choice,
+        /// and twelve of them down a column pushed everything else off the page.
         /// </summary>
-        private void DoPlateStyleRow(Listing_Standard listing, string style)
+        private void DoPlateStyleGrid(Listing_Standard listing)
         {
-            const float RowHeight = 38f;
-            const float SampleWidth = 150f;
+            const float CellHeight = 40f;
+            const float MinCellWidth = 290f;
 
-            Rect row = listing.GetRect(RowHeight);
+            string[] styles = PlateStyles;
+            float width = listing.ColumnWidth;
+            int columns = Mathf.Clamp(Mathf.FloorToInt(width / MinCellWidth), 1, 3);
+            int rows = Mathf.CeilToInt(styles.Length / (float)columns);
+
+            Rect area = listing.GetRect(rows * CellHeight);
+            float cellWidth = width / columns;
+
+            for (int i = 0; i < styles.Length; i++)
+            {
+                var cell = new Rect(
+                    area.x + (i % columns) * cellWidth,
+                    area.y + (i / columns) * CellHeight,
+                    cellWidth,
+                    CellHeight);
+
+                DoPlateStyleCell(cell, styles[i]);
+            }
+        }
+
+        private void DoPlateStyleCell(Rect cell, string style)
+        {
             bool selected = Settings.architectPlateStyle == style;
+            Rect inner = cell.ContractedBy(2f);
 
             if (selected)
             {
-                Widgets.DrawHighlightSelected(row);
+                Widgets.DrawHighlightSelected(inner);
             }
-            else if (Mouse.IsOver(row))
+            else if (Mouse.IsOver(inner))
             {
-                Widgets.DrawHighlight(row);
+                Widgets.DrawHighlight(inner);
             }
 
-            var sample = new Rect(row.x + 8f, row.y + 3f, SampleWidth, RowHeight - 6f);
+            float sampleWidth = Mathf.Min(150f, inner.width * 0.55f);
+            var sample = new Rect(inner.x + 4f, inner.y + 3f, sampleWidth, inner.height - 6f);
             DrawPlateSample(sample, style);
 
-            Rect label = row;
-            label.xMin = sample.xMax + 12f;
+            Rect label = inner;
+            label.xMin = sample.xMax + 10f;
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(label, ("LizarbInterface.Architect.PlateStyle." + style).Translate());
             Text.Anchor = TextAnchor.UpperLeft;
 
-            TooltipHandler.TipRegion(row,
+            TooltipHandler.TipRegion(inner,
                 ("LizarbInterface.Architect.PlateStyle." + style + ".Tip").Translate());
 
-            if (Widgets.ButtonInvisible(row))
+            if (Widgets.ButtonInvisible(inner))
             {
                 Settings.architectPlateStyle = style;
                 RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
             }
         }
-
         /// <summary>
         /// <summary>
         /// Calls the same draw the game uses, so the two cannot drift.
@@ -780,12 +807,11 @@ namespace LizarbInterface
             Color tint = new Color(205f / 255f, 137f / 255f, 95f / 255f, Settings.architectPlateAlpha);
             ArchitectPlate.Draw(rect.ContractedBy(3f), style, tint);
 
-            Texture2D icon = AtlasSwap.Shared("IconProduction");
-            if (icon != null)
-            {
-                float size = Mathf.Min(24f, rect.height - 8f);
-                GUI.DrawTexture(new Rect(rect.x + 5f, rect.y + (rect.height - size) / 2f, size, size), icon);
-            }
+            // The same call the real button makes. Sizing the icon here by hand is
+            // what put it a pixel off the shape: the button uses
+            // min(26, max(12, h - 10)) and this used min(24, h - 8), so at a row
+            // height of 32 one said 22 and the other 24.
+            ArchitectIcons.Draw(rect, "Production");
 
             // The label uses the SAME rule the real button does, so ticking "colour
             // the button text" shows its effect here before it is applied anywhere.
@@ -796,7 +822,8 @@ namespace LizarbInterface
             Color previous = GUI.color;
             GUI.color = label;
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(new Rect(rect.x + 36f, rect.y, rect.width - 40f, rect.height), "Production");
+            float textLeft = ArchitectIcons.MarginFor(rect);
+            Widgets.Label(new Rect(rect.x + textLeft, rect.y, rect.width - textLeft - 4f, rect.height), "Production");
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.color = previous;
         }

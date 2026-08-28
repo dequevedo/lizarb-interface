@@ -124,12 +124,8 @@
   <LizarbInterface.Architect.PlateStyle.Shield.Tip>A shield, heavier at the top.</LizarbInterface.Architect.PlateStyle.Shield.Tip>
   <LizarbInterface.Architect.PlateStyle.Hex>Hexagon</LizarbInterface.Architect.PlateStyle.Hex>
   <LizarbInterface.Architect.PlateStyle.Hex.Tip>A flat-topped hexagon.</LizarbInterface.Architect.PlateStyle.Hex.Tip>
-  <LizarbInterface.Architect.PlateStyle.Chip>Chip</LizarbInterface.Architect.PlateStyle.Chip>
-  <LizarbInterface.Architect.PlateStyle.Chip.Tip>A chip with pins on two sides.</LizarbInterface.Architect.PlateStyle.Chip.Tip>
   <LizarbInterface.Architect.PlateStyle.Cascade>Cascade</LizarbInterface.Architect.PlateStyle.Cascade>
   <LizarbInterface.Architect.PlateStyle.Cascade.Tip>A square, then bars stepping down to its right.</LizarbInterface.Architect.PlateStyle.Cascade.Tip>
-  <LizarbInterface.Architect.PlateStyle.Underline>Underline</LizarbInterface.Architect.PlateStyle.Underline>
-  <LizarbInterface.Architect.PlateStyle.Underline.Tip>A rule along the bottom of the button.</LizarbInterface.Architect.PlateStyle.Underline.Tip>
   <LizarbInterface.Architect.ShapeOutline>Black outline on the shape</LizarbInterface.Architect.ShapeOutline>
   <LizarbInterface.Architect.ShapeOutline.Tip>Rings the shape in black, which keeps it separate from the button underneath. Painted as the same shape one pixel larger behind, so it follows whatever shape is chosen.</LizarbInterface.Architect.ShapeOutline.Tip>
 </LanguageData>
