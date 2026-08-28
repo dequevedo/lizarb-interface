@@ -85,7 +85,16 @@ namespace LizarbInterface
         /// plays every time any dialog opens, and what feels elegant on the first
         /// open feels like lag on the fiftieth.
         /// </summary>
-        public float animationDuration = 0.12f;
+        public float animationDuration = 0.35f;
+
+        /// <summary>Animate the main panels: Architect, Work, Schedule and the rest.</summary>
+        public bool animateMainTabs = true;
+
+        /// <summary>Animate immediate windows, e.g. the inspect pane.</summary>
+        public bool animateImmediate = true;
+
+        /// <summary>Animate anything on a layer the three toggles above do not cover.</summary>
+        public bool animateOtherLayers = true;
 
         // Which surfaces the mod is allowed to touch.
         //
@@ -164,7 +173,10 @@ namespace LizarbInterface
             Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
             Scribe_Values.Look(ref windowOpacity, "windowOpacity", 1f);
             Scribe_Values.Look(ref windowAnimation, "windowAnimation", defaultValue: true);
-            Scribe_Values.Look(ref animationDuration, "animationDuration", 0.12f);
+            Scribe_Values.Look(ref animationDuration, "animationDuration", 0.35f);
+            Scribe_Values.Look(ref animateMainTabs, "animateMainTabs", defaultValue: true);
+            Scribe_Values.Look(ref animateImmediate, "animateImmediate", defaultValue: true);
+            Scribe_Values.Look(ref animateOtherLayers, "animateOtherLayers", defaultValue: true);
             Scribe_Values.Look(ref skinButtons, "skinButtons", defaultValue: true);
             Scribe_Values.Look(ref skinWindows, "skinWindows", defaultValue: true);
             Scribe_Values.Look(ref skinTabs, "skinTabs", defaultValue: true);
@@ -648,11 +660,28 @@ namespace LizarbInterface
                 ref Settings.windowAnimation,
                 "LizarbInterface.WindowAnimation.Tip".Translate());
 
-            if (Settings.windowAnimation)
+            listing.CheckboxLabeled(
+                "LizarbInterface.AnimateMainTabs".Translate(),
+                ref Settings.animateMainTabs,
+                "LizarbInterface.AnimateMainTabs.Tip".Translate());
+
+            listing.CheckboxLabeled(
+                "LizarbInterface.AnimateImmediate".Translate(),
+                ref Settings.animateImmediate,
+                "LizarbInterface.AnimateImmediate.Tip".Translate());
+
+            listing.CheckboxLabeled(
+                "LizarbInterface.AnimateOther".Translate(),
+                ref Settings.animateOtherLayers,
+                "LizarbInterface.AnimateOther.Tip".Translate());
+
+            bool anyAnimation = Settings.windowAnimation || Settings.animateMainTabs ||
+                                Settings.animateImmediate || Settings.animateOtherLayers;
+            if (anyAnimation)
             {
                 listing.Label("LizarbInterface.AnimationDuration".Translate(
                     Mathf.RoundToInt(Settings.animationDuration * 1000f).ToString()));
-                Settings.animationDuration = listing.Slider(Settings.animationDuration, 0.05f, 0.35f);
+                Settings.animationDuration = listing.Slider(Settings.animationDuration, 0.05f, 0.6f);
             }
         }
 

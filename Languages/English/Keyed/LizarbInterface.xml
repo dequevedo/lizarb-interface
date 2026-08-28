@@ -112,4 +112,10 @@
   <LizarbInterface.Architect.PlateStyle.Cascade.Tip>A square, then bars stepping down to its right.</LizarbInterface.Architect.PlateStyle.Cascade.Tip>
   <LizarbInterface.Architect.ShapeOutline>Black outline on the shape</LizarbInterface.Architect.ShapeOutline>
   <LizarbInterface.Architect.ShapeOutline.Tip>Rings the shape in black, which keeps it separate from the button underneath. Painted as the same shape one pixel larger behind, so it follows whatever shape is chosen.</LizarbInterface.Architect.ShapeOutline.Tip>
+  <LizarbInterface.AnimateMainTabs>Animate the main panels</LizarbInterface.AnimateMainTabs>
+  <LizarbInterface.AnimateMainTabs.Tip>Architect, Work, Schedule and the rest of the bottom bar. These open constantly, so the animation is felt far more often here than on a dialog.</LizarbInterface.AnimateMainTabs.Tip>
+  <LizarbInterface.AnimateImmediate>Animate immediate windows</LizarbInterface.AnimateImmediate>
+  <LizarbInterface.AnimateImmediate.Tip>The inspect pane and the other panels the game rebuilds every frame. They come and go with what is selected, so this fires often.</LizarbInterface.AnimateImmediate.Tip>
+  <LizarbInterface.AnimateOther>Animate everything else</LizarbInterface.AnimateOther>
+  <LizarbInterface.AnimateOther.Tip>Any window on a layer the three above do not cover.</LizarbInterface.AnimateOther.Tip>
 </LanguageData>

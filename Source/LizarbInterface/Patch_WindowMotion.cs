@@ -19,11 +19,40 @@ namespace LizarbInterface
 
         private static readonly Dictionary<Window, float> openedAt = new Dictionary<Window, float>();
 
-        private static bool ShouldSkip(Window window)
+        /// <summary>
+        /// Which toggle governs this window. Type is checked before layer because a
+        /// MainTabWindow sits on the same layer as plenty of things that are not one.
+        /// </summary>
+        private static bool Animates(Window window, LizarbInterfaceSettings settings)
         {
-            return window is MainTabWindow
-                   || window is ImmediateWindow
-                   || window.layer != WindowLayer.Dialog && window.layer != WindowLayer.SubSuper;
+            if (window is MainTabWindow)
+            {
+                return settings.animateMainTabs;
+            }
+
+            if (window is ImmediateWindow)
+            {
+                return settings.animateImmediate;
+            }
+
+            if (window.layer == WindowLayer.Dialog || window.layer == WindowLayer.SubSuper)
+            {
+                return settings.windowAnimation;
+            }
+
+            return settings.animateOtherLayers;
+        }
+
+        /// <summary>
+        /// Opacity keeps the ORIGINAL scope on purpose. Letting it follow the new
+        /// animation toggles would make the Architect menu translucent the moment
+        /// someone ticked "animate main panels", which is not what that asks for.
+        /// </summary>
+        private static bool Fades(Window window)
+        {
+            return !(window is MainTabWindow)
+                   && !(window is ImmediateWindow)
+                   && (window.layer == WindowLayer.Dialog || window.layer == WindowLayer.SubSuper);
         }
 
         /// <summary>Harmony allows one __state, so colour and matrix travel together.</summary>
@@ -39,14 +68,14 @@ namespace LizarbInterface
             __state.Matrix = GUI.matrix;
 
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || ShouldSkip(__instance))
+            if (settings == null || !settings.enabled)
             {
                 return;
             }
 
-            float alpha = settings.windowOpacity;
+            float alpha = Fades(__instance) ? settings.windowOpacity : 1f;
 
-            if (settings.windowAnimation)
+            if (Animates(__instance, settings))
             {
                 if (!openedAt.TryGetValue(__instance, out float start))
                 {
