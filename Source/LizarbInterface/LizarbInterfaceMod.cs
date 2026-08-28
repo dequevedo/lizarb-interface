@@ -458,9 +458,6 @@ namespace LizarbInterface
 
                 DrawThemeSwatch(area, Themes[i].Id);
             }
-
-            listing.Gap(4f);
-            listing.Label(("LizarbInterface.Theme." + Settings.theme + ".Tip").Translate());
         }
 
         private void DrawThemeSwatch(Rect area, string theme)
@@ -497,6 +494,10 @@ namespace LizarbInterface
             {
                 Widgets.DrawHighlight(area);
             }
+
+            // The description moves here rather than being deleted: on hover it
+            // costs no room on a page that already runs long.
+            TooltipHandler.TipRegion(area, ("LizarbInterface.Theme." + theme + ".Tip").Translate());
 
             if (Widgets.ButtonInvisible(area))
             {
