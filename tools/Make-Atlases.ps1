@@ -210,7 +210,7 @@ function New-RoundAtlas {
             $ornamentHit = $false
             $plate = 0.0
             $bcU = 0.0
-            $ow = [Math]::Max(1.0, $scale)
+            $ow = [Math]::Max(1.0, $scale * 0.8)
 
             if ($Ornament -eq 'Bracket') {
                 # overlaid L, hugging the corner
@@ -264,7 +264,7 @@ function New-RoundAtlas {
                 $ornamentHit = $false
             $plate = 0.0
             $bcU = 0.0
-            $ow = [Math]::Max(1.0, $scale)
+            $ow = [Math]::Max(1.0, $scale * 0.8)
                 $rr = 3.1 * $scale
                 foreach ($a in @(22.0, 68.0)) {
                     $rad = $a * [Math]::PI / 180.0
@@ -486,6 +486,13 @@ function New-RoundAtlas {
                 if ($Recess -le 0) {
                     if ($Flat) { $c = Blend $body $Black 0.28 }
                     else { $c = Blend $body $Black 0.45 }     # sombra interna
+                }
+                elseif ($Flat) {
+                    # Two flat steps rather than a ramp. The direction is what does
+                    # the work: shadow on the top-left lip, light on the bottom-right
+                    # is the INVERTED bevel, and inverted is what reads as sunk.
+                    if ($nearTopLeft) { $c = Blend $body $Black 0.45 }
+                    else { $c = Blend $body @(255, 246, 220) 0.16 }
                 }
                 else {
                     # Deep into the recess the light returns to the flat interior.
@@ -1030,7 +1037,7 @@ $Themes = @{
     # The palette is warm grey rather than oxblood and gilt, because saturation
     # was doing as much of the clutter as the geometry was.
     'Grimoire' = @{
-        Ornament = 'BookCorner'; Edge = 'Plain'; Pattern = 'Hatch'; Flat = $true
+        Ornament = 'BookCorner'; Edge = 'Plain'; Pattern = 'Hatch'; Flat = $true; Recess = 3.5
         Radius = @{ Button = 3; Tab = 3; Window = 6; Section = 3 }
         Fillet = @{ Thin = 2; Fat = 2; WindowThin = 2; WindowFat = 2 }
         Button  = @{ Light = @(150, 142, 128); Dark = @(74, 68, 61);   Fill = @(58, 53, 48) }
