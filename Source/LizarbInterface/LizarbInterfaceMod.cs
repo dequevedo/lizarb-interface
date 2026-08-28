@@ -87,6 +87,9 @@ namespace LizarbInterface
         /// </summary>
         public float animationDuration = 0.35f;
 
+        /// <summary>Which opening animation, from WindowAnimation.Styles.</summary>
+        public string windowAnimationStyle = "Scale";
+
         /// <summary>Animate the main panels: Architect, Work, Schedule and the rest.</summary>
         public bool animateMainTabs = true;
 
@@ -174,6 +177,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref windowOpacity, "windowOpacity", 1f);
             Scribe_Values.Look(ref windowAnimation, "windowAnimation", defaultValue: true);
             Scribe_Values.Look(ref animationDuration, "animationDuration", 0.35f);
+            Scribe_Values.Look(ref windowAnimationStyle, "windowAnimationStyle", "Scale");
             Scribe_Values.Look(ref animateMainTabs, "animateMainTabs", defaultValue: true);
             Scribe_Values.Look(ref animateImmediate, "animateImmediate", defaultValue: true);
             Scribe_Values.Look(ref animateOtherLayers, "animateOtherLayers", defaultValue: true);
@@ -682,6 +686,10 @@ namespace LizarbInterface
                 listing.Label("LizarbInterface.AnimationDuration".Translate(
                     Mathf.RoundToInt(Settings.animationDuration * 1000f).ToString()));
                 Settings.animationDuration = listing.Slider(Settings.animationDuration, 0.05f, 0.6f);
+
+                listing.Gap(4f);
+                listing.Label("LizarbInterface.AnimationStyle".Translate());
+                DoAnimationStyleGrid(listing);
             }
         }
 
@@ -746,6 +754,64 @@ namespace LizarbInterface
         }
 
         private static string[] PlateStyles => ArchitectPlate.Styles;
+
+        /// <summary>
+        /// Animation cannot be shown standing still, so picking one replays it on the
+        /// settings window itself: forgetting the window makes the patch treat it as
+        /// newly opened on the next frame.
+        /// </summary>
+        private void DoAnimationStyleGrid(Listing_Standard listing)
+        {
+            const float CellHeight = 28f;
+            const float MinCellWidth = 150f;
+
+            string[] styles = WindowAnimation.Styles;
+            float width = listing.ColumnWidth;
+            int columns = Mathf.Clamp(Mathf.FloorToInt(width / MinCellWidth), 1, 4);
+            int rows = Mathf.CeilToInt(styles.Length / (float)columns);
+
+            Rect area = listing.GetRect(rows * CellHeight);
+            float cellWidth = width / columns;
+
+            for (int i = 0; i < styles.Length; i++)
+            {
+                var cell = new Rect(
+                    area.x + (i % columns) * cellWidth,
+                    area.y + (i / columns) * CellHeight,
+                    cellWidth,
+                    CellHeight).ContractedBy(2f);
+
+                bool selected = Settings.windowAnimationStyle == styles[i];
+                if (selected)
+                {
+                    Widgets.DrawHighlightSelected(cell);
+                }
+                else if (Mouse.IsOver(cell))
+                {
+                    Widgets.DrawHighlight(cell);
+                }
+
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(cell, ("LizarbInterface.Animation." + styles[i]).Translate());
+                Text.Anchor = TextAnchor.UpperLeft;
+
+                if (Widgets.ButtonInvisible(cell))
+                {
+                    Settings.windowAnimationStyle = styles[i];
+                    ReplayAnimation();
+                    RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+                }
+            }
+        }
+
+        private static void ReplayAnimation()
+        {
+            Window window = Find.WindowStack?.WindowOfType<RimWorld.Dialog_ModSettings>();
+            if (window != null)
+            {
+                Patch_WindowMotion.Forget(window);
+            }
+        }
 
         /// <summary>
         /// The shape picker, as a grid of real architect buttons rather than a list

@@ -118,4 +118,14 @@
   <LizarbInterface.AnimateImmediate.Tip>O painel de inspeção e os outros que o jogo reconstrói a cada quadro. Eles aparecem e somem conforme a seleção, então isto dispara com frequência.</LizarbInterface.AnimateImmediate.Tip>
   <LizarbInterface.AnimateOther>Animar todo o resto</LizarbInterface.AnimateOther>
   <LizarbInterface.AnimateOther.Tip>Qualquer janela numa camada que os três acima não cobrem.</LizarbInterface.AnimateOther.Tip>
+  <LizarbInterface.AnimationStyle>Estilo da animação (clique para rever)</LizarbInterface.AnimationStyle>
+  <LizarbInterface.Animation.Scale>Escala</LizarbInterface.Animation.Scale>
+  <LizarbInterface.Animation.Pop>Salto</LizarbInterface.Animation.Pop>
+  <LizarbInterface.Animation.Zoom>Recuo</LizarbInterface.Animation.Zoom>
+  <LizarbInterface.Animation.Rise>Subida</LizarbInterface.Animation.Rise>
+  <LizarbInterface.Animation.Slide>Deslize</LizarbInterface.Animation.Slide>
+  <LizarbInterface.Animation.Unfold>Desdobra</LizarbInterface.Animation.Unfold>
+  <LizarbInterface.Animation.Flip>Virada</LizarbInterface.Animation.Flip>
+  <LizarbInterface.Animation.Tilt>Inclinada</LizarbInterface.Animation.Tilt>
+  <LizarbInterface.Animation.Fade>Esmaece</LizarbInterface.Animation.Fade>
 </LanguageData>

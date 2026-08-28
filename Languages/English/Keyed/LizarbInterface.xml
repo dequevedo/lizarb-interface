@@ -118,4 +118,14 @@
   <LizarbInterface.AnimateImmediate.Tip>The inspect pane and the other panels the game rebuilds every frame. They come and go with what is selected, so this fires often.</LizarbInterface.AnimateImmediate.Tip>
   <LizarbInterface.AnimateOther>Animate everything else</LizarbInterface.AnimateOther>
   <LizarbInterface.AnimateOther.Tip>Any window on a layer the three above do not cover.</LizarbInterface.AnimateOther.Tip>
+  <LizarbInterface.AnimationStyle>Animation style (click to replay)</LizarbInterface.AnimationStyle>
+  <LizarbInterface.Animation.Scale>Scale</LizarbInterface.Animation.Scale>
+  <LizarbInterface.Animation.Pop>Pop</LizarbInterface.Animation.Pop>
+  <LizarbInterface.Animation.Zoom>Zoom out</LizarbInterface.Animation.Zoom>
+  <LizarbInterface.Animation.Rise>Rise</LizarbInterface.Animation.Rise>
+  <LizarbInterface.Animation.Slide>Slide</LizarbInterface.Animation.Slide>
+  <LizarbInterface.Animation.Unfold>Unfold</LizarbInterface.Animation.Unfold>
+  <LizarbInterface.Animation.Flip>Flip</LizarbInterface.Animation.Flip>
+  <LizarbInterface.Animation.Tilt>Tilt</LizarbInterface.Animation.Tilt>
+  <LizarbInterface.Animation.Fade>Fade</LizarbInterface.Animation.Fade>
 </LanguageData>

@@ -15,7 +15,6 @@ namespace LizarbInterface
     internal static class Patch_WindowMotion
     {
         private const float MinDuration = 0.01f;
-        private const float StartScale = 0.94f;
 
         private static readonly Dictionary<Window, float> openedAt = new Dictionary<Window, float>();
 
@@ -89,20 +88,18 @@ namespace LizarbInterface
 
                 if (progress < 1f)
                 {
-                    float eased = 1f - Mathf.Pow(1f - progress, 3f);
-                    float scale = Mathf.Lerp(StartScale, 1f, eased);
-
-                    // Multiplied on the RIGHT: GUI.matrix maps GUI coords to screen and
-                    // the pivot is in GUI coords, so the scale must happen before that
-                    // mapping. On the left it applies in screen space and the window
-                    // lands wrong at any UI scale but 1.
                     Vector2 pivot = __instance.windowRect.center;
-                    GUI.matrix = GUI.matrix
-                                 * Matrix4x4.TRS(pivot, Quaternion.identity, Vector3.one)
-                                 * Matrix4x4.Scale(new Vector3(scale, scale, 1f))
-                                 * Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
+                    if (WindowAnimation.Transform(settings.windowAnimationStyle, progress, pivot,
+                                                  out Matrix4x4 transform, out float fade))
+                    {
+                        // Multiplied on the RIGHT: GUI.matrix maps GUI coords to screen
+                        // and the pivot is in GUI coords, so the transform has to happen
+                        // before that mapping. On the left it applies in screen space and
+                        // the window lands wrong at any UI scale but 1.
+                        GUI.matrix = GUI.matrix * transform;
+                    }
 
-                    alpha *= eased;
+                    alpha *= fade;
                 }
             }
 
