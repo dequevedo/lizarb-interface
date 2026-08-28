@@ -11,7 +11,7 @@ namespace LizarbInterface
     [StaticConstructorOnStartup]
     internal static class PatchAudit
     {
-        private const string OurId = "lizarb.interface";
+        private const string OurId = LizarbInterfaceMod.HarmonyId;
 
         static PatchAudit()
         {
@@ -32,7 +32,12 @@ namespace LizarbInterface
 
         private static void Report()
         {
-            var harmony = new Harmony(OurId);
+            Harmony harmony = LizarbInterfaceMod.Harmony;
+            if (harmony == null)
+            {
+                return;
+            }
+
             var shared = new List<string>();
 
             foreach (MethodBase method in harmony.GetPatchedMethods())

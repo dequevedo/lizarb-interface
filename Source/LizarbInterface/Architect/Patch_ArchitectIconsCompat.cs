@@ -17,7 +17,12 @@ namespace LizarbInterface
         {
             try
             {
-                var harmony = new Harmony("lizarb.interface");
+                Harmony harmony = LizarbInterfaceMod.Harmony;
+                if (harmony == null)
+                {
+                    return;
+                }
+
                 Type type = AccessTools.TypeByName(TargetType);
                 MethodInfo target = type == null ? null : AccessTools.Method(type, TargetMethod);
                 if (target == null)

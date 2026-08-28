@@ -203,12 +203,17 @@ namespace LizarbInterface
             "Hatch", "Medieval", "Scales", "Bricks", "Dots", "Chevron", "Woodgrain",
         };
 
+        internal const string HarmonyId = "lizarb.interface";
+
+        internal static Harmony Harmony { get; private set; }
+
         public LizarbInterfaceMod(ModContentPack content) : base(content)
         {
             RootDir = content.RootDir;
             Pack = content;
             Settings = GetSettings<LizarbInterfaceSettings>();
-            new Harmony("lizarb.interface").PatchAll(Assembly.GetExecutingAssembly());
+            Harmony = new Harmony(HarmonyId);
+            Harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
         public static Rect Inset(Rect rect)
