@@ -161,7 +161,7 @@ namespace LizarbInterface
 
         public static ModContentPack Pack { get; private set; }
 
-        private static readonly (string Id, string Pattern, Color Outline)[] Themes =
+        internal static readonly (string Id, string Pattern, Color Outline)[] Themes =
         {
             ("Brass",    "Hatch",    new Color(0.10f, 0.07f, 0.04f)),
             ("Iron",     "Bricks",   new Color(0.05f, 0.06f, 0.07f)),
