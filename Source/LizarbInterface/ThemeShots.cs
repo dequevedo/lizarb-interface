@@ -160,14 +160,14 @@ namespace LizarbInterface
     internal static class ThemeShots
     {
         [DebugAction("Lizarb Interface", name = "Shoot every theme",
-                     allowedGameStates = AllowedGameStates.Entry | AllowedGameStates.Playing)]
+                     allowedGameStates = AllowedGameStates.Invalid)]
         private static void ShootEveryTheme()
         {
             Run(false);
         }
 
         [DebugAction("Lizarb Interface", name = "Shoot every theme, vanilla first",
-                     allowedGameStates = AllowedGameStates.Entry | AllowedGameStates.Playing)]
+                     allowedGameStates = AllowedGameStates.Invalid)]
         private static void ShootWithVanilla()
         {
             Run(true);
