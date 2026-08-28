@@ -108,12 +108,8 @@
   <LizarbInterface.Architect.PlateStyle.Flat>Flat</LizarbInterface.Architect.PlateStyle.Flat>
   <LizarbInterface.Architect.PlateStyle.Flat.Tip>A plain rectangle, ignoring the theme shape.</LizarbInterface.Architect.PlateStyle.Flat.Tip>  <LizarbInterface.Theme.Grimoire>Grimoire</LizarbInterface.Theme.Grimoire>
   <LizarbInterface.Theme.Grimoire.Tip>Oxblood leather boards with gilt tooling. The corner is the metal piece nailed to a real binding, and the border carries the blind-tooled triple rule that runs around a cover.</LizarbInterface.Theme.Grimoire.Tip>
-  <LizarbInterface.Theme.Circuit>Circuit</LizarbInterface.Theme.Circuit>
-  <LizarbInterface.Theme.Circuit.Tip>A printed board: near black, cyan traces, a via at every corner. The one theme here not pretending to be a material you could hold.</LizarbInterface.Theme.Circuit.Tip>
-  <LizarbInterface.Theme.Porcelain>Porcelain</LizarbInterface.Theme.Porcelain>
-  <LizarbInterface.Theme.Porcelain.Tip>Glazed white with a scalloped rim and a cove moulding, both from tableware rather than hardware. The only pale theme, which sets it further apart than any change of colour could.</LizarbInterface.Theme.Porcelain.Tip>
   <LizarbInterface.Theme.Foundry>Foundry</LizarbInterface.Theme.Foundry>
   <LizarbInterface.Theme.Foundry.Tip>Hot-rolled plate with the orange still in it. Wide stepped shoulders and three rivets to a corner: mass is the whole read.</LizarbInterface.Theme.Foundry.Tip>
-  <LizarbInterface.Theme.Lacquer>Lacquer</LizarbInterface.Theme.Lacquer>
-  <LizarbInterface.Theme.Lacquer.Tip>Black ground, cinnabar and gold leaf. The corner fan is asymmetric on purpose, so it reads as a painted flourish instead of a fitting.</LizarbInterface.Theme.Lacquer.Tip>
+  <LizarbInterface.GrainOnButtons>Texture on buttons too</LizarbInterface.GrainOnButtons>
+  <LizarbInterface.GrainOnButtons.Tip>Tiles the same pattern across button, tooltip and menu faces, not just window backgrounds. With the Grimoire skin this is what gives the buttons their parchment.</LizarbInterface.GrainOnButtons.Tip>
 </LanguageData>

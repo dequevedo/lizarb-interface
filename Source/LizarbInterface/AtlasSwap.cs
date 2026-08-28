@@ -406,6 +406,46 @@ namespace LizarbInterface
             Part(right, UvRight, atlas);
         }
 
+        /// <summary>
+        /// Tiles the theme pattern across the face of a skinned piece, so a button
+        /// can carry the same parchment or grain the windows do.
+        ///
+        /// Deliberately ONE draw call, with no arc banding: this runs for every atlas
+        /// the game draws in a frame, which is dozens, and the square corners of the
+        /// tile are invisible under a border at these opacities.
+        /// </summary>
+        internal static void DrawFaceGrain(Rect rect, float corner)
+        {
+            LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
+            if (settings == null || !settings.grainOnButtons ||
+                !settings.texturedBackground || settings.backgroundGrain <= 0.001f)
+            {
+                return;
+            }
+
+            Rect face = rect.ContractedBy(corner * 0.5f);
+            if (face.width < 6f || face.height < 6f)
+            {
+                return;
+            }
+
+            Texture2D grain = Own("Pattern_" + settings.backgroundPattern, tiling: true);
+            if (grain == null)
+            {
+                return;
+            }
+
+            float tileW = grain.width;
+            float tileH = grain.height;
+
+            Color previous = GUI.color;
+            GUI.color = new Color(1f, 1f, 1f, settings.backgroundGrain);
+            GUI.DrawTextureWithTexCoords(
+                face, grain,
+                new Rect(0f, 0f, face.width / tileW, face.height / tileH));
+            GUI.color = previous;
+        }
+
         private static void Part(Rect drawRect, Rect uv, Texture2D atlas)
         {
             Widgets.DrawTexturePart(drawRect, uv, atlas);
@@ -480,7 +520,9 @@ namespace LizarbInterface
             // corner size has to come from AtlasSwap.Scale instead of the texture
             // width. Only inset what we skinned: atlases we do not replace keep
             // vanilla geometry, so nothing else in the game shifts.
-            AtlasSwap.DrawScaled(LizarbInterfaceMod.Inset(rect), mine, drawTop);
+            Rect painted = LizarbInterfaceMod.Inset(rect);
+            AtlasSwap.DrawScaled(painted, mine, drawTop);
+            AtlasSwap.DrawFaceGrain(painted, mine.width * 0.25f / AtlasSwap.Scale);
             return false;
         }
     }

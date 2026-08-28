@@ -112,7 +112,14 @@ function New-RoundAtlas {
         #   Cove    concave sweep from fillet to fill, with a bead at the bottom
         #   Rail    two thin rules with a dark channel between them (bus bar)
         #   Bead    a single rounded half-round moulding
-        [string]$Edge = 'Plain'
+        [string]$Edge = 'Plain',
+
+        # Depth, in 1x pixels, of a recess cut into the interior just inside the
+        # border. The shading is INVERTED against the usual bevel - shadow on the
+        # top-left lip, light on the bottom-right - which is what reads as sunk
+        # rather than raised, and is what makes an applied corner piece sit proud
+        # of the surface around it.
+        [double]$Recess = 0.0
     )
 
     $bmp = New-Object System.Drawing.Bitmap($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -125,6 +132,8 @@ function New-RoundAtlas {
     # existing themes come out byte for byte identical.
     $profileDepth = 0.0
     if ($Edge -ne 'Plain') { $profileDepth = 5.0 * $scale }
+    $recessDepth = 1.0
+    if ($Recess -gt 0) { $recessDepth = $Recess * $scale }
     $r1 = 1.6 * $scale
     $r2 = $r1 + [Math]::Max(1.0, 1.4 * $scale)
 
@@ -193,6 +202,9 @@ function New-RoundAtlas {
 
             # --- ornaments added on top of the outline ---------------------
             $ornamentHit = $false
+            $plate = 0.0
+            $bcU = 0.0
+            $ow = [Math]::Max(1.0, $scale)
 
             if ($Ornament -eq 'Bracket') {
                 # overlaid L, hugging the corner
@@ -202,22 +214,25 @@ function New-RoundAtlas {
                                (($cx -le $bar) -or ($cy -le $bar)) -and ($dist -ge 1)
             }
             elseif ($Ornament -eq 'BookCorner') {
-                # The metal corner piece on a bound book: a triangular plate across
-                # the corner, its inner edge stepped, with a small stud set in it.
-                # The plate is SOLID rather than an outline, which is what separates
-                # it from Bracket: hardware laid on the board, not a drawn frame.
-                $reach = 15.0 * $scale
+                # The metal corner piece nailed to a bound book. Built as a signed
+                # DISTANCE rather than a boolean hit, which is what buys the two
+                # things a boolean cannot: an outline that follows the piece on the
+                # inside as well as the outside, and a relief that knows how far it
+                # is from either edge.
+                $reach = 10.5 * $scale
                 $diag = $cx + $cy
-                $inner = $reach - [Math]::Floor(($diag / $reach) * 2.0) * (1.6 * $scale)
-                $ornamentHit = ($cx -lt $reach -and $cy -lt $reach) -and
-                               ($diag -lt $inner) -and ($dist -ge 1)
 
-                # the stud, set on the diagonal
-                $sc = 5.2 * $scale
-                $sr = 1.9 * $scale
-                $sdx = $cx - $sc; $sdy = $cy - $sc
-                if ((($sdx * $sdx) + ($sdy * $sdy)) -lt ($sr * $sr)) {
-                    $ornamentHit = $true
+                # Distance to the far side of the plate, measured perpendicular to
+                # the diagonal. 1.4142 converts the sum-of-axes into real distance.
+                $toInner = ($reach - $diag) / 1.4142
+                $toOuter = $dist - 1.0
+
+                $plate = [Math]::Min($toOuter, $toInner)
+                $ornamentHit = ($plate -gt 0) -and ($dist -ge 1)
+
+                if ($ornamentHit) {
+                    # 1 hard against the rim, 0 at the inner edge.
+                    $bcU = $toInner / [Math]::Max(0.001, $toOuter + $toInner)
                 }
             }
             elseif ($Ornament -eq 'Trace') {
@@ -241,6 +256,9 @@ function New-RoundAtlas {
                 # Three rivets in an arc across the corner: a bolted plate, heavier
                 # than the single stud of Studs.
                 $ornamentHit = $false
+            $plate = 0.0
+            $bcU = 0.0
+            $ow = [Math]::Max(1.0, $scale)
                 $rr = 3.1 * $scale
                 foreach ($a in @(22.0, 68.0)) {
                     $rad = $a * [Math]::PI / 180.0
@@ -386,6 +404,18 @@ function New-RoundAtlas {
                 $lit = ($ddx + $ddy) -lt 0
                 $c = if ($lit) { Blend $Light @(255, 240, 210) 0.4 } else { Blend $Dark $Black 0.3 }
             }
+            elseif ($ornamentHit -and $Ornament -eq 'BookCorner') {
+                if ($plate -lt $ow) {
+                    # The inner outline. The outer one is the rim's own, so the piece
+                    # ends up ringed all the way round.
+                    $c = $Black
+                }
+                else {
+                    # Raised: the edge against the rim catches the light, the inner
+                    # edge falls away into shadow.
+                    $c = Blend (Blend $metal $Black 0.42) (Blend $metal @(255, 246, 212) 0.6) $bcU
+                }
+            }
             elseif ($ornamentHit) {
                 $c = $metal
             }
@@ -435,9 +465,18 @@ function New-RoundAtlas {
                     default { $c = $body }
                 }
             }
-            elseif ($dist -lt 2 + $thick + $profileDepth) {
-                $c = Blend $body $Black 0.45                  # sombra interna
+            elseif ($dist -lt 1 + $thick + $profileDepth + $recessDepth) {
                 $alpha = $FillAlpha
+                if ($Recess -le 0) {
+                    $c = Blend $body $Black 0.45              # sombra interna
+                }
+                else {
+                    # Deep into the recess the light returns to the flat interior.
+                    $rt = ($dist - 1 - $thick - $profileDepth) / $recessDepth
+                    $fade = 1.0 - $rt
+                    if ($nearTopLeft) { $c = Blend $body $Black (0.62 * $fade) }
+                    else { $c = Blend $body @(255, 246, 220) (0.30 * $fade) }
+                }
             }
             else {
                 $c = $body
@@ -973,7 +1012,7 @@ $Themes = @{
     # piece nailed to a real binding, and the edge carries the blind-tooled triple
     # rule that runs around a cover. Small radius: leather boards are cut square.
     'Grimoire' = @{
-        Ornament = 'BookCorner'; Edge = 'Ribbed'; Pattern = 'Medieval'
+        Ornament = 'BookCorner'; Edge = 'Ribbed'; Pattern = 'Medieval'; Recess = 3.0
         Radius = @{ Button = 3; Tab = 3; Window = 6; Section = 3 }
         Fillet = @{ Thin = 2; Fat = 3; WindowThin = 2; WindowFat = 4 }
         Button  = @{ Light = @(198, 162, 88);  Dark = @(92, 38, 34);   Fill = @(58, 26, 26) }
@@ -984,42 +1023,10 @@ $Themes = @{
         Window  = @{ Light = @(190, 156, 86);  Dark = @(80, 34, 30);   Fill = @(32, 16, 16) }
         Section = @{ Light = @(128, 104, 58);  Dark = @(58, 26, 24);   Fill = @(24, 12, 12) }
     }
-
-    # Printed circuit. Near-black board, cyan traces, a via at every corner. The
-    # only theme here that is not pretending to be a material you could hold.
-    'Circuit' = @{
-        Ornament = 'Trace'; Edge = 'Rail'; Pattern = 'Dots'
-        Radius = @{ Button = 2; Tab = 2; Window = 4; Section = 2 }
-        Fillet = @{ Thin = 1; Fat = 1; WindowThin = 1; WindowFat = 1 }
-        Button  = @{ Light = @(64, 226, 208);  Dark = @(18, 84, 82);   Fill = @(10, 26, 28) }
-        Hover   = @{ Light = @(126, 255, 236); Dark = @(28, 122, 118); Fill = @(14, 40, 42) }
-        Click   = @{ Light = @(22, 96, 92);    Dark = @(70, 214, 198); Fill = @(6, 18, 20) }
-        Subtle  = @{ Light = @(52, 190, 176);  Dark = @(16, 74, 72);   Fill = @(9, 22, 24) }
-        Tab     = @{ Light = @(90, 244, 222);  Dark = @(22, 100, 96);  Fill = @(12, 32, 34) }
-        Window  = @{ Light = @(48, 178, 166);  Dark = @(14, 68, 66);   Fill = @(6, 15, 17) }
-        Section = @{ Light = @(30, 120, 114);  Dark = @(10, 48, 48);   Fill = @(4, 11, 13) }
-    }
-
-    # Glazed porcelain. The only PALE theme: everything else here is dark, so a
-    # light ground diverges further than any change of hue could. Scalloped rim
-    # and a cove moulding, both taken from tableware rather than from hardware.
-    'Porcelain' = @{
-        Ornament = 'Scallop'; Edge = 'Cove'; Pattern = 'Veins'
-        Radius = @{ Button = 9; Tab = 8; Window = 18; Section = 8 }
-        Fillet = @{ Thin = 2; Fat = 3; WindowThin = 2; WindowFat = 4 }
-        Button  = @{ Light = @(255, 255, 253); Dark = @(126, 144, 176); Fill = @(226, 231, 240) }
-        Hover   = @{ Light = @(255, 255, 255); Dark = @(150, 172, 208); Fill = @(240, 245, 252) }
-        Click   = @{ Light = @(150, 168, 198); Dark = @(232, 238, 248); Fill = @(198, 206, 220) }
-        Subtle  = @{ Light = @(250, 251, 254); Dark = @(134, 152, 184); Fill = @(216, 222, 234) }
-        Tab     = @{ Light = @(255, 255, 255); Dark = @(112, 132, 168); Fill = @(232, 237, 246) }
-        Window  = @{ Light = @(244, 247, 252); Dark = @(120, 138, 172); Fill = @(210, 217, 230) }
-        Section = @{ Light = @(198, 210, 230); Dark = @(140, 156, 184); Fill = @(224, 229, 238) }
-    }
-
     # Foundry plate: hot-rolled steel with the orange still in it. Heavy, wide
     # stepped shoulders and three rivets per corner. Mass is the whole read.
     'Foundry' = @{
-        Ornament = 'Rivets'; Edge = 'Step'; Pattern = 'Bricks'
+        Ornament = 'None'; Edge = 'Step'; Pattern = 'Bricks'
         Radius = @{ Button = 5; Tab = 5; Window = 10; Section = 5 }
         Fillet = @{ Thin = 3; Fat = 5; WindowThin = 4; WindowFat = 7 }
         Button  = @{ Light = @(214, 132, 62);  Dark = @(70, 58, 54);   Fill = @(48, 40, 38) }
@@ -1030,22 +1037,6 @@ $Themes = @{
         Window  = @{ Light = @(178, 112, 56);  Dark = @(58, 49, 46);   Fill = @(28, 24, 23) }
         Section = @{ Light = @(120, 78, 44);   Dark = @(44, 38, 36);   Fill = @(20, 17, 17) }
     }
-
-    # Lacquerware: black ground, cinnabar, gold leaf. The corner fan is asymmetric
-    # on purpose, so it reads as a painted flourish rather than as a fitting.
-    'Lacquer' = @{
-        Ornament = 'Fan'; Edge = 'Bead'; Pattern = 'Chevron'
-        Radius = @{ Button = 8; Tab = 7; Window = 16; Section = 7 }
-        Fillet = @{ Thin = 2; Fat = 2; WindowThin = 2; WindowFat = 3 }
-        Button  = @{ Light = @(226, 182, 88);  Dark = @(122, 26, 24);  Fill = @(26, 14, 14) }
-        Hover   = @{ Light = @(255, 220, 130); Dark = @(168, 40, 34);  Fill = @(44, 20, 19) }
-        Click   = @{ Light = @(128, 100, 46);  Dark = @(206, 164, 78); Fill = @(18, 10, 10) }
-        Subtle  = @{ Light = @(210, 168, 80);  Dark = @(106, 24, 22);  Fill = @(22, 12, 12) }
-        Tab     = @{ Light = @(244, 200, 104); Dark = @(140, 30, 27);  Fill = @(32, 16, 16) }
-        Window  = @{ Light = @(206, 164, 78);  Dark = @(112, 24, 22);  Fill = @(16, 9, 9) }
-        Section = @{ Light = @(140, 110, 52);  Dark = @(76, 18, 17);   Fill = @(12, 7, 7) }
-    }
-
     # The original: dark wood and brass. Warm, round, opulent.
     'Brass' = @{
         Ornament = 'Fillet'; Pattern = 'Hatch'
@@ -1709,6 +1700,7 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     $gl = 0.0; if ($t.ContainsKey('Gloss'))     { $gl = $t.Gloss }
     $ol = $true; if ($t.ContainsKey('Outline')) { $ol = $t.Outline }
     $ed = 'Plain'; if ($t.ContainsKey('Edge')) { $ed = $t.Edge }
+    $rc = 0.0; if ($t.ContainsKey('Recess')) { $rc = $t.Recess }
 
     $OutDir = Join-Path $SkinsRoot $id
     if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
@@ -1718,19 +1710,19 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
 
     New-RoundAtlas -Name 'ButtonBG' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
-        -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Button.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Button.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-RoundAtlas -Name 'ButtonBGMouseover' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat (($t.Fillet.Fat + 0.5)*$S) `
-        -Light $t.Hover.Light -Dark $t.Hover.Dark -Fill $t.Hover.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Hover.Light -Dark $t.Hover.Dark -Fill $t.Hover.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-RoundAtlas -Name 'ButtonBGClick' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
-        -Light $t.Click.Light -Dark $t.Click.Dark -Fill $t.Click.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Click.Light -Dark $t.Click.Dark -Fill $t.Click.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-RoundAtlas -Name 'ButtonSubtleAtlas' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
-        -Light $t.Subtle.Light -Dark $t.Subtle.Dark -Fill $t.Subtle.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Subtle.Light -Dark $t.Subtle.Dark -Fill $t.Subtle.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-TabAtlas -Name 'TabAtlas' -Scale $S -Radius ($t.Radius.Tab*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
@@ -1740,11 +1732,11 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     # for a large radius without crushing the fillet.
     New-RoundAtlas -Name 'WindowAtlas' -Size (128*$S) -Radius ($t.Radius.Window*$S) `
         -Thin ($t.Fillet.WindowThin*$S) -Fat ($t.Fillet.WindowFat*$S) `
-        -Light $t.Window.Light -Dark $t.Window.Dark -Fill $t.Window.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Window.Light -Dark $t.Window.Dark -Fill $t.Window.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-RoundAtlas -Name 'SectionAtlas' -Size (64*$S) -Radius ($t.Radius.Section*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
-        -Light $t.Section.Light -Dark $t.Section.Dark -Fill $t.Section.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Section.Light -Dark $t.Section.Dark -Fill $t.Section.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     # These also go through Widgets.DrawAtlas, so they are 9-slice like the buttons.
     # The slider rail is flat and dark on purpose - the knob is what must stand out.
@@ -1753,7 +1745,7 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
 
     New-RoundAtlas -Name 'TooltipBG' -Size (64*$S) -Radius ($t.Radius.Section*$S) `
         -Thin ($t.Fillet.Thin*$S) -Fat ($t.Fillet.Fat*$S) `
-        -Light $t.Tab.Light -Dark $t.Tab.Dark -Fill $t.Window.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Tab.Light -Dark $t.Tab.Dark -Fill $t.Window.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-RoundAtlas -Name 'FloatMenuOptionBG' -Size (64*$S) -Radius (6*$S) -Thin (1*$S) -Fat (2*$S) `
         -Light $t.Subtle.Light -Dark $t.Subtle.Dark -Fill $t.Subtle.Fill -Ornament 'Fillet' -Outline $ol
@@ -1761,7 +1753,7 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     # Gizmo: the game STRETCHES the whole texture with no 9-slice, so keep the
     # radius small or the corner deforms on a 75px button.
     New-RoundAtlas -Name 'GizmoBG' -Size (64*$S) -Radius (6*$S) -Thin (2*$S) -Fat (3*$S) `
-        -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Button.Fill -Ornament $t.Ornament -Edge $ed -FillAlpha $fa -Gloss $gl -Outline $ol
+        -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Button.Fill -Ornament $t.Ornament -Edge $ed -Recess $rc -FillAlpha $fa -Gloss $gl -Outline $ol
 
     New-Checkbox -Name 'CheckOn'      -State 'On'      -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Section.Fill -Mark $t.Tab.Light
     New-Checkbox -Name 'CheckOff'     -State 'Off'     -Light $t.Button.Light -Dark $t.Button.Dark -Fill $t.Section.Fill -Mark $t.Tab.Light

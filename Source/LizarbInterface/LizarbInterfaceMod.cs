@@ -71,6 +71,9 @@ namespace LizarbInterface
         /// <summary>Nearest-neighbour sampling for the skin textures instead of bilinear.</summary>
         public bool pointFilter;
 
+        /// <summary>Tile the background pattern across button and tooltip faces too.</summary>
+        public bool grainOnButtons = true;
+
         /// <summary>Opacity of dialog windows. 1 = solid.</summary>
         public float windowOpacity = 1f;
 
@@ -152,6 +155,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref backgroundPattern, "backgroundPattern", "Hatch");
             Scribe_Values.Look(ref backgroundGrain, "backgroundGrain", 0.05f);
             Scribe_Values.Look(ref pointFilter, "pointFilter", defaultValue: false);
+            Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
             Scribe_Values.Look(ref windowOpacity, "windowOpacity", 1f);
             Scribe_Values.Look(ref windowAnimation, "windowAnimation", defaultValue: true);
             Scribe_Values.Look(ref animationDuration, "animationDuration", 0.12f);
@@ -205,12 +209,7 @@ namespace LizarbInterface
             ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f)),
             ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f)),
             ("Grimoire", "Medieval",  new Color(0.06f, 0.03f, 0.03f)),
-            ("Circuit",  "Dots",      new Color(0.01f, 0.05f, 0.05f)),
-            // Pale ground, so the outline ink is the only one here that is not near
-            // black: true black under light porcelain reads as soot, not as a line.
-            ("Porcelain", "Veins",    new Color(0.30f, 0.34f, 0.42f)),
             ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f)),
-            ("Lacquer",  "Chevron",   new Color(0.04f, 0.02f, 0.02f)),
         };
 
         /// <summary>Outline colour of the active theme, dark grey as a fallback.</summary>
@@ -789,6 +788,11 @@ namespace LizarbInterface
 
                 listing.Label("LizarbInterface.BackgroundGrain".Translate(Settings.backgroundGrain.ToStringPercent()));
                 Settings.backgroundGrain = listing.Slider(Settings.backgroundGrain, 0f, 1f);
+
+                listing.CheckboxLabeled(
+                    "LizarbInterface.GrainOnButtons".Translate(),
+                    ref Settings.grainOnButtons,
+                    "LizarbInterface.GrainOnButtons.Tip".Translate());
             }
         }
     }
