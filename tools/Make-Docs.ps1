@@ -4,7 +4,8 @@ param(
     [switch]$PreviewOnly,
     [switch]$ArchitectOnly,
     [switch]$FontsOnly,
-    [switch]$ShapesOnly
+    [switch]$ShapesOnly,
+    [switch]$GuidesOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -443,10 +444,132 @@ function Write-Shapes {
     Write-Host "docs\shapes.png  ($($styles.Count) shapes, $Theme)" -ForegroundColor Green
 }
 
-$only = $SheetOnly -or $PreviewOnly -or $ArchitectOnly -or $FontsOnly -or $ShapesOnly
+function Write-Overlay {
+    param([int]$W, [int]$H, [string]$Dir)
+
+    $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $cx = [int]($W / 4)
+    $cy = [int]($H / 4)
+
+    $line = [System.Drawing.Color]::FromArgb(200, 255, 0, 200)
+    $corner = [System.Drawing.Color]::FromArgb(28, 255, 0, 200)
+    $edge = [System.Drawing.Color]::FromArgb(28, 0, 200, 255)
+
+    for ($y = 0; $y -lt $H; $y++) {
+        $inTopBottom = ($y -lt $cy) -or ($y -ge $H - $cy)
+        for ($x = 0; $x -lt $W; $x++) {
+            $inLeftRight = ($x -lt $cx) -or ($x -ge $W - $cx)
+
+            $onLine = ($x -eq $cx) -or ($x -eq $W - $cx - 1) -or ($y -eq $cy) -or ($y -eq $H - $cy - 1)
+
+            if ($onLine) {
+                $bmp.SetPixel($x, $y, $line)
+            } elseif ($inLeftRight -and $inTopBottom) {
+                $bmp.SetPixel($x, $y, $corner)
+            } elseif ($inLeftRight -or $inTopBottom) {
+                $bmp.SetPixel($x, $y, $edge)
+            }
+        }
+    }
+
+    $out = Join-Path $Dir "slices-${W}x${H}.png"
+    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+    Write-Host "  slices-${W}x${H}.png  (corner $cx x $cy texels)" -ForegroundColor DarkGray
+}
+
+function Write-Guides {
+    $dir = Join-Path $Repo 'docs\guides'
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+
+    $sizes = @(
+        , @(64, 64)
+        , @(128, 64)
+        , @(128, 128)
+        , @(256, 256)
+    )
+    foreach ($s in $sizes) { Write-Overlay $s[0] $s[1] $dir }
+
+    $W = 900; $H = 560
+    $c = New-Canvas $W $H
+    $bmp = $c[0]; $g = $c[1]
+
+    $head = New-Object System.Drawing.Font('Segoe UI', 15, [System.Drawing.FontStyle]::Bold)
+    $body = New-Object System.Drawing.Font('Segoe UI', 10)
+    $mono = New-Object System.Drawing.Font('Consolas', 9)
+    $white = [System.Drawing.Brushes]::White
+    $dim = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 168, 160, 150))
+
+    $g.DrawString('Nine slice: what survives where', $head, $white, 24, 18)
+
+    $bx = 24; $by = 62; $bw = 320; $bh = 320
+    $cx = [int]($bw / 4); $cy = [int]($bh / 4)
+
+    $cornerBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(90, 255, 0, 200))
+    $edgeBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(70, 0, 200, 255))
+    $midBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(60, 255, 200, 0))
+
+    $g.FillRectangle($midBrush, ($bx + $cx), ($by + $cy), ($bw - 2 * $cx), ($bh - 2 * $cy))
+    $g.FillRectangle($edgeBrush, ($bx + $cx), $by, ($bw - 2 * $cx), $cy)
+    $g.FillRectangle($edgeBrush, ($bx + $cx), ($by + $bh - $cy), ($bw - 2 * $cx), $cy)
+    $g.FillRectangle($edgeBrush, $bx, ($by + $cy), $cx, ($bh - 2 * $cy))
+    $g.FillRectangle($edgeBrush, ($bx + $bw - $cx), ($by + $cy), $cx, ($bh - 2 * $cy))
+    foreach ($p in @(@(0, 0), @(1, 0), @(0, 1), @(1, 1))) {
+        $g.FillRectangle($cornerBrush, ($bx + $p[0] * ($bw - $cx)), ($by + $p[1] * ($bh - $cy)), $cx, $cy)
+    }
+
+    $pen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(220, 255, 0, 200), 1)
+    $g.DrawRectangle($pen, $bx, $by, ($bw - 1), ($bh - 1))
+    $g.DrawLine($pen, ($bx + $cx), $by, ($bx + $cx), ($by + $bh))
+    $g.DrawLine($pen, ($bx + $bw - $cx), $by, ($bx + $bw - $cx), ($by + $bh))
+    $g.DrawLine($pen, $bx, ($by + $cy), ($bx + $bw), ($by + $cy))
+    $g.DrawLine($pen, $bx, ($by + $bh - $cy), ($bx + $bw), ($by + $bh - $cy))
+
+    $g.DrawString('corner', $mono, $white, ($bx + 12), ($by + 30))
+    $g.DrawString('edge', $mono, $white, ($bx + $bw / 2 - 14), ($by + 30))
+    $g.DrawString('middle', $mono, $white, ($bx + $bw / 2 - 20), ($by + $bh / 2 - 8))
+
+    $tx = 380
+    $lines = @(
+        @('Corner, magenta', 'Never stretched. Both axes are preserved, so this is the only'),
+        @('', 'region where any drawing can go. Its size is the texture width'),
+        @('', 'divided by four, clamped to half the height and half the width.'),
+        @('', ''),
+        @('Edge, blue', 'Stretched along the side, its cross section preserved. A profile'),
+        @('', 'reads; a pattern along the side smears. The top band stretches'),
+        @('', 'horizontally, so vertical detail in it survives.'),
+        @('', ''),
+        @('Middle, amber', 'Stretched on both axes. Flat colour, or a gradient, which just'),
+        @('', 'scales. Anything with detail turns to mush.'),
+        @('', ''),
+        @('When it is short', 'The corner is clamped to half the height, so on an element'),
+        @('', 'thinner than two corners the middle band has no room and the'),
+        @('', 'top quarter is drawn straight against the bottom quarter.'),
+        @('', 'Keep every vertical change inside the top and bottom quarters,'),
+        @('', 'or a seam appears where they meet.')
+    )
+
+    $y = 62
+    foreach ($l in $lines) {
+        if ($l[0]) { $g.DrawString($l[0], $body, $white, $tx, $y) }
+        if ($l[1]) { $g.DrawString($l[1], $body, $dim, ($tx + 120), $y) }
+        $y += 19
+    }
+
+    $g.DrawString('Overlay files in this folder match a texture pixel for pixel. Open one as a layer on top of your art.',
+                  $mono, $dim, 24, ($H - 34))
+
+    $out = Join-Path $dir 'slices.png'
+    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    $g.Dispose(); $bmp.Dispose()
+    Write-Host "docs\guides\  ($($sizes.Count) overlays + slices.png)" -ForegroundColor Green
+}
+
+$only = $SheetOnly -or $PreviewOnly -or $ArchitectOnly -or $FontsOnly -or $ShapesOnly -or $GuidesOnly
 
 if ($SheetOnly -or -not $only) { Write-Sheet }
 if ($PreviewOnly -or -not $only) { Write-Preview }
 if ($ArchitectOnly -or -not $only) { Write-Architect }
 if ($FontsOnly -or -not $only) { Write-Fonts }
 if ($ShapesOnly -or -not $only) { Write-Shapes }
+if ($GuidesOnly -or -not $only) { Write-Guides }
