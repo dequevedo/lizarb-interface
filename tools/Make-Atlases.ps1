@@ -1013,6 +1013,15 @@ function New-Plate {
                 'Bar' {
                     $a = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.5))
                 }
+                'Gradient' {
+                    $edge = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.5))
+                    $t = $y / [double]$max
+                    $a = $edge * (0.80 + 0.20 * $t)
+                    if ($x -gt $band) {
+                        $u = ($x - $band) / ($max - $band)
+                        $a = $a * (1 - $u) * (1 - $u)
+                    }
+                }
                 'Frame' {
                     $inner = $band * 0.55
                     $fall = [Math]::Min(1.0, [Math]::Max(0.0, ($inner - $dist) / $inner))
@@ -1233,32 +1242,6 @@ function New-Icon {
     Write-Host "  $Name.png"
 }
 
-
-function New-Fade {
-    param([string]$Name, [int]$W = 128, [int]$H = 64, [int]$Inset = 4)
-
-    $path = Join-Path $OutDir "$Name.png"
-    if (Test-HandDrawn $path $Name) {
-        [void]$KeptByHand.Add($Name)
-        return
-    }
-
-    $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-
-    for ($x = 0; $x -lt $W; $x++) {
-        $t = $x / [double]($W - 1)
-        $a = [int][Math]::Round(255 * (1 - $t) * (1 - $t))
-        for ($y = 0; $y -lt $H; $y++) {
-            $edge = if ($y -lt $Inset -or $y -gt $H - 1 - $Inset) { 0 } else { $a }
-            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($edge, 255, 255, 255))
-        }
-    }
-
-    $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
-    $bmp.Dispose()
-    $GeneratedHashes[$Name] = Get-PngHash $path
-    Write-Host "  $Name.png  ($W x $H)"
-}
 
 function Ring-Points {
     param([int]$Count, [double]$Cx, [double]$Cy, [double]$R, [double]$Phase = 0.0)
@@ -1512,6 +1495,7 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
 
     New-Plate -Name 'Plate'      -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Plate'
     New-Plate -Name 'PlateFrame' -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Frame'
+    New-Plate -Name 'PlateGradient' -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Gradient'
 
     New-Strip -Name 'BarFill' -W (16*$S) -H (32*$S) -Border 'Rows' -Scale $S `
         -Top $t.Tab.Light -Bottom (Blend $t.Button.Light $t.Button.Dark 0.45) -Edge $t.Button.Dark
@@ -1555,7 +1539,6 @@ foreach ($name in ($(if ($DefineOnly) { @() } else { $Shapes.Keys | Sort-Object 
     New-Icon -Name "Shape$name" -Shapes $Shapes[$name] -Outline 0.0
 }
 
-if (-not $DefineOnly) { New-Fade -Name 'ShapeFade' }
 
 if (-not $DefineOnly) {
     $lines = $GeneratedHashes.Keys | Sort-Object | ForEach-Object { "$_ $($GeneratedHashes[$_])" }

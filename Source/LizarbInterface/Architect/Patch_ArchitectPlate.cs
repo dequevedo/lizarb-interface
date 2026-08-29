@@ -34,15 +34,10 @@ namespace LizarbInterface
                 return;
             }
 
-            switch (style)
+            if (style == "Flat")
             {
-                case "Flat":
-                    Widgets.DrawBoxSolid(plate, tint);
-                    return;
-
-                case "Gradient":
-                    Gradient(plate, tint);
-                    return;
+                Widgets.DrawBoxSolid(plate, tint);
+                return;
             }
 
             if (IsBadge(style))
@@ -52,7 +47,7 @@ namespace LizarbInterface
                 return;
             }
 
-            Texture2D shape = AtlasSwap.Own(style == "Frame" ? "PlateFrame" : "Plate");
+            Texture2D shape = AtlasSwap.Own(style == "Plate" ? "Plate" : "Plate" + style);
             if (shape == null)
             {
                 Widgets.DrawBoxSolid(plate, tint);
@@ -62,27 +57,6 @@ namespace LizarbInterface
             Color previous = GUI.color;
             GUI.color = tint;
             AtlasSwap.DrawScaled(plate, shape, true);
-            GUI.color = previous;
-        }
-
-        private static void Gradient(Rect plate, Color tint)
-        {
-            float side = Mathf.Min(plate.height, plate.width);
-            float rest = plate.width - side;
-            Texture2D ramp = AtlasSwap.Shared("ShapeFade");
-
-            if (ramp == null || rest <= 0f)
-            {
-                Widgets.DrawBoxSolid(new Rect(plate.x, plate.y, side, side), tint);
-                return;
-            }
-
-            Color previous = GUI.color;
-            GUI.color = tint;
-            GUI.DrawTextureWithTexCoords(
-                new Rect(plate.x, plate.y, plate.width, side),
-                ramp,
-                new Rect(-side / rest, 0f, plate.width / rest, 1f));
             GUI.color = previous;
         }
 
