@@ -70,19 +70,20 @@ namespace LizarbInterface
             float side = Mathf.Min(plate.height, plate.width);
             Badge(new Rect(plate.x, plate.y, side, side), "Square", tint);
 
-            float x = plate.x + side + side * 0.16f;
             float barWidth = side * 0.30f;
+            float gap = side * 0.14f;
+            float x = plate.xMax - barWidth;
 
-            foreach (float fraction in new[] { 0.4f, 0.2f, 0.1f })
+            foreach (float fraction in new[] { 0.1f, 0.2f, 0.4f })
             {
                 float h = side * fraction;
-                if (x + barWidth > plate.xMax)
+                if (x < plate.x + side + gap)
                 {
                     return;
                 }
 
                 Badge(new Rect(x, plate.y + (side - h) / 2f, barWidth, h), "Square", tint);
-                x += barWidth + side * 0.14f;
+                x -= barWidth + gap;
             }
         }
 
