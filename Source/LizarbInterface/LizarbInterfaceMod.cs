@@ -13,7 +13,11 @@ namespace LizarbInterface
     {
         public bool enabled = true;
 
-        public string theme = "Foundry";
+        public const string DefaultTheme = "Foundry";
+
+        public const string DefaultPattern = "Hatch";
+
+        public string theme = DefaultTheme;
 
         public float inset = 1f;
 
@@ -39,7 +43,7 @@ namespace LizarbInterface
 
         public bool texturedBackground = true;
 
-        public string backgroundPattern = "Hatch";
+        public string backgroundPattern = DefaultPattern;
 
         public float backgroundGrain = 0.05f;
 
@@ -98,7 +102,7 @@ namespace LizarbInterface
         public override void ExposeData()
         {
             Scribe_Values.Look(ref enabled, "enabled", defaultValue: true);
-            Scribe_Values.Look(ref theme, "theme", "Foundry");
+            Scribe_Values.Look(ref theme, "theme", DefaultTheme);
             Scribe_Values.Look(ref inset, "inset", 1f);
             Scribe_Values.Look(ref fontName, "fontName", DefaultFont);
             Scribe_Values.Look(ref fontOffsetTiny, "fontOffsetTiny", 0);
@@ -110,7 +114,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref outlineTinyText, "outlineTinyText", defaultValue: false);
             Scribe_Values.Look(ref showAllFonts, "showAllFonts", defaultValue: false);
             Scribe_Values.Look(ref texturedBackground, "texturedBackground", defaultValue: true);
-            Scribe_Values.Look(ref backgroundPattern, "backgroundPattern", "Hatch");
+            Scribe_Values.Look(ref backgroundPattern, "backgroundPattern", DefaultPattern);
             Scribe_Values.Look(ref backgroundGrain, "backgroundGrain", 0.05f);
             Scribe_Values.Look(ref pointFilter, "pointFilter", defaultValue: false);
             Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
@@ -155,6 +159,16 @@ namespace LizarbInterface
                 {
                     windowAnimationStyle = "Slide";
                 }
+
+                if (System.Array.IndexOf(LizarbInterfaceMod.Patterns, backgroundPattern) < 0)
+                {
+                    backgroundPattern = DefaultPattern;
+                }
+
+                if (!LizarbInterfaceMod.HasTheme(theme))
+                {
+                    theme = DefaultTheme;
+                }
             }
             base.ExposeData();
         }
@@ -193,6 +207,19 @@ namespace LizarbInterface
             ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), true),
         };
 
+        internal static bool HasTheme(string id)
+        {
+            foreach (var entry in Themes)
+            {
+                if (entry.Id == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static Color OutlineColor
         {
             get
@@ -210,7 +237,7 @@ namespace LizarbInterface
             }
         }
 
-        private static readonly string[] Patterns =
+        internal static readonly string[] Patterns =
         {
             "Hatch", "Medieval", "Scales", "Bricks", "Dots", "Chevron", "Woodgrain",
         };
