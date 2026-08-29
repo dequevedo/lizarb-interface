@@ -24,7 +24,8 @@
   <LizarbInterface.OutlineOpacity>Opacidade do contorno: {0}</LizarbInterface.OutlineOpacity>
   <LizarbInterface.Pattern.Hatch>Hachura</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
-  <LizarbInterface.ThemeSection>Tema</LizarbInterface.ThemeSection>
+  <LizarbInterface.ThemeSquared>Quadrados</LizarbInterface.ThemeSquared>
+  <LizarbInterface.ThemeRounded>Arredondados (experimental)</LizarbInterface.ThemeRounded>
   <LizarbInterface.Theme.Default>Padrão do RimWorld</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Latão</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Ferro</LizarbInterface.Theme.Iron>
@@ -49,6 +50,10 @@
   <LizarbInterface.Theme.Aero>Aero</LizarbInterface.Theme.Aero>
   <LizarbInterface.Theme.Copper>Cobre</LizarbInterface.Theme.Copper>
   <LizarbInterface.Theme.Ash>Cinza</LizarbInterface.Theme.Ash>
+  <LizarbInterface.Theme.Slate>Slate</LizarbInterface.Theme.Slate>
+  <LizarbInterface.Theme.Rivet>Rivet</LizarbInterface.Theme.Rivet>
+  <LizarbInterface.Theme.Vellum>Vellum</LizarbInterface.Theme.Vellum>
+  <LizarbInterface.Theme.Bulwark>Bulwark</LizarbInterface.Theme.Bulwark>
   <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Texto</LizarbInterface.Tab.Text>

@@ -163,24 +163,29 @@ namespace LizarbInterface
 
         public static ModContentPack Pack { get; private set; }
 
-        internal static readonly (string Id, string Pattern, Color Outline)[] Themes =
+        internal static readonly (string Id, string Pattern, Color Outline, bool Rounded)[] Themes =
         {
-            ("Brass",    "Hatch",    new Color(0.10f, 0.07f, 0.04f)),
-            ("Iron",     "Bricks",   new Color(0.05f, 0.06f, 0.07f)),
-            ("Royal",    "Medieval", new Color(0.06f, 0.05f, 0.11f)),
-            ("Obsidian", "Chevron",  new Color(0.03f, 0.03f, 0.04f)),
-            ("Verdant",  "Scales",   new Color(0.04f, 0.08f, 0.05f)),
-            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f)),
-            ("Crimson",  "Scales",   new Color(0.11f, 0.04f, 0.04f)),
-            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f)),
-            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f)),
-            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f)),
-            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f)),
-            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f)),
-            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f)),
-            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f)),
-            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f)),
-            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f)),
+            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), false),
+            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), false),
+            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), false),
+            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), false),
+            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), false),
+            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), false),
+            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), false),
+            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), false),
+            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), false),
+            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), false),
+
+            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), true),
+            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), true),
+            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), true),
+            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), true),
+            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), true),
+            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), true),
+            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), true),
+            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), true),
+            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), true),
+            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), true),
         };
 
         public static Color OutlineColor
@@ -340,25 +345,37 @@ namespace LizarbInterface
 
         private void DoThemeSection(Listing_Standard listing)
         {
-            listing.Label("LizarbInterface.ThemeSection".Translate());
+            var squared = new List<string> { null };
+            var rounded = new List<string>();
 
+            foreach (var entry in Themes)
+            {
+                (entry.Rounded ? rounded : squared).Add(entry.Id);
+            }
+
+            DrawThemeGrid(listing, "LizarbInterface.ThemeSquared", squared);
+            listing.Gap(6f);
+            DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
+        }
+
+        private void DrawThemeGrid(Listing_Standard listing, string heading, List<string> ids)
+        {
             const float SwatchHeight = 74f;
             const int PerRow = 4;
-            int count = Themes.Length + 1;
-            int rows = Mathf.CeilToInt(count / (float)PerRow);
 
+            listing.Label(heading.Translate());
+
+            int rows = Mathf.CeilToInt(ids.Count / (float)PerRow);
             Rect block = listing.GetRect(rows * (SwatchHeight + 6f));
             float cell = block.width / PerRow;
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < ids.Count; i++)
             {
-                var area = new Rect(
+                DrawThemeSwatch(new Rect(
                     block.x + (i % PerRow) * cell,
                     block.y + (i / PerRow) * (SwatchHeight + 6f),
                     cell - 8f,
-                    SwatchHeight);
-
-                DrawThemeSwatch(area, i == 0 ? null : Themes[i - 1].Id);
+                    SwatchHeight), ids[i]);
             }
         }
 

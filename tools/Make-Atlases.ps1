@@ -784,7 +784,7 @@ $Themes = @{
     }
 
     'Verdant' = @{
-        Ornament = 'Studs'; Pattern = 'Scales'
+        Ornament = 'None'; Pattern = 'Scales'
         Radius = @{ Button = 10; Tab = 9; Window = 20; Section = 9 }
         Fillet = @{ Thin = 2; Fat = 3; WindowThin = 3; WindowFat = 4 }
         Button  = @{ Light = @(164, 142, 84);  Dark = @(52, 66, 46);   Fill = @(36, 50, 36) }
@@ -797,7 +797,7 @@ $Themes = @{
     }
 
     'Bone' = @{
-        Ornament = 'Bone'; Pattern = 'Dots'
+        Ornament = 'None'; Pattern = 'Dots'
         Radius = @{ Button = 13; Tab = 10; Window = 26; Section = 11 }
         Fillet = @{ Thin = 2; Fat = 2; WindowThin = 3; WindowFat = 3 }
         Button  = @{ Light = @(240, 227, 178); Dark = @(128, 109, 64);  Fill = @(44, 40, 31) }
@@ -876,8 +876,8 @@ $Themes = @{
 
     'Aero' = @{
         Ornament = 'None'; Pattern = 'Dots'; Outline = $false
-        Radius = @{ Button = 16; Tab = 14; Window = 32; Section = 16 }
-        Fillet = @{ Thin = 1; Fat = 1; WindowThin = 1; WindowFat = 1 }
+        Radius = @{ Button = 8; Tab = 7; Window = 16; Section = 8 }
+        Fillet = @{ Thin = 0; Fat = 0; WindowThin = 0; WindowFat = 0 }
         FillAlpha = 150; Gloss = 0.55
         Button  = @{ Light = @(226, 244, 255); Dark = @(96, 132, 160); Fill = @(58, 92, 122) }
         Hover   = @{ Light = @(255, 255, 255); Dark = @(126, 170, 200); Fill = @(82, 124, 158) }
@@ -889,7 +889,7 @@ $Themes = @{
     }
 
     'Copper' = @{
-        Ornament = 'Studs'; Pattern = 'Scales'
+        Ornament = 'None'; Pattern = 'Scales'
         Radius = @{ Button = 10; Tab = 9; Window = 20; Section = 9 }
         Fillet = @{ Thin = 2; Fat = 4; WindowThin = 3; WindowFat = 5 }
         Button  = @{ Light = @(214, 132, 74);  Dark = @(62, 96, 88);   Fill = @(58, 74, 70) }
@@ -912,6 +912,58 @@ $Themes = @{
         Tab     = @{ Light = @(176, 172, 167); Dark = @(72, 70, 68);   Fill = @(56, 55, 54) }
         Window  = @{ Light = @(142, 139, 134); Dark = @(56, 54, 52);   Fill = @(30, 30, 29) }
         Section = @{ Light = @(96, 94, 91);    Dark = @(42, 41, 40);   Fill = @(22, 22, 21) }
+    }
+
+    'Slate' = @{
+        Ornament = 'None'; Edge = 'Plain'; Pattern = 'Bricks'
+        Radius = @{ Button = 1; Tab = 1; Window = 2; Section = 1 }
+        Fillet = @{ Thin = 2; Fat = 2; WindowThin = 2; WindowFat = 2 }
+        Button  = @{ Light = @(148, 156, 166); Dark = @(56, 61, 68);   Fill = @(40, 44, 50) }
+        Hover   = @{ Light = @(196, 206, 218); Dark = @(80, 87, 96);   Fill = @(56, 62, 70) }
+        Click   = @{ Light = @(72, 78, 86);    Dark = @(140, 148, 158); Fill = @(30, 33, 38) }
+        Subtle  = @{ Light = @(136, 144, 154); Dark = @(50, 55, 61);   Fill = @(36, 40, 45) }
+        Tab     = @{ Light = @(170, 179, 190); Dark = @(66, 72, 80);   Fill = @(48, 53, 60) }
+        Window  = @{ Light = @(132, 140, 150); Dark = @(52, 57, 63);   Fill = @(26, 29, 33) }
+        Section = @{ Light = @(96, 102, 110);  Dark = @(40, 44, 49);   Fill = @(19, 21, 24) }
+    }
+
+    'Rivet' = @{
+        Ornament = 'Bracket'; Edge = 'Step'; Pattern = 'Hatch'
+        Radius = @{ Button = 2; Tab = 2; Window = 4; Section = 2 }
+        Fillet = @{ Thin = 2; Fat = 3; WindowThin = 3; WindowFat = 4 }
+        Button  = @{ Light = @(166, 150, 122); Dark = @(64, 58, 50);   Fill = @(46, 42, 37) }
+        Hover   = @{ Light = @(214, 196, 162); Dark = @(92, 84, 72);   Fill = @(64, 58, 51) }
+        Click   = @{ Light = @(80, 72, 62);    Dark = @(154, 140, 114); Fill = @(34, 31, 27) }
+        Subtle  = @{ Light = @(150, 136, 111); Dark = @(58, 53, 46);   Fill = @(41, 37, 33) }
+        Tab     = @{ Light = @(190, 172, 140); Dark = @(76, 69, 59);   Fill = @(54, 49, 43) }
+        Window  = @{ Light = @(150, 136, 111); Dark = @(58, 53, 46);   Fill = @(30, 27, 24) }
+        Section = @{ Light = @(108, 98, 80);   Dark = @(45, 41, 36);   Fill = @(22, 20, 18) }
+    }
+
+    'Vellum' = @{
+        Ornament = 'BookCorner'; Edge = 'Plain'; Pattern = 'Medieval'; Flat = $true; Recess = 3.0
+        Radius = @{ Button = 2; Tab = 2; Window = 4; Section = 2 }
+        Fillet = @{ Thin = 2; Fat = 2; WindowThin = 2; WindowFat = 2 }
+        Button  = @{ Light = @(198, 176, 138); Dark = @(88, 74, 56);   Fill = @(62, 52, 40) }
+        Hover   = @{ Light = @(238, 216, 176); Dark = @(120, 102, 78); Fill = @(84, 71, 55) }
+        Click   = @{ Light = @(92, 78, 60);    Dark = @(186, 164, 128); Fill = @(46, 39, 30) }
+        Subtle  = @{ Light = @(182, 162, 127); Dark = @(80, 68, 52);   Fill = @(55, 46, 36) }
+        Tab     = @{ Light = @(220, 199, 160); Dark = @(104, 88, 67);  Fill = @(72, 61, 47) }
+        Window  = @{ Light = @(176, 156, 122); Dark = @(78, 66, 51);   Fill = @(36, 30, 24) }
+        Section = @{ Light = @(126, 111, 87);  Dark = @(58, 49, 38);   Fill = @(27, 23, 18) }
+    }
+
+    'Bulwark' = @{
+        Ornament = 'Chamfer'; Edge = 'Step'; Pattern = 'Chevron'
+        Radius = @{ Button = 3; Tab = 3; Window = 6; Section = 3 }
+        Fillet = @{ Thin = 2; Fat = 2; WindowThin = 3; WindowFat = 3 }
+        Button  = @{ Light = @(126, 146, 118); Dark = @(48, 58, 46);   Fill = @(34, 42, 33) }
+        Hover   = @{ Light = @(170, 194, 158); Dark = @(70, 84, 66);   Fill = @(48, 58, 45) }
+        Click   = @{ Light = @(62, 74, 58);    Dark = @(118, 138, 110); Fill = @(25, 31, 24) }
+        Subtle  = @{ Light = @(114, 133, 107); Dark = @(43, 52, 41);   Fill = @(30, 37, 29) }
+        Tab     = @{ Light = @(146, 168, 136); Dark = @(57, 69, 54);   Fill = @(41, 50, 39) }
+        Window  = @{ Light = @(112, 130, 105); Dark = @(45, 54, 43);   Fill = @(22, 27, 21) }
+        Section = @{ Light = @(80, 94, 76);    Dark = @(34, 41, 33);   Fill = @(16, 20, 16) }
     }
 }
 

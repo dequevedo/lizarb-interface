@@ -24,7 +24,8 @@
   <LizarbInterface.OutlineOpacity>Outline opacity: {0}</LizarbInterface.OutlineOpacity>
   <LizarbInterface.Pattern.Hatch>Hatch</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
-  <LizarbInterface.ThemeSection>Theme</LizarbInterface.ThemeSection>
+  <LizarbInterface.ThemeSquared>Squared</LizarbInterface.ThemeSquared>
+  <LizarbInterface.ThemeRounded>Rounded (experimental)</LizarbInterface.ThemeRounded>
   <LizarbInterface.Theme.Default>RimWorld default</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Iron</LizarbInterface.Theme.Iron>
@@ -49,6 +50,10 @@
   <LizarbInterface.Theme.Aero>Aero</LizarbInterface.Theme.Aero>
   <LizarbInterface.Theme.Copper>Copper</LizarbInterface.Theme.Copper>
   <LizarbInterface.Theme.Ash>Ash</LizarbInterface.Theme.Ash>
+  <LizarbInterface.Theme.Slate>Slate</LizarbInterface.Theme.Slate>
+  <LizarbInterface.Theme.Rivet>Rivet</LizarbInterface.Theme.Rivet>
+  <LizarbInterface.Theme.Vellum>Vellum</LizarbInterface.Theme.Vellum>
+  <LizarbInterface.Theme.Bulwark>Bulwark</LizarbInterface.Theme.Bulwark>
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Text</LizarbInterface.Tab.Text>
