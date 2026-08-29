@@ -205,8 +205,8 @@ function New-RoundAtlas {
 
             $alpha = 255
 
-            if ($dist -lt 1) {
-                if ($Outline) { $c = $Black } else { $c = $metal }
+            if ($dist -lt 1 -and $Outline) {
+                $c = $Black
             }
             elseif ($ornamentHit -and ($Ornament -eq 'Studs' -or $Ornament -eq 'Rivets')) {
                 $lit = ($ddx + $ddy) -lt 0
@@ -226,7 +226,7 @@ function New-RoundAtlas {
             elseif ($ornamentHit) {
                 $c = $metal
             }
-            elseif ($dist -lt 1 + $thick) {
+            elseif ($thick -gt 0 -and $dist -lt 1 + $thick) {
                 if ($Flat) {
                     $c = $metal
                 }
@@ -849,7 +849,7 @@ $Themes = @{
     }
 
     'Flesh' = @{
-        Ornament = 'Studs'; Pattern = 'Hatch'
+        Ornament = 'None'; Pattern = 'Hatch'
         Radius = @{ Button = 14; Tab = 12; Window = 26; Section = 12 }
         Fillet = @{ Thin = 3; Fat = 5; WindowThin = 3; WindowFat = 6 }
         Button  = @{ Light = @(206, 132, 126); Dark = @(96, 48, 48);   Fill = @(122, 68, 66) }
@@ -1217,6 +1217,32 @@ function New-Icon {
     Write-Host "  $Name.png"
 }
 
+
+function New-Fade {
+    param([string]$Name, [int]$W = 128, [int]$H = 16)
+
+    $path = Join-Path $OutDir "$Name.png"
+    if (Test-HandDrawn $path $Name) {
+        [void]$KeptByHand.Add($Name)
+        return
+    }
+
+    $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+
+    for ($x = 0; $x -lt $W; $x++) {
+        $t = $x / [double]($W - 1)
+        $a = [int][Math]::Round(255 * (1 - $t) * (1 - $t))
+        for ($y = 0; $y -lt $H; $y++) {
+            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($a, 255, 255, 255))
+        }
+    }
+
+    $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+    $GeneratedHashes[$Name] = Get-PngHash $path
+    Write-Host "  $Name.png  ($W x $H)"
+}
+
 function Ring-Points {
     param([int]$Count, [double]$Cx, [double]$Cy, [double]$R, [double]$Phase = 0.0)
     $out = New-Object System.Collections.Generic.List[object]
@@ -1511,6 +1537,8 @@ foreach ($name in ($(if ($DefineOnly) { @() } else { $Icons.Keys | Sort-Object }
 foreach ($name in ($(if ($DefineOnly) { @() } else { $Shapes.Keys | Sort-Object }))) {
     New-Icon -Name "Shape$name" -Shapes $Shapes[$name] -Outline 0.0
 }
+
+if (-not $DefineOnly) { New-Fade -Name 'ShapeFade' }
 
 if (-not $DefineOnly) {
     $lines = $GeneratedHashes.Keys | Sort-Object | ForEach-Object { "$_ $($GeneratedHashes[$_])" }

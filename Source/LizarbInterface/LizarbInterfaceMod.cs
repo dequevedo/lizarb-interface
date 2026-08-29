@@ -19,7 +19,7 @@ namespace LizarbInterface
 
         public const string DefaultFont = "Rajdhani";
 
-        public const string DefaultPlateStyle = "Cascade";
+        public const string DefaultPlateStyle = "Gradient";
 
         public string fontName = DefaultFont;
 
@@ -139,6 +139,11 @@ namespace LizarbInterface
                 if (architectPlateStyle == "Bar")
                 {
                     architectPlateStyle = "Square";
+                }
+
+                if (architectPlateStyle == "Cascade")
+                {
+                    architectPlateStyle = DefaultPlateStyle;
                 }
 
                 if (System.Array.IndexOf(ArchitectPlate.Styles, architectPlateStyle) < 0)

@@ -8,7 +8,7 @@ namespace LizarbInterface
         internal static readonly string[] Styles =
         {
             "Plate", "Frame", "Flat",
-            "Square", "Circle", "Diamond", "Tag", "Shield", "Hex", "Cascade",
+            "Square", "Circle", "Diamond", "Tag", "Shield", "Hex", "Gradient",
         };
 
         private static bool IsBadge(string style)
@@ -40,8 +40,8 @@ namespace LizarbInterface
                     Widgets.DrawBoxSolid(plate, tint);
                     return;
 
-                case "Cascade":
-                    Cascade(plate, tint);
+                case "Gradient":
+                    Gradient(plate, tint);
                     return;
             }
 
@@ -65,26 +65,30 @@ namespace LizarbInterface
             GUI.color = previous;
         }
 
-        private static void Cascade(Rect plate, Color tint)
+        private static void Gradient(Rect plate, Color tint)
         {
             float side = Mathf.Min(plate.height, plate.width);
-            Badge(new Rect(plate.x, plate.y, side, side), "Square", tint);
 
-            float barWidth = side * 0.30f;
-            float gap = side * 0.14f;
-            float x = plate.xMax - barWidth;
-
-            foreach (float fraction in new[] { 0.1f, 0.2f, 0.4f })
+            Texture2D square = AtlasSwap.Shared("ShapeSquare");
+            Texture2D fade = AtlasSwap.Shared("ShapeFade");
+            if (square == null || fade == null)
             {
-                float h = side * fraction;
-                if (x < plate.x + side + gap)
-                {
-                    return;
-                }
-
-                Badge(new Rect(x, plate.y + (side - h) / 2f, barWidth, h), "Square", tint);
-                x -= barWidth + gap;
+                Widgets.DrawBoxSolid(new Rect(plate.x, plate.y, side, side), tint);
+                return;
             }
+
+            Color previous = GUI.color;
+            GUI.color = tint;
+
+            GUI.DrawTexture(new Rect(plate.x, plate.y, side, side), square);
+
+            float tail = plate.xMax - (plate.x + side);
+            if (tail > 0f)
+            {
+                GUI.DrawTexture(new Rect(plate.x + side, plate.y, tail, side), fade);
+            }
+
+            GUI.color = previous;
         }
 
         private static void Badge(Rect rect, string shapeName, Color tint)
