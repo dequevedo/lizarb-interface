@@ -22,7 +22,7 @@
   </loadAfter>
   <description>A complete reskin of RimWorld's interface.
 
-- 16 themes, each with its own palette, corner geometry and ornament
+- 20 themes, ten squared and ten rounded, each with its own palette, corner geometry and ornament
 - 7 tileable background patterns
 - Font selection with a real text outline
 - Window frames, tabs, buttons, tooltips, checkboxes, gizmos, scrollbars

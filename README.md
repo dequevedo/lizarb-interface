@@ -1,7 +1,7 @@
 # Lizarb Interface
 
 A complete reskin of RimWorld 1.6's interface: window frames, buttons, tabs, tooltips,
-widgets, scrollbars, fonts and the Architect menu, in 16 themes.
+widgets, scrollbars, fonts and the Architect menu, in 20 themes.
 
 ![Themes](docs/themes.png)
 
@@ -9,7 +9,7 @@ widgets, scrollbars, fonts and the Architect menu, in 16 themes.
 
 ## What it does
 
-- **16 themes.** Each one changes palette, corner radius, fillet weight, corner ornament
+- **20 themes**, ten squared and ten rounded. Each one changes palette, corner radius, fillet weight, corner ornament
   and background pattern. Iron is square and austere, Royal is wide and heavy, Aero is a
   translucent bubble with no outline at all.
 - **7 tileable background patterns**, baked per theme so they carry the theme's own inks.
