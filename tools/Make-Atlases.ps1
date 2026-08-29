@@ -275,7 +275,7 @@ function New-RoundAtlas {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png  ($Size x $Size, radius $Radius, $Ornament/$Edge)"
 }
@@ -346,7 +346,7 @@ function New-TabAtlas {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png  ($w x $h, raio $Radius)"
 }
@@ -529,7 +529,7 @@ function New-Pattern {
     [System.Runtime.InteropServices.Marshal]::Copy($bytes, 0, $data.Scan0, $bytes.Length)
     $bmp.UnlockBits($data)
 
-    $bmp.Save((Join-Path $OutDir "Pattern_$Kind.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp "Pattern_$Kind"
     $bmp.Dispose()
     Write-Host "  Pattern_$Kind.png"
 }
@@ -569,7 +569,7 @@ function New-Checkbox {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png"
 }
@@ -600,7 +600,7 @@ function New-Radio {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png"
 }
@@ -629,7 +629,7 @@ function New-Knob {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png"
 }
@@ -684,7 +684,7 @@ function New-Bar9 {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png  ($Size x $Size)"
 }
@@ -716,7 +716,7 @@ function New-Strip {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png  ($W x $H)"
 }
@@ -1037,7 +1037,7 @@ function New-Plate {
         }
     }
 
-    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
     Write-Host "  $Name.png"
 }
@@ -1116,7 +1116,7 @@ function Sd-Shape {
     }
 }
 
-$IconManifest = Join-Path $PSScriptRoot 'generated-icons.txt'
+$IconManifest = Join-Path $PSScriptRoot 'generated-textures.txt'
 $GeneratedHashes = @{}
 $ManifestExisted = Test-Path $IconManifest
 if ($ManifestExisted) {
@@ -1140,15 +1140,24 @@ function Test-HandDrawn {
     (Get-PngHash $Path) -ne $GeneratedHashes[$Name]
 }
 
+function Save-Skin {
+    param($Bmp, [string]$Name)
+
+    $path = Join-Path $OutDir "$Name.png"
+    $key = "$(Split-Path $OutDir -Leaf)/$Name"
+
+    if (Test-HandDrawn $path $key) {
+        [void]$KeptByHand.Add($key)
+        return
+    }
+
+    $Bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+    $GeneratedHashes[$key] = Get-PngHash $path
+}
+
 function New-Icon {
     param([string]$Name, [object[]]$Shapes, [int]$Size = 64, [double]$Outline = 2.2)
 
-    $path = Join-Path $OutDir "$Name.png"
-    if (Test-HandDrawn $path $Name) {
-        [void]$KeptByHand.Add($Name)
-        Write-Host "  $Name.png kept (hand drawn; -Force overwrites)" -ForegroundColor Yellow
-        return
-    }
 
     $bmp = New-Object System.Drawing.Bitmap($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $max = $Size - 1
@@ -1238,9 +1247,8 @@ function New-Icon {
         }
     }
 
-    $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Skin $bmp $Name
     $bmp.Dispose()
-    $GeneratedHashes[$Name] = Get-PngHash $path
     Write-Host "  $Name.png"
 }
 
@@ -1550,7 +1558,8 @@ if (-not $DefineOnly) {
 
     if ($KeptByHand.Count -gt 0) {
         Write-Host ""
-        Write-Host "$($KeptByHand.Count) hand drawn, left alone: $($KeptByHand -join ', ')" -ForegroundColor Yellow
+        Write-Host "$($KeptByHand.Count) hand drawn, left alone:" -ForegroundColor Yellow
+        foreach ($k in ($KeptByHand | Sort-Object)) { Write-Host "  $k" -ForegroundColor Yellow }
     }
 }
 

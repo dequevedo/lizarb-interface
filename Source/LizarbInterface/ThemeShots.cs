@@ -166,6 +166,15 @@ namespace LizarbInterface
 
     internal static class ThemeShots
     {
+        [DebugAction("Lizarb Interface", name = "Reload skin textures",
+                     allowedGameStates = AllowedGameStates.Invalid)]
+        private static void ReloadSkins()
+        {
+            AtlasSwap.Forget();
+            FontEngine.Apply();
+            Log.Message("[LizarbInterface] skin textures reloaded from disk");
+        }
+
         [DebugAction("Lizarb Interface", name = "Shoot every theme",
                      allowedGameStates = AllowedGameStates.Invalid)]
         private static void ShootEveryTheme()

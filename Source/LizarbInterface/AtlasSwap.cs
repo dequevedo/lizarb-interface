@@ -18,6 +18,8 @@ namespace LizarbInterface
             public bool Tiling;
             public bool Shared;
             public string Theme;
+            public long Stamp;
+            public float Checked;
         }
 
         private static Slot[] slots = new Slot[0];
@@ -76,10 +78,11 @@ namespace LizarbInterface
         private static void EnsureLoaded(Slot slot)
         {
             string theme = slot.Shared ? "Shared" : CurrentTheme;
-            if (slot.Theme != theme)
+            if (slot.Theme != theme || Edited(slot, theme))
             {
                 slot.Theme = theme;
                 slot.Png = ReadSkinFile(slot.Name, theme);
+                slot.Stamp = StampOf(slot.Name, theme);
                 slot.Ours = null;
             }
 
@@ -100,6 +103,59 @@ namespace LizarbInterface
 
         private static FilterMode DesiredFilter =>
             LizarbInterfaceMod.Settings?.pointFilter == true ? FilterMode.Point : FilterMode.Bilinear;
+
+        private static string SkinPath(string fileName, string theme)
+        {
+            string dir = theme == null ? SkinDir : Path.Combine(root, "Skins/" + theme);
+            return Path.Combine(dir, fileName + ".png");
+        }
+
+        private static long StampOf(string fileName, string theme)
+        {
+            try
+            {
+                string path = SkinPath(fileName, theme);
+                return File.Exists(path) ? File.GetLastWriteTimeUtc(path).Ticks : 0L;
+            }
+            catch
+            {
+                return 0L;
+            }
+        }
+
+        private static bool Edited(Slot slot, string theme)
+        {
+            if (!Prefs.DevMode)
+            {
+                return false;
+            }
+
+            float now = Time.realtimeSinceStartup;
+            if (now - slot.Checked < 1f)
+            {
+                return false;
+            }
+
+            slot.Checked = now;
+            return StampOf(slot.Name, theme) != slot.Stamp;
+        }
+
+        internal static void Forget()
+        {
+            foreach (Slot s in slots)
+            {
+                s.Theme = null;
+                s.Ours = null;
+            }
+
+            foreach (Slot s in owned.Values)
+            {
+                s.Theme = null;
+                s.Ours = null;
+            }
+
+            previews.Clear();
+        }
 
         private static byte[] ReadSkinFile(string fileName, string theme = null)
         {
