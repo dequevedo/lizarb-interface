@@ -12,6 +12,7 @@ namespace LizarbInterface
         {
             public Texture2D Vanilla;
             public string File;
+            public bool Shared;
         }
 
         private static Entry[] entries = new Entry[0];
@@ -20,6 +21,7 @@ namespace LizarbInterface
         {
             RuntimeHelpersRun(typeof(Widgets));
             RuntimeHelpersRun(typeof(Command));
+            RuntimeHelpersRun(typeof(TexButton));
 
             entries = new[]
             {
@@ -32,6 +34,29 @@ namespace LizarbInterface
                 Make(typeof(Command), "BGTex", "GizmoBG"),
 
                 Make(typeof(Widgets), "BarFullTexHor", "BarFill"),
+
+                Icon("ShowZones"),
+                Icon("ShowBeauty"),
+                Icon("ShowRoomStats"),
+                Icon("CategorizedResourceReadout"),
+                Icon("ShowColonistBar"),
+                Icon("ShowRoofOverlay"),
+                Icon("ShowTemperatureOverlay"),
+                Icon("ShowFertilityOverlay"),
+                Icon("ShowTerrainAffordanceOverlay"),
+                Icon("ShowPollutionOverlay"),
+                Icon("ShowLearningHelper"),
+                Icon("AutoHomeArea"),
+                Icon("AutoRebuild"),
+                Icon("LockNorthUp"),
+                Icon("ShowWorldFeatures"),
+                Icon("UsePlanetDayNightSystem"),
+                Icon("ShowImportantLocations"),
+                Icon("ShowLandmarkIcons"),
+                Icon("ShowOtherFactionBases"),
+                Icon("CodexButton"),
+                Icon("SearchButton"),
+                Icon("ShowVacuumOverlay"),
             };
         }
 
@@ -55,6 +80,13 @@ namespace LizarbInterface
             return new Entry { Vanilla = vanilla, File = file };
         }
 
+        private static Entry Icon(string field)
+        {
+            Entry e = Make(typeof(TexButton), field, "Icon" + field);
+            e.Shared = true;
+            return e;
+        }
+
         internal static Texture2D For(Texture original)
         {
             if (original == null || entries.Length == 0)
@@ -72,7 +104,7 @@ namespace LizarbInterface
             {
                 if (ReferenceEquals(entries[i].Vanilla, original))
                 {
-                    return AtlasSwap.Own(entries[i].File);
+                    return entries[i].Shared ? AtlasSwap.Shared(entries[i].File) : AtlasSwap.Own(entries[i].File);
                 }
             }
 
