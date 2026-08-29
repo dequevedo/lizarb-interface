@@ -1538,6 +1538,82 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     }
 }
 
+function New-SliceAtlas {
+    param([string]$Name, [int]$W, [int]$H, [int[]]$Hue)
+
+    $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $bandX = [int]($W / 4)
+    $bandY = [int]($H / 4)
+    $maxX = $W - 1
+    $maxY = $H - 1
+
+    for ($y = 0; $y -le $maxY; $y++) {
+        $cy = [Math]::Min($y, $maxY - $y)
+        $inY = $cy -lt $bandY
+
+        for ($x = 0; $x -le $maxX; $x++) {
+            $cx = [Math]::Min($x, $maxX - $x)
+            $inX = $cx -lt $bandX
+
+            if ($inX -and $inY)      { $lit = 1.00 }
+            elseif ($inX -or $inY)   { $lit = 0.52 }
+            else                     { $lit = 0.20 }
+
+            if ($inY -and -not $inX -and ($x % 8) -lt 2) { $lit = $lit * 0.45 }
+            if ($inX -and -not $inY -and ($y % 8) -lt 2) { $lit = $lit * 0.45 }
+            if (-not $inX -and -not $inY -and ($cx -eq $bandX -or $cy -eq $bandY)) { $lit = 0.60 }
+
+            $c = @([int]($Hue[0] * $lit), [int]($Hue[1] * $lit), [int]($Hue[2] * $lit))
+
+            if ($cx -eq $bandX -or $cy -eq $bandY) { $c = @(255, 255, 255) }
+            if ($cx -lt 1 -or $cy -lt 1) { $c = @(0, 0, 0) }
+
+            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $c[0], $c[1], $c[2]))
+        }
+    }
+
+    Save-Skin $bmp $Name
+    $bmp.Dispose()
+    Write-Host "  $Name.png  ($W x $H)"
+}
+
+$DebugParts = @(
+    , @('ButtonBG',          128, 128, @(255, 40, 170))
+    , @('ButtonBGMouseover', 128, 128, @(255, 150, 210))
+    , @('ButtonBGClick',     128, 128, @(140, 20, 95))
+    , @('ButtonSubtleAtlas', 128, 128, @(255, 130, 0))
+    , @('WindowAtlas',       256, 256, @(0, 210, 130))
+    , @('SectionAtlas',      128, 128, @(0, 160, 255))
+    , @('TabAtlas',          128, 64,  @(255, 220, 0))
+    , @('TooltipBG',         128, 128, @(175, 95, 255))
+    , @('FloatMenuOptionBG', 128, 128, @(0, 225, 225))
+    , @('GizmoBG',           128, 128, @(255, 60, 60))
+    , @('SliderRail',        128, 128, @(130, 255, 60))
+    , @('BarRound',          128, 128, @(255, 165, 60))
+    , @('BarTrough',         128, 128, @(100, 100, 150))
+    , @('KeyBadge',          64,  64,  @(240, 240, 240))
+)
+
+function New-DebugTheme {
+    param([string]$Id, [int]$Divide = 1, [switch]$Sparse)
+
+    $OutDir = Join-Path $SkinsRoot $Id
+    if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
+
+    Write-Host "=== $Id ===" -ForegroundColor Cyan
+
+    foreach ($p in $DebugParts) {
+        if ($Sparse -and $p[0] -ne 'ButtonBG') { continue }
+        New-SliceAtlas -Name $p[0] -W ([int]($p[1] / $Divide)) -H ([int]($p[2] / $Divide)) -Hue $p[3]
+    }
+}
+
+if (-not $DefineOnly -and -not $IconsOnly -and $Only.Count -eq 0) {
+    New-DebugTheme -Id 'Slices'
+    New-DebugTheme -Id 'Coarse' -Divide 2
+    New-DebugTheme -Id 'Sparse' -Sparse
+}
+
 $OutDir = Join-Path $SkinsRoot 'Shared'
 if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
 

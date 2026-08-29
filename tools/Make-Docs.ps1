@@ -19,8 +19,9 @@ $Cats  = Join-Path $Repo 'Source\LizarbInterface\Architect\CategoryPalette.cs'
 $Featured = @('Foundry', 'Royal', 'Verdant', 'Crimson', 'Wood', 'Aero')
 
 $src = Get-Content $Mod -Raw
-$pairs = @([regex]::Matches($src, '\("([A-Za-z]+)",\s*"([A-Za-z]+)",\s*new Color\([^)]*\),\s*(true|false)\)') |
-           ForEach-Object { , @($_.Groups[1].Value, $_.Groups[2].Value, ($_.Groups[3].Value -eq 'true')) })
+$pairs = @([regex]::Matches($src, '\("([A-Za-z]+)",\s*"([A-Za-z]+)",\s*new Color\([^)]*\),\s*"(\w+)"\)') |
+           ForEach-Object { , @($_.Groups[1].Value, $_.Groups[2].Value, $_.Groups[3].Value) } |
+           Where-Object { $_[2] -ne 'Development' })
 if ($pairs.Count -eq 0) { throw "no theme tuples found in $Mod" }
 
 foreach ($p in $pairs) {
@@ -108,8 +109,8 @@ function Write-Sheet {
     $CW = 248; $CH = 190; $COLS = 4; $GAP = 6; $HEAD = 30
 
     $groups = @(
-        , @('Squared', @($pairs | Where-Object { -not $_[2] }))
-        , @('Rounded (experimental)', @($pairs | Where-Object { $_[2] }))
+        , @('Squared', @($pairs | Where-Object { $_[2] -eq 'Squared' }))
+        , @('Rounded (experimental)', @($pairs | Where-Object { $_[2] -eq 'Rounded' }))
     )
 
     $H = $GAP

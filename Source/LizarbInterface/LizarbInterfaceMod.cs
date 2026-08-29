@@ -185,29 +185,33 @@ namespace LizarbInterface
 
         public static ModContentPack Pack { get; private set; }
 
-        internal static readonly (string Id, string Pattern, Color Outline, bool Rounded)[] Themes =
+        internal static readonly (string Id, string Pattern, Color Outline, string Group)[] Themes =
         {
-            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), false),
-            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), false),
-            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), false),
-            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), false),
-            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), false),
-            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), false),
-            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), false),
-            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), false),
-            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), false),
-            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), false),
+            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared"),
+            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared"),
+            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared"),
+            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared"),
+            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared"),
+            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared"),
+            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared"),
+            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared"),
+            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared"),
+            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared"),
 
-            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), true),
-            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), true),
-            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), true),
-            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), true),
-            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), true),
-            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), true),
-            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), true),
-            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), true),
-            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), true),
-            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), true),
+            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded"),
+            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded"),
+            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded"),
+            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded"),
+            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded"),
+            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded"),
+            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded"),
+            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded"),
+            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded"),
+            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded"),
+
+            ("Slices",   "Hatch",     new Color(0.10f, 0.02f, 0.08f), "Development"),
+            ("Coarse",   "Hatch",     new Color(0.10f, 0.02f, 0.08f), "Development"),
+            ("Sparse",   "Hatch",     new Color(0.10f, 0.02f, 0.08f), "Development"),
         };
 
         internal static bool HasTheme(string id)
@@ -382,15 +386,27 @@ namespace LizarbInterface
         {
             var squared = new List<string> { null };
             var rounded = new List<string>();
+            var development = new List<string>();
 
             foreach (var entry in Themes)
             {
-                (entry.Rounded ? rounded : squared).Add(entry.Id);
+                switch (entry.Group)
+                {
+                    case "Rounded": rounded.Add(entry.Id); break;
+                    case "Development": development.Add(entry.Id); break;
+                    default: squared.Add(entry.Id); break;
+                }
             }
 
             DrawThemeGrid(listing, "LizarbInterface.ThemeSquared", squared);
             listing.Gap(6f);
             DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
+
+            if (Prefs.DevMode)
+            {
+                listing.Gap(6f);
+                DrawThemeGrid(listing, "LizarbInterface.ThemeDevelopment", development);
+            }
         }
 
         private void DrawThemeGrid(Listing_Standard listing, string heading, List<string> ids)
