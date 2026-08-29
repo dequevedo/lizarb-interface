@@ -15,6 +15,7 @@ namespace LizarbInterface
         internal const string Vanilla = "Vanilla";
 
         private readonly List<string> queue;
+        private readonly List<Window> hidden;
         private readonly string folder;
 
         private readonly bool hadEnabled;
@@ -26,9 +27,10 @@ namespace LizarbInterface
         private bool armed;
         private bool restored;
 
-        internal ThemeShotSequence(List<string> themes, string dir)
+        internal ThemeShotSequence(List<string> themes, List<Window> devWindows, string dir)
         {
             queue = themes;
+            hidden = devWindows;
             folder = dir;
 
             LizarbInterfaceSettings s = LizarbInterfaceMod.Settings;
@@ -143,6 +145,11 @@ namespace LizarbInterface
             s.theme = hadTheme;
             s.backgroundPattern = hadPattern;
             FontEngine.Apply();
+
+            foreach (Window w in hidden)
+            {
+                Find.WindowStack.Add(w);
+            }
         }
 
         internal static string Folder()
@@ -191,7 +198,27 @@ namespace LizarbInterface
                 themes.Add(entry.Id);
             }
 
-            Find.WindowStack.Add(new ThemeShotSequence(themes, ThemeShotSequence.Folder()));
+            Find.WindowStack.Add(new ThemeShotSequence(themes, StowDevWindows(), ThemeShotSequence.Folder()));
+        }
+
+        private static List<Window> StowDevWindows()
+        {
+            var stowed = new List<Window>();
+
+            foreach (Window w in Find.WindowStack.Windows)
+            {
+                if (w is Window_Dev)
+                {
+                    stowed.Add(w);
+                }
+            }
+
+            foreach (Window w in stowed)
+            {
+                Find.WindowStack.TryRemove(w, false);
+            }
+
+            return stowed;
         }
     }
 }
