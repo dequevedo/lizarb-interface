@@ -1,0 +1,33 @@
+Twenty themes, split into Squared and Rounded (experimental)
+
+A comment said the rounded themes did not fit RimWorld, and that was fair.
+The Theme tab now has two groups, four new squared themes join the list, and
+every rounded one is less round than it was.
+
+- New: Slate (nearly square grey stone), Rivet (chamfered steel with corner
+  brackets), Vellum (parchment with book corners), Bulwark (chamfered military
+  green).
+- Copper, Verdant, Bone and Flesh lose the studs in their corners, and Aero is
+  a clean bubble with no rim and half the radius.
+
+Icons and chrome
+
+- Twenty two icons for the map toggle row: zones, beauty, room stats, roof,
+  heat, fertility, terrain, pollution, home area, auto rebuild, the codex,
+  search and the rest.
+- The four speed buttons and the window close X get their own glyphs, each on
+  a plate in the current theme.
+- Architect hotkeys get a keycap behind the letter.
+- Need bars are drawn as 9-slice, so their ends follow the theme's corner
+  radius instead of fading out.
+
+Everything is drawn at one pixel density
+
+Checkboxes, radio buttons, the slider knob, the bar strips and the background
+patterns were authored at half the resolution of everything around them, so
+they read softer. They are all at the same density now.
+
+Architect
+
+The colour shape Cascade is replaced by Gradient: a solid square that fades
+out across the button. Saved profiles are migrated.
