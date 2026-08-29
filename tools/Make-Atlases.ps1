@@ -1342,6 +1342,10 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
         -Top $t.Tab.Light -Body $t.Button.Light `
         -Bottom (Blend $t.Button.Light $t.Button.Dark 0.55) -Rim $t.Button.Dark -RimWidth (2*$S)
 
+    New-Bar9 -Name 'KeyBadge' -Size (32*$S) -Radius ([Math]::Max(2, $t.Radius.Button) * $S) `
+        -Top (Blend $t.Button.Dark $Black 0.25) -Body (Blend $t.Button.Dark $Black 0.45) `
+        -Bottom (Blend $t.Button.Dark $Black 0.15) -Rim $t.Button.Light -RimWidth (1.5*$S)
+
     New-Bar9 -Name 'BarTrough' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
         -Top (Blend $t.Section.Fill $Black 0.6) -Body $t.Section.Fill `
         -Bottom (Blend $t.Section.Fill $t.Section.Light 0.20) -Rim $Black -RimWidth (1.5*$S)
