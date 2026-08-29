@@ -272,8 +272,7 @@ namespace LizarbInterface
             rect = UIScaling.AdjustRectToUIScaling(rect);
 
             float a = atlas.width * 0.25f / Scale;
-            a = UIScaling.AdjustCoordToUIScalingCeil(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
-            a = GenMath.Min(a, rect.height / 2f, rect.width / 2f);
+            a = UIScaling.AdjustCoordToUIScalingFloor(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
 
             if (drawTop)
             {
