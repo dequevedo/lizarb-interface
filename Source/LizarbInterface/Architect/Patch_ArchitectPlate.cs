@@ -69,9 +69,9 @@ namespace LizarbInterface
         {
             float side = Mathf.Min(plate.height, plate.width);
 
-            Texture2D square = AtlasSwap.Shared("ShapeSquare");
-            Texture2D fade = AtlasSwap.Shared("ShapeFade");
-            if (square == null || fade == null)
+            Texture2D head = AtlasSwap.Shared("ShapeFadeHead");
+            Texture2D tail = AtlasSwap.Shared("ShapeFade");
+            if (head == null || tail == null)
             {
                 Widgets.DrawBoxSolid(new Rect(plate.x, plate.y, side, side), tint);
                 return;
@@ -80,12 +80,12 @@ namespace LizarbInterface
             Color previous = GUI.color;
             GUI.color = tint;
 
-            GUI.DrawTexture(new Rect(plate.x, plate.y, side, side), square);
+            GUI.DrawTexture(new Rect(plate.x, plate.y, side, side), head);
 
-            float tail = plate.xMax - (plate.x + side);
-            if (tail > 0f)
+            float rest = plate.xMax - (plate.x + side);
+            if (rest > 0f)
             {
-                GUI.DrawTexture(new Rect(plate.x + side, plate.y, tail, side), fade);
+                GUI.DrawTexture(new Rect(plate.x + side, plate.y, rest, side), tail);
             }
 
             GUI.color = previous;

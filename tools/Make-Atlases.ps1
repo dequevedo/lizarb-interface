@@ -491,27 +491,43 @@ function New-Pattern {
     $cov = $map.Cov; $mix = $map.Mix; $wsh = $map.Wash
 
     $bmp = New-Object System.Drawing.Bitmap($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $box = New-Object System.Drawing.Rectangle(0, 0, $Size, $Size)
+    $data = $bmp.LockBits($box, [System.Drawing.Imaging.ImageLockMode]::WriteOnly, $bmp.PixelFormat)
+    $stride = $data.Stride
+    $bytes = New-Object 'byte[]' ($stride * $Size)
 
     $lineAlpha = 150.0
     $washAlpha = 38.0
-    $clear = [System.Drawing.Color]::FromArgb(0, 0, 0, 0)
+    $ar = $InkA[0]; $ag = $InkA[1]; $ab = $InkA[2]
+    $br = $InkB[0]; $bg = $InkB[1]; $bb = $InkB[2]
+    $wr = $Wash[0]; $wg = $Wash[1]; $wb = $Wash[2]
 
     for ($y = 0; $y -lt $Size; $y++) {
+        $row = $y * $stride
+        $line = $y * $Size
         for ($x = 0; $x -lt $Size; $x++) {
-            $i = $y * $Size + $x
+            $i = $line + $x
 
             $la = $lineAlpha * $cov[$i]
-            $wa = $washAlpha * (0.35 + 0.65 * $wsh[$i])
-            $total = $la + $wa
+            $total = $la + $washAlpha * (0.35 + 0.65 * $wsh[$i])
+            if ($total -le 0.5) { continue }
 
-            if ($total -le 0.5) { $bmp.SetPixel($x, $y, $clear); continue }
+            $t = $mix[$i]
+            $ir = [Math]::Round($ar + ($br - $ar) * $t)
+            $ig = [Math]::Round($ag + ($bg - $ag) * $t)
+            $ib = [Math]::Round($ab + ($bb - $ab) * $t)
 
-            $ink = Blend $InkA $InkB $mix[$i]
-            $c = Blend $Wash $ink ($la / $total)
-
-            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb([int][Math]::Min(255, $total), $c[0], $c[1], $c[2]))
+            $u = $la / $total
+            $o = $row + $x * 4
+            $bytes[$o]     = [byte][int][Math]::Round($wb + ($ib - $wb) * $u)
+            $bytes[$o + 1] = [byte][int][Math]::Round($wg + ($ig - $wg) * $u)
+            $bytes[$o + 2] = [byte][int][Math]::Round($wr + ($ir - $wr) * $u)
+            $bytes[$o + 3] = [byte][int][Math]::Min(255, $total)
         }
     }
+
+    [System.Runtime.InteropServices.Marshal]::Copy($bytes, 0, $data.Scan0, $bytes.Length)
+    $bmp.UnlockBits($data)
 
     $bmp.Save((Join-Path $OutDir "Pattern_$Kind.png"), [System.Drawing.Imaging.ImageFormat]::Png)
     $bmp.Dispose()
@@ -733,7 +749,7 @@ $Themes = @{
     }
     'Brass' = @{
         Ornament = 'Fillet'; Pattern = 'Hatch'
-        Radius = @{ Button = 11; Tab = 10; Window = 22; Section = 10 }
+        Radius = @{ Button = 8; Tab = 7; Window = 16; Section = 7}
         Fillet = @{ Thin = 2; Fat = 4; WindowThin = 3; WindowFat = 7 }
         Button  = @{ Light = @(178, 145, 89);  Dark = @(96, 77, 48);   Fill = @(64, 51, 38) }
         Hover   = @{ Light = @(238, 204, 138); Dark = @(140, 113, 70); Fill = @(90, 73, 52) }
@@ -759,7 +775,7 @@ $Themes = @{
 
     'Royal' = @{
         Ornament = 'Double'; Pattern = 'Medieval'
-        Radius = @{ Button = 13; Tab = 12; Window = 26; Section = 12 }
+        Radius = @{ Button = 9; Tab = 8; Window = 18; Section = 8}
         Fillet = @{ Thin = 3; Fat = 6; WindowThin = 4; WindowFat = 9 }
         Button  = @{ Light = @(214, 176, 88);  Dark = @(110, 88, 40);  Fill = @(45, 42, 78) }
         Hover   = @{ Light = @(252, 220, 130); Dark = @(150, 120, 56); Fill = @(62, 58, 104) }
@@ -785,7 +801,7 @@ $Themes = @{
 
     'Verdant' = @{
         Ornament = 'None'; Pattern = 'Scales'
-        Radius = @{ Button = 10; Tab = 9; Window = 20; Section = 9 }
+        Radius = @{ Button = 8; Tab = 7; Window = 16; Section = 7}
         Fillet = @{ Thin = 2; Fat = 3; WindowThin = 3; WindowFat = 4 }
         Button  = @{ Light = @(164, 142, 84);  Dark = @(52, 66, 46);   Fill = @(36, 50, 36) }
         Hover   = @{ Light = @(214, 190, 118); Dark = @(72, 92, 62);   Fill = @(52, 70, 50) }
@@ -798,7 +814,7 @@ $Themes = @{
 
     'Bone' = @{
         Ornament = 'None'; Pattern = 'Dots'
-        Radius = @{ Button = 13; Tab = 10; Window = 26; Section = 11 }
+        Radius = @{ Button = 9; Tab = 8; Window = 18; Section = 8}
         Fillet = @{ Thin = 2; Fat = 2; WindowThin = 3; WindowFat = 3 }
         Button  = @{ Light = @(240, 227, 178); Dark = @(128, 109, 64);  Fill = @(44, 40, 31) }
         Hover   = @{ Light = @(255, 248, 208); Dark = @(160, 138, 84);  Fill = @(63, 57, 44) }
@@ -811,7 +827,7 @@ $Themes = @{
 
     'Crimson' = @{
         Ornament = 'Bracket'; Pattern = 'Scales'
-        Radius = @{ Button = 9; Tab = 8; Window = 18; Section = 8 }
+        Radius = @{ Button = 7; Tab = 6; Window = 14; Section = 6}
         Fillet = @{ Thin = 2; Fat = 4; WindowThin = 3; WindowFat = 5 }
         Button  = @{ Light = @(196, 96, 76);   Dark = @(74, 30, 28);   Fill = @(58, 26, 26) }
         Hover   = @{ Light = @(240, 138, 108); Dark = @(104, 44, 40);  Fill = @(80, 36, 34) }
@@ -824,7 +840,7 @@ $Themes = @{
 
     'Arcane' = @{
         Ornament = 'Double'; Pattern = 'Dots'
-        Radius = @{ Button = 12; Tab = 11; Window = 24; Section = 11 }
+        Radius = @{ Button = 9; Tab = 8; Window = 18; Section = 8}
         Fillet = @{ Thin = 2; Fat = 3; WindowThin = 2; WindowFat = 4 }
         Button  = @{ Light = @(120, 226, 224); Dark = @(52, 40, 92);   Fill = @(34, 26, 62) }
         Hover   = @{ Light = @(170, 250, 248); Dark = @(74, 58, 126);  Fill = @(48, 38, 86) }
@@ -850,7 +866,7 @@ $Themes = @{
 
     'Flesh' = @{
         Ornament = 'None'; Pattern = 'Hatch'
-        Radius = @{ Button = 14; Tab = 12; Window = 26; Section = 12 }
+        Radius = @{ Button = 10; Tab = 8; Window = 20; Section = 8}
         Fillet = @{ Thin = 3; Fat = 5; WindowThin = 3; WindowFat = 6 }
         Button  = @{ Light = @(206, 132, 126); Dark = @(96, 48, 48);   Fill = @(122, 68, 66) }
         Hover   = @{ Light = @(240, 168, 160); Dark = @(126, 66, 64);  Fill = @(150, 88, 84) }
@@ -876,7 +892,7 @@ $Themes = @{
 
     'Aero' = @{
         Ornament = 'None'; Pattern = 'Dots'; Outline = $false
-        Radius = @{ Button = 8; Tab = 7; Window = 16; Section = 8 }
+        Radius = @{ Button = 7; Tab = 6; Window = 14; Section = 7}
         Fillet = @{ Thin = 0; Fat = 0; WindowThin = 0; WindowFat = 0 }
         FillAlpha = 150; Gloss = 0.55
         Button  = @{ Light = @(226, 244, 255); Dark = @(96, 132, 160); Fill = @(58, 92, 122) }
@@ -890,7 +906,7 @@ $Themes = @{
 
     'Copper' = @{
         Ornament = 'None'; Pattern = 'Scales'
-        Radius = @{ Button = 10; Tab = 9; Window = 20; Section = 9 }
+        Radius = @{ Button = 8; Tab = 7; Window = 16; Section = 7}
         Fillet = @{ Thin = 2; Fat = 4; WindowThin = 3; WindowFat = 5 }
         Button  = @{ Light = @(214, 132, 74);  Dark = @(62, 96, 88);   Fill = @(58, 74, 70) }
         Hover   = @{ Light = @(248, 172, 108); Dark = @(84, 126, 116); Fill = @(76, 96, 90) }
@@ -903,7 +919,7 @@ $Themes = @{
 
     'Ash' = @{
         Ornament = 'Fillet'; Pattern = 'Dots'
-        Radius = @{ Button = 9; Tab = 8; Window = 18; Section = 8 }
+        Radius = @{ Button = 7; Tab = 6; Window = 14; Section = 6}
         Fillet = @{ Thin = 1; Fat = 2; WindowThin = 1; WindowFat = 2 }
         Button  = @{ Light = @(150, 146, 142); Dark = @(58, 56, 54);   Fill = @(48, 47, 46) }
         Hover   = @{ Light = @(200, 196, 190); Dark = @(84, 82, 79);   Fill = @(68, 67, 65) }
@@ -1219,7 +1235,7 @@ function New-Icon {
 
 
 function New-Fade {
-    param([string]$Name, [int]$W = 128, [int]$H = 16)
+    param([string]$Name, [int]$W = 128, [int]$H = 64, [int]$Inset = 4)
 
     $path = Join-Path $OutDir "$Name.png"
     if (Test-HandDrawn $path $Name) {
@@ -1233,7 +1249,8 @@ function New-Fade {
         $t = $x / [double]($W - 1)
         $a = [int][Math]::Round(255 * (1 - $t) * (1 - $t))
         for ($y = 0; $y -lt $H; $y++) {
-            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($a, 255, 255, 255))
+            $edge = if ($y -lt $Inset -or $y -gt $H - 1 - $Inset) { 0 } else { $a }
+            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($edge, 255, 255, 255))
         }
     }
 
@@ -1416,6 +1433,7 @@ $Shapes = @{
     'Tag'     = @( @('box', 3, 7, 42, 57, 7), @('tri', 42, 7, 42, 57, 62, 32) )
     'Shield'  = @( @('box', 5, 5, 59, 38, 8), @('tri', 5, 34, 59, 34, 32, 62) )
     'Hex'     = @( @('box', 16, 6, 48, 58, 3), @('tri', 16, 6, 16, 58, 3, 32), @('tri', 48, 6, 48, 58, 61, 32) )
+    'FadeHead' = @(, @('box', 4, 4, 96, 60, 9))
 }
 
 $Shapes['Diamond'] = @(, @('diam', 32, 32, 22, 5))
