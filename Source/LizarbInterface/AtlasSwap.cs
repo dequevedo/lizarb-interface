@@ -19,6 +19,7 @@ namespace LizarbInterface
             public bool Shared;
             public string Theme;
             public long Stamp;
+            public float Shade;
             public float Checked;
         }
 
@@ -81,7 +82,8 @@ namespace LizarbInterface
             if (slot.Theme != theme || Edited(slot, theme))
             {
                 slot.Theme = theme;
-                slot.Png = ReadSkinFile(slot.Name, theme);
+                slot.Png = ReadSkinFile(slot.Name, theme, out float shade);
+                slot.Shade = shade;
                 slot.Stamp = StampOf(slot.Name, theme);
                 slot.Ours = null;
             }
@@ -110,12 +112,70 @@ namespace LizarbInterface
             return Path.Combine(dir, fileName + ".png");
         }
 
+        private static readonly System.Collections.Generic.Dictionary<string, string[]> Instead =
+            new System.Collections.Generic.Dictionary<string, string[]>
+            {
+                { "ButtonBGMouseover", new[] { "ButtonBG" } },
+                { "ButtonBGClick",     new[] { "ButtonBG" } },
+                { "ButtonSubtleAtlas", new[] { "ButtonBG" } },
+                { "GizmoBG",           new[] { "ButtonBG" } },
+                { "KeyBadge",          new[] { "ButtonBG" } },
+                { "BarRound",          new[] { "ButtonBG" } },
+                { "TabAtlas",          new[] { "ButtonBG" } },
+                { "WindowAtlas",       new[] { "SectionAtlas", "ButtonBG" } },
+                { "SectionAtlas",      new[] { "WindowAtlas", "ButtonBG" } },
+                { "TooltipBG",         new[] { "SectionAtlas", "WindowAtlas", "ButtonBG" } },
+                { "FloatMenuOptionBG", new[] { "SectionAtlas", "WindowAtlas", "ButtonBG" } },
+                { "SliderRail",        new[] { "SectionAtlas", "WindowAtlas", "ButtonBG" } },
+                { "BarTrough",         new[] { "SectionAtlas", "WindowAtlas", "ButtonBG" } },
+            };
+
+        private static readonly System.Collections.Generic.Dictionary<string, float> Derived =
+            new System.Collections.Generic.Dictionary<string, float>
+            {
+                { "ButtonBGMouseover", 1.35f },
+                { "ButtonBGClick",     0.72f },
+                { "ButtonSubtleAtlas", 0.88f },
+            };
+
+        private static string Resolve(string fileName, string theme, out float shade)
+        {
+            shade = 1f;
+
+            string own = SkinPath(fileName, theme);
+            if (File.Exists(own))
+            {
+                return own;
+            }
+
+            if (Instead.TryGetValue(fileName, out string[] alternatives))
+            {
+                foreach (string alt in alternatives)
+                {
+                    string path = SkinPath(alt, theme);
+                    if (File.Exists(path))
+                    {
+                        Derived.TryGetValue(fileName, out shade);
+                        if (shade <= 0f)
+                        {
+                            shade = 1f;
+                        }
+
+                        return path;
+                    }
+                }
+            }
+
+            string standard = SkinPath(fileName, LizarbInterfaceSettings.DefaultTheme);
+            return File.Exists(standard) ? standard : null;
+        }
+
         private static long StampOf(string fileName, string theme)
         {
             try
             {
-                string path = SkinPath(fileName, theme);
-                return File.Exists(path) ? File.GetLastWriteTimeUtc(path).Ticks : 0L;
+                string path = Resolve(fileName, theme, out float ignored);
+                return path == null ? 0L : File.GetLastWriteTimeUtc(path).Ticks;
             }
             catch
             {
@@ -157,16 +217,16 @@ namespace LizarbInterface
             previews.Clear();
         }
 
-        private static byte[] ReadSkinFile(string fileName, string theme = null)
+        private static byte[] ReadSkinFile(string fileName, string theme, out float shade)
         {
-            string dir = theme == null ? SkinDir : Path.Combine(root, "Skins/" + theme);
-            string path = Path.Combine(dir, fileName + ".png");
-            if (File.Exists(path))
+            string path = Resolve(fileName, theme, out shade);
+            if (path != null)
             {
                 return File.ReadAllBytes(path);
             }
 
-            Log.Error("[LizarbInterface] missing skin file: " + path);
+            Log.ErrorOnce("[LizarbInterface] no skin file for " + fileName + " in " + theme,
+                          (fileName + theme).GetHashCode());
             return null;
         }
 
@@ -275,6 +335,7 @@ namespace LizarbInterface
 
             var tex = new Texture2D(2, 2, TextureFormat.RGBA32, mipChain: false);
             tex.LoadImage(slot.Png);
+            Shift(tex, slot.Shade);
             tex.name = slot.Name;
             tex.filterMode = DesiredFilter;
             tex.anisoLevel = 0;
@@ -282,6 +343,26 @@ namespace LizarbInterface
             tex.Apply(updateMipmaps: false, makeNoLongerReadable: false);
             tex.hideFlags = HideFlags.HideAndDontSave;
             return tex;
+        }
+
+        private static void Shift(Texture2D tex, float shade)
+        {
+            if (shade <= 0f || Mathf.Approximately(shade, 1f))
+            {
+                return;
+            }
+
+            Color32[] pixels = tex.GetPixels32();
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                Color32 p = pixels[i];
+                p.r = (byte)Mathf.Clamp(p.r * shade, 0f, 255f);
+                p.g = (byte)Mathf.Clamp(p.g * shade, 0f, 255f);
+                p.b = (byte)Mathf.Clamp(p.b * shade, 0f, 255f);
+                pixels[i] = p;
+            }
+
+            tex.SetPixels32(pixels);
         }
 
         internal static float Scale { get; private set; } = 1f;
