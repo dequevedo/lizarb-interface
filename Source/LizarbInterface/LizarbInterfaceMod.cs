@@ -17,7 +17,7 @@ namespace LizarbInterface
 
         public float inset = 1f;
 
-        public const string DefaultFont = "Bungee";
+        public const string DefaultFont = "Rajdhani";
 
         public const string DefaultPlateStyle = "Cascade";
 
