@@ -20,4 +20,3 @@ dev/unity-fonts/
 
 # Release staging built by tools/Make-Release.ps1
 dist/
-docs/shots/
