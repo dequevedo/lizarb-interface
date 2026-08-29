@@ -80,12 +80,13 @@ namespace LizarbInterface
             Color previous = GUI.color;
             GUI.color = tint;
 
-            GUI.DrawTexture(new Rect(plate.x, plate.y, side, side), head);
+            float split = Mathf.Round(plate.x + side);
 
-            float rest = plate.xMax - (plate.x + side);
-            if (rest > 0f)
+            GUI.DrawTexture(new Rect(plate.x, plate.y, split - plate.x, side), head);
+
+            if (plate.xMax > split)
             {
-                GUI.DrawTexture(new Rect(plate.x + side, plate.y, rest, side), tail);
+                GUI.DrawTexture(new Rect(split, plate.y, plate.xMax - split, side), tail);
             }
 
             GUI.color = previous;
