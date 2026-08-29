@@ -3,7 +3,8 @@ param(
     [string]$Out,
     [switch]$SkipBuild,
     [switch]$Link,
-    [switch]$Dev
+    [switch]$Dev,
+    [switch]$NoBump
 )
 
 $ErrorActionPreference = 'Stop'
@@ -49,6 +50,24 @@ if (-not $SkipBuild) {
 
 $dll = Join-Path $Repo "Assemblies\$ModName.dll"
 if (-not (Test-Path $dll)) { throw "missing $dll" }
+
+$aboutPath = Join-Path $Repo 'About\About.xml'
+$about = Get-Content $aboutPath -Raw
+if ($about -notmatch '<modVersion>(\d+)\.(\d+)\.(\d+)</modVersion>') {
+    throw "no <modVersion>major.minor.patch</modVersion> in $aboutPath"
+}
+
+$was = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+$version = $was
+
+if ($NoBump) {
+    Write-Host "version $version, kept" -ForegroundColor DarkGray
+} else {
+    $version = "$($Matches[1]).$([int]$Matches[2] + 1).0"
+    $bumped = $about -replace '<modVersion>[^<]*</modVersion>', "<modVersion>$version</modVersion>"
+    [IO.File]::WriteAllText($aboutPath, $bumped, (New-Object Text.UTF8Encoding $false))
+    Write-Host "version $was -> $version. run with -NoBump to keep it" -ForegroundColor Cyan
+}
 
 $keepId = $null
 $idPath = Join-Path $Dist 'About\PublishedFileId.txt'
