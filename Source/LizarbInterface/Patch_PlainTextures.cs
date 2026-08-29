@@ -13,6 +13,7 @@ namespace LizarbInterface
             public Texture2D Vanilla;
             public string File;
             public bool Shared;
+            public bool Plate;
         }
 
         private static Entry[] entries = new Entry[0];
@@ -57,6 +58,12 @@ namespace LizarbInterface
                 Icon("CodexButton"),
                 Icon("SearchButton"),
                 Icon("ShowVacuumOverlay"),
+
+                Icon("CloseXSmall", "IconCloseX"),
+                Element("SpeedButtonTextures", 0, "IconSpeedPause", plate: true),
+                Element("SpeedButtonTextures", 1, "IconSpeedNormal", plate: true),
+                Element("SpeedButtonTextures", 2, "IconSpeedFast", plate: true),
+                Element("SpeedButtonTextures", 3, "IconSpeedSuper", plate: true),
             };
         }
 
@@ -85,6 +92,51 @@ namespace LizarbInterface
             Entry e = Make(typeof(TexButton), field, "Icon" + field);
             e.Shared = true;
             return e;
+        }
+
+        private static Entry Icon(string field, string file, bool plate = false)
+        {
+            Entry e = Make(typeof(TexButton), field, file);
+            e.Shared = true;
+            e.Plate = plate;
+            return e;
+        }
+
+        private static Entry Element(string field, int index, string file, bool plate = false)
+        {
+            Texture2D vanilla = null;
+            try
+            {
+                Texture2D[] all = AccessTools.StaticFieldRefAccess<Texture2D[]>(typeof(TexButton), field);
+                if (all != null && index < all.Length)
+                {
+                    vanilla = all[index];
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Warning("[LizarbInterface] could not read TexButton." + field + ": " + e.Message);
+            }
+
+            return new Entry { Vanilla = vanilla, File = file, Shared = true, Plate = plate };
+        }
+
+        internal static bool WantsPlate(Texture original)
+        {
+            if (original == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (ReferenceEquals(entries[i].Vanilla, original))
+                {
+                    return entries[i].Plate;
+                }
+            }
+
+            return false;
         }
 
         internal static Texture2D For(Texture original)

@@ -12,10 +12,13 @@ namespace LizarbInterface
     [HarmonyPatch(typeof(Command), "GizmoOnGUIInt")]
     internal static class Patch_GizmoContext
     {
-        private static void Prefix(Rect butRect, out Rect? __state)
+        private static void Prefix(Rect butRect, GizmoRenderParms parms, out Rect? __state)
         {
             __state = GizmoKeyContext.Current;
-            GizmoKeyContext.Current = butRect;
+
+            float dx = parms.shrunk ? 3f : 5f;
+            float dy = parms.shrunk ? 0f : 3f;
+            GizmoKeyContext.Current = new Rect(butRect.x + dx, butRect.y + dy, butRect.width - 10f, 0f);
         }
 
         private static void Postfix(Rect? __state)
@@ -45,7 +48,14 @@ namespace LizarbInterface
             }
 
             Rect? gizmo = GizmoKeyContext.Current;
-            if (!gizmo.HasValue || gizmo.Value != rect)
+            if (!gizmo.HasValue)
+            {
+                return;
+            }
+
+            Rect where = gizmo.Value;
+            if (!Mathf.Approximately(where.x, rect.x) || !Mathf.Approximately(where.y, rect.y) ||
+                !Mathf.Approximately(where.width, rect.width))
             {
                 return;
             }
@@ -60,6 +70,31 @@ namespace LizarbInterface
             Rect badge = new Rect(rect.x, rect.y, size.x + PadX * 2f, size.y + PadY * 2f);
 
             AtlasSwap.DrawScaled(badge, plate, true);
+        }
+    }
+
+    [HarmonyPatch(typeof(Widgets), nameof(Widgets.ButtonImage),
+        typeof(Rect), typeof(Texture2D), typeof(bool), typeof(string))]
+    internal static class Patch_ButtonImagePlate
+    {
+        private static void Prefix(Rect butRect, Texture2D tex)
+        {
+            LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
+            if (settings == null || !settings.enabled || !settings.skinWidgets)
+            {
+                return;
+            }
+
+            if (!PlainTextures.WantsPlate(tex))
+            {
+                return;
+            }
+
+            Texture2D plate = AtlasSwap.Own("ButtonBG");
+            if (plate != null)
+            {
+                AtlasSwap.DrawScaled(butRect, plate, true);
+            }
         }
     }
 
