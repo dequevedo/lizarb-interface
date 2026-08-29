@@ -26,6 +26,7 @@
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSquared>Squared</LizarbInterface.ThemeSquared>
   <LizarbInterface.ThemeRounded>Rounded (experimental)</LizarbInterface.ThemeRounded>
+  <LizarbInterface.ThemeCustom>Your own</LizarbInterface.ThemeCustom>
   <LizarbInterface.ThemeDevelopment>Development and debug</LizarbInterface.ThemeDevelopment>
   <LizarbInterface.Theme.Default>RimWorld default</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>

@@ -26,6 +26,7 @@
   <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSquared>Quadrados</LizarbInterface.ThemeSquared>
   <LizarbInterface.ThemeRounded>Arredondados (experimental)</LizarbInterface.ThemeRounded>
+  <LizarbInterface.ThemeCustom>Seus</LizarbInterface.ThemeCustom>
   <LizarbInterface.ThemeDevelopment>Desenvolvimento e debug</LizarbInterface.ThemeDevelopment>
   <LizarbInterface.Theme.Default>Padrão do RimWorld</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Latão</LizarbInterface.Theme.Brass>

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
@@ -214,9 +215,69 @@ namespace LizarbInterface
             ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
         };
 
-        internal static bool HasTheme(string id)
+        private static List<(string Id, string Pattern, Color Outline, string Group)> all;
+
+        internal static List<(string Id, string Pattern, Color Outline, string Group)> AllThemes
+        {
+            get
+            {
+                if (all == null)
+                {
+                    all = new List<(string, string, Color, string)>(Themes);
+                    Discover();
+                }
+
+                return all;
+            }
+        }
+
+        private static void Discover()
+        {
+            if (RootDir.NullOrEmpty())
+            {
+                return;
+            }
+
+            string skins = Path.Combine(RootDir, "Skins");
+            if (!Directory.Exists(skins))
+            {
+                return;
+            }
+
+            foreach (string dir in Directory.GetDirectories(skins))
+            {
+                string id = Path.GetFileName(dir);
+                if (id == "Shared" || IsBuiltIn(id))
+                {
+                    continue;
+                }
+
+                if (Directory.GetFiles(dir, "*.png").Length == 0)
+                {
+                    continue;
+                }
+
+                string group = id.StartsWith("Debug") ? "Development" : "Custom";
+                all.Add((id, LizarbInterfaceSettings.DefaultPattern, new Color(0.05f, 0.05f, 0.05f), group));
+            }
+        }
+
+        private static bool IsBuiltIn(string id)
         {
             foreach (var entry in Themes)
+            {
+                if (entry.Id == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool HasTheme(string id)
+        {
+            foreach (var entry in AllThemes)
             {
                 if (entry.Id == id)
                 {
@@ -232,7 +293,7 @@ namespace LizarbInterface
             get
             {
                 string id = Settings?.theme;
-                foreach (var t in Themes)
+                foreach (var t in AllThemes)
                 {
                     if (t.Id == id)
                     {
@@ -386,14 +447,16 @@ namespace LizarbInterface
         {
             var squared = new List<string> { null };
             var rounded = new List<string>();
+            var custom = new List<string>();
             var development = new List<string>();
 
-            foreach (var entry in Themes)
+            foreach (var entry in AllThemes)
             {
                 switch (entry.Group)
                 {
                     case "Rounded": rounded.Add(entry.Id); break;
                     case "Development": development.Add(entry.Id); break;
+                    case "Custom": custom.Add(entry.Id); break;
                     default: squared.Add(entry.Id); break;
                 }
             }
@@ -402,7 +465,13 @@ namespace LizarbInterface
             listing.Gap(6f);
             DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
 
-            if (Prefs.DevMode)
+            if (custom.Count > 0)
+            {
+                listing.Gap(6f);
+                DrawThemeGrid(listing, "LizarbInterface.ThemeCustom", custom);
+            }
+
+            if (Prefs.DevMode && development.Count > 0)
             {
                 listing.Gap(6f);
                 DrawThemeGrid(listing, "LizarbInterface.ThemeDevelopment", development);
@@ -428,6 +497,12 @@ namespace LizarbInterface
                     cell - 8f,
                     SwatchHeight), ids[i]);
             }
+        }
+
+        private static string Label(string id)
+        {
+            string key = "LizarbInterface.Theme." + id;
+            return key.CanTranslate() ? key.Translate().ToString() : id;
         }
 
         private void DrawThemeSwatch(Rect area, string theme)
@@ -456,8 +531,7 @@ namespace LizarbInterface
             }
 
             Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(area.x, area.y + 8f, area.width, 24f),
-                          ("LizarbInterface.Theme." + (vanilla ? "Default" : theme)).Translate());
+            Widgets.Label(new Rect(area.x, area.y + 8f, area.width, 24f), Label(vanilla ? "Default" : theme));
             Text.Anchor = TextAnchor.UpperLeft;
 
             if (selected)
