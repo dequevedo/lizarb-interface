@@ -74,18 +74,20 @@ namespace LizarbInterface
     }
 
     [HarmonyPatch(typeof(Widgets), nameof(Widgets.ButtonImage),
-        typeof(Rect), typeof(Texture2D), typeof(bool), typeof(string))]
+        typeof(Rect), typeof(Texture2D), typeof(Color), typeof(Color), typeof(bool), typeof(string))]
     internal static class Patch_ButtonImagePlate
     {
-        private static void Prefix(Rect butRect, Texture2D tex)
+        private const float Smallest = 10f;
+
+        private static void Prefix(Rect butRect)
         {
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || !settings.skinWidgets)
+            if (settings == null || !settings.enabled || !settings.skinWidgets || !settings.plateIconButtons)
             {
                 return;
             }
 
-            if (!PlainTextures.WantsPlate(tex))
+            if (butRect.width < Smallest || butRect.height < Smallest)
             {
                 return;
             }

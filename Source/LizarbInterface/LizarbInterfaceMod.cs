@@ -51,6 +51,8 @@ namespace LizarbInterface
 
         public bool grainOnButtons = true;
 
+        public bool plateIconButtons = true;
+
         public bool windowAnimation = true;
 
         public float animationDuration = 0.35f;
@@ -118,6 +120,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref backgroundGrain, "backgroundGrain", 0.05f);
             Scribe_Values.Look(ref pointFilter, "pointFilter", defaultValue: false);
             Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
+            Scribe_Values.Look(ref plateIconButtons, "plateIconButtons", defaultValue: true);
             Scribe_Values.Look(ref windowAnimation, "windowAnimation", defaultValue: true);
             Scribe_Values.Look(ref animationDuration, "animationDuration", 0.35f);
             Scribe_Values.Look(ref windowAnimationStyle, "windowAnimationStyle", "Slide");
@@ -937,6 +940,11 @@ namespace LizarbInterface
                     ref Settings.grainOnButtons,
                     "LizarbInterface.GrainOnButtons.Tip".Translate());
             }
+
+            listing.CheckboxLabeled(
+                "LizarbInterface.PlateIconButtons".Translate(),
+                ref Settings.plateIconButtons,
+                "LizarbInterface.PlateIconButtons.Tip".Translate());
         }
     }
 

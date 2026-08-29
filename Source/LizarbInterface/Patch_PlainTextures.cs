@@ -13,7 +13,6 @@ namespace LizarbInterface
             public Texture2D Vanilla;
             public string File;
             public bool Shared;
-            public bool Plate;
         }
 
         private static Entry[] entries = new Entry[0];
@@ -59,11 +58,12 @@ namespace LizarbInterface
                 Icon("SearchButton"),
                 Icon("ShowVacuumOverlay"),
 
-                Icon("CloseXSmall", "IconCloseX", plate: true),
-                Element("SpeedButtonTextures", 0, "IconSpeedPause", plate: true),
-                Element("SpeedButtonTextures", 1, "IconSpeedNormal", plate: true),
-                Element("SpeedButtonTextures", 2, "IconSpeedFast", plate: true),
-                Element("SpeedButtonTextures", 3, "IconSpeedSuper", plate: true),
+                Icon("CloseXSmall", "IconCloseX"),
+                Element("SpeedButtonTextures", 0, "IconSpeedPause"),
+                Element("SpeedButtonTextures", 1, "IconSpeedNormal"),
+                Element("SpeedButtonTextures", 2, "IconSpeedFast"),
+                Element("SpeedButtonTextures", 3, "IconSpeedSuper"),
+                Content("UI/TimeControls/TimeSpeedButton_Ultrafast", "IconSpeedUltra"),
             };
         }
 
@@ -87,15 +87,14 @@ namespace LizarbInterface
             return new Entry { Vanilla = vanilla, File = file };
         }
 
-        private static Entry Icon(string field, string file = null, bool plate = false)
+        private static Entry Icon(string field, string file = null)
         {
             Entry e = Make(typeof(TexButton), field, file ?? "Icon" + field);
             e.Shared = true;
-            e.Plate = plate;
             return e;
         }
 
-        private static Entry Element(string field, int index, string file, bool plate = false)
+        private static Entry Element(string field, int index, string file)
         {
             Texture2D vanilla = null;
             try
@@ -111,25 +110,13 @@ namespace LizarbInterface
                 Log.Warning("[LizarbInterface] could not read TexButton." + field + ": " + e.Message);
             }
 
-            return new Entry { Vanilla = vanilla, File = file, Shared = true, Plate = plate };
+            return new Entry { Vanilla = vanilla, File = file, Shared = true };
         }
 
-        internal static bool WantsPlate(Texture original)
+        private static Entry Content(string path, string file)
         {
-            if (original == null)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < entries.Length; i++)
-            {
-                if (ReferenceEquals(entries[i].Vanilla, original))
-                {
-                    return entries[i].Plate;
-                }
-            }
-
-            return false;
+            Texture2D vanilla = ContentFinder<Texture2D>.Get(path, reportFailure: false);
+            return new Entry { Vanilla = vanilla, File = file, Shared = true };
         }
 
         internal static Texture2D For(Texture original)

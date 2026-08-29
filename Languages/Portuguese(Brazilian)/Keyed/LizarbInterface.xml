@@ -94,6 +94,8 @@
   <LizarbInterface.Theme.Foundry>Fundição</LizarbInterface.Theme.Foundry>
   <LizarbInterface.GrainOnButtons>Textura nos botões também</LizarbInterface.GrainOnButtons>
   <LizarbInterface.GrainOnButtons.Tip>Ladrilha o mesmo padrão na face dos botões, dos tooltips e dos menus, não só no fundo das janelas. Com a pele Grimório é o que dá o pergaminho aos botões.</LizarbInterface.GrainOnButtons.Tip>
+  <LizarbInterface.PlateIconButtons>Placa atras dos botoes de icone</LizarbInterface.PlateIconButtons>
+  <LizarbInterface.PlateIconButtons.Tip>Desenha o botao do tema atras de todo botao pequeno de icone, inclusive os que outros mods acrescentam, para eles lerem como parte da interface. Ela so vai atras: nenhum icone de mod e substituido.</LizarbInterface.PlateIconButtons.Tip>
   <LizarbInterface.Architect.AutoWidth>Alargar o menu para caber os rótulos</LizarbInterface.Architect.AutoWidth>
   <LizarbInterface.Architect.AutoWidth.Tip>O vanilla fixa o menu Arquiteto em 200px, o que cabe a fonte padrão e os nomes do Core em inglês, e mais nada. Isto mede o nome de categoria mais longo na fonte que você escolheu e alarga o menu até caber. Nunca deixa o menu mais estreito.</LizarbInterface.Architect.AutoWidth.Tip>
   <LizarbInterface.Architect.PlateStyle.Square>Quadrado</LizarbInterface.Architect.PlateStyle.Square>
