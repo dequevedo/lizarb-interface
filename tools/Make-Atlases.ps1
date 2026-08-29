@@ -1609,9 +1609,9 @@ function New-DebugTheme {
 }
 
 if (-not $DefineOnly -and -not $IconsOnly -and $Only.Count -eq 0) {
-    New-DebugTheme -Id 'Slices'
-    New-DebugTheme -Id 'Coarse' -Divide 2
-    New-DebugTheme -Id 'Sparse' -Sparse
+    New-DebugTheme -Id 'DebugSlices'
+    New-DebugTheme -Id 'DebugCoarse' -Divide 2
+    New-DebugTheme -Id 'DebugSparse' -Sparse
 }
 
 $OutDir = Join-Path $SkinsRoot 'Shared'

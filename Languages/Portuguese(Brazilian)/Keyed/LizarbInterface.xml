@@ -26,7 +26,7 @@
   <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSquared>Quadrados</LizarbInterface.ThemeSquared>
   <LizarbInterface.ThemeRounded>Arredondados (experimental)</LizarbInterface.ThemeRounded>
-  <LizarbInterface.ThemeDevelopment>Desenvolvimento</LizarbInterface.ThemeDevelopment>
+  <LizarbInterface.ThemeDevelopment>Desenvolvimento e debug</LizarbInterface.ThemeDevelopment>
   <LizarbInterface.Theme.Default>Padrão do RimWorld</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Latão</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Ferro</LizarbInterface.Theme.Iron>
@@ -55,9 +55,9 @@
   <LizarbInterface.Theme.Rivet>Rivet</LizarbInterface.Theme.Rivet>
   <LizarbInterface.Theme.Vellum>Vellum</LizarbInterface.Theme.Vellum>
   <LizarbInterface.Theme.Bulwark>Bulwark</LizarbInterface.Theme.Bulwark>
-  <LizarbInterface.Theme.Slices>Mapa de fatias</LizarbInterface.Theme.Slices>
-  <LizarbInterface.Theme.Coarse>Mapa de fatias, metade da resolucao</LizarbInterface.Theme.Coarse>
-  <LizarbInterface.Theme.Sparse>Um arquivo so, o resto derivado</LizarbInterface.Theme.Sparse>
+  <LizarbInterface.Theme.DebugSlices>Mapa de fatias</LizarbInterface.Theme.DebugSlices>
+  <LizarbInterface.Theme.DebugCoarse>Mapa de fatias, metade da resolucao</LizarbInterface.Theme.DebugCoarse>
+  <LizarbInterface.Theme.DebugSparse>Um arquivo so, o resto derivado</LizarbInterface.Theme.DebugSparse>
   <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Texto</LizarbInterface.Tab.Text>

@@ -26,7 +26,7 @@
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSquared>Squared</LizarbInterface.ThemeSquared>
   <LizarbInterface.ThemeRounded>Rounded (experimental)</LizarbInterface.ThemeRounded>
-  <LizarbInterface.ThemeDevelopment>Development</LizarbInterface.ThemeDevelopment>
+  <LizarbInterface.ThemeDevelopment>Development and debug</LizarbInterface.ThemeDevelopment>
   <LizarbInterface.Theme.Default>RimWorld default</LizarbInterface.Theme.Default>
   <LizarbInterface.Theme.Brass>Brass</LizarbInterface.Theme.Brass>
   <LizarbInterface.Theme.Iron>Iron</LizarbInterface.Theme.Iron>
@@ -55,9 +55,9 @@
   <LizarbInterface.Theme.Rivet>Rivet</LizarbInterface.Theme.Rivet>
   <LizarbInterface.Theme.Vellum>Vellum</LizarbInterface.Theme.Vellum>
   <LizarbInterface.Theme.Bulwark>Bulwark</LizarbInterface.Theme.Bulwark>
-  <LizarbInterface.Theme.Slices>Slice map</LizarbInterface.Theme.Slices>
-  <LizarbInterface.Theme.Coarse>Slice map, half resolution</LizarbInterface.Theme.Coarse>
-  <LizarbInterface.Theme.Sparse>One file, everything else derived</LizarbInterface.Theme.Sparse>
+  <LizarbInterface.Theme.DebugSlices>Slice map</LizarbInterface.Theme.DebugSlices>
+  <LizarbInterface.Theme.DebugCoarse>Slice map, half resolution</LizarbInterface.Theme.DebugCoarse>
+  <LizarbInterface.Theme.DebugSparse>One file, everything else derived</LizarbInterface.Theme.DebugSparse>
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Text</LizarbInterface.Tab.Text>

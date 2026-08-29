@@ -209,9 +209,9 @@ namespace LizarbInterface
             ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded"),
             ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded"),
 
-            ("Slices",   "Hatch",     new Color(0.10f, 0.02f, 0.08f), "Development"),
-            ("Coarse",   "Hatch",     new Color(0.10f, 0.02f, 0.08f), "Development"),
-            ("Sparse",   "Hatch",     new Color(0.10f, 0.02f, 0.08f), "Development"),
+            ("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
+            ("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
+            ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
         };
 
         internal static bool HasTheme(string id)
