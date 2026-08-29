@@ -68,10 +68,10 @@ namespace LizarbInterface
         private static void Gradient(Rect plate, Color tint)
         {
             float side = Mathf.Min(plate.height, plate.width);
+            float rest = plate.width - side;
+            Texture2D ramp = AtlasSwap.Shared("ShapeFade");
 
-            Texture2D head = AtlasSwap.Shared("ShapeFadeHead");
-            Texture2D tail = AtlasSwap.Shared("ShapeFade");
-            if (head == null || tail == null)
+            if (ramp == null || rest <= 0f)
             {
                 Widgets.DrawBoxSolid(new Rect(plate.x, plate.y, side, side), tint);
                 return;
@@ -79,16 +79,10 @@ namespace LizarbInterface
 
             Color previous = GUI.color;
             GUI.color = tint;
-
-            float split = Mathf.Round(plate.x + side);
-
-            GUI.DrawTexture(new Rect(plate.x, plate.y, split - plate.x, side), head);
-
-            if (plate.xMax > split)
-            {
-                GUI.DrawTexture(new Rect(split, plate.y, plate.xMax - split, side), tail);
-            }
-
+            GUI.DrawTextureWithTexCoords(
+                new Rect(plate.x, plate.y, plate.width, side),
+                ramp,
+                new Rect(-side / rest, 0f, plate.width / rest, 1f));
             GUI.color = previous;
         }
 
