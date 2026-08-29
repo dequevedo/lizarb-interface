@@ -32,5 +32,7 @@ Compatibility: this mod replaces the drawing of tabs, window backgrounds and men
 
 Twenty-eight fonts ship with the mod under the SIL Open Font License. Full credits and licence files are included.
 
+Built with AI: the code was written with Claude, Anthropic's assistant, with me directing and testing. The textures and icons are not generated images, they are drawn by the generator scripts in the repository.
+
 Source: https://github.com/dequevedo/lizarb-interface</description>
 </ModMetaData>

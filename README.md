@@ -139,3 +139,13 @@ EB Garamond, Exo 2, Grenze Gotisch, Michroma, Orbitron, Philosopher, Saira Stenc
 Spectral, Teko, Vollkorn and Zen Dots are credited to their project authors, named in
 each licence file.
 
+
+## Built with AI
+
+The code was written with Claude, Anthropic's assistant, with me directing, testing
+and deciding.
+
+The textures and icons are not generated images. `tools/Make-Atlases.ps1` draws every
+atlas, pattern, plate and icon from geometry: signed distance fields, analytic
+coverage for the anti-aliasing, and a palette per theme. Run it and you get the same
+files back, byte for byte.
