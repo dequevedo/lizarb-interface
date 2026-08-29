@@ -27,6 +27,13 @@ Checkboxes, radio buttons, the slider knob, the bar strips and the background
 patterns were authored at half the resolution of everything around them, so
 they read softer. They are all at the same density now.
 
+Buttons other mods add
+
+The theme's button plate is drawn behind every icon button now, not just the
+ones this mod knows by name, so a fifth speed button or a minimap toolbar
+reads as part of the interface. It only ever goes behind: no mod's icon is
+replaced, and there is a switch for it under Surfaces.
+
 Architect
 
 The colour shape Cascade is replaced by Gradient: a solid square that fades
