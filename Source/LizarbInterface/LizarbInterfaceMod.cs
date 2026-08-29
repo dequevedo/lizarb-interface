@@ -19,6 +19,8 @@ namespace LizarbInterface
 
         public const string DefaultFont = "Bungee";
 
+        public const string DefaultPlateStyle = "Cascade";
+
         public string fontName = DefaultFont;
 
         public int fontOffsetTiny;
@@ -75,7 +77,7 @@ namespace LizarbInterface
 
         public bool architectAutoColor = true;
 
-        public string architectPlateStyle = "Plate";
+        public string architectPlateStyle = DefaultPlateStyle;
 
         public bool architectIcons = true;
 
@@ -127,7 +129,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectPlateAlpha, "architectPlateAlpha", 1f);
             Scribe_Values.Look(ref architectColorLabels, "architectColorLabels", defaultValue: false);
             Scribe_Values.Look(ref architectAutoColor, "architectAutoColor", defaultValue: true);
-            Scribe_Values.Look(ref architectPlateStyle, "architectPlateStyle", "Plate");
+            Scribe_Values.Look(ref architectPlateStyle, "architectPlateStyle", DefaultPlateStyle);
             Scribe_Values.Look(ref architectIcons, "architectIcons", defaultValue: true);
             Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
             Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
@@ -141,7 +143,7 @@ namespace LizarbInterface
 
                 if (System.Array.IndexOf(ArchitectPlate.Styles, architectPlateStyle) < 0)
                 {
-                    architectPlateStyle = "Plate";
+                    architectPlateStyle = DefaultPlateStyle;
                 }
 
                 if (System.Array.IndexOf(WindowAnimation.Styles, windowAnimationStyle) < 0)
