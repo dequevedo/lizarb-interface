@@ -2,7 +2,9 @@
 param(
     [switch]$SheetOnly,
     [switch]$PreviewOnly,
-    [switch]$ArchitectOnly
+    [switch]$ArchitectOnly,
+    [switch]$FontsOnly,
+    [switch]$ShapesOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -16,8 +18,8 @@ $Cats  = Join-Path $Repo 'Source\LizarbInterface\Architect\CategoryPalette.cs'
 $Featured = @('Foundry', 'Royal', 'Verdant', 'Crimson', 'Wood', 'Aero')
 
 $src = Get-Content $Mod -Raw
-$pairs = @([regex]::Matches($src, '\("([A-Za-z]+)",\s*"([A-Za-z]+)",\s*new Color') |
-           ForEach-Object { , @($_.Groups[1].Value, $_.Groups[2].Value) })
+$pairs = @([regex]::Matches($src, '\("([A-Za-z]+)",\s*"([A-Za-z]+)",\s*new Color\([^)]*\),\s*(true|false)\)') |
+           ForEach-Object { , @($_.Groups[1].Value, $_.Groups[2].Value, ($_.Groups[3].Value -eq 'true')) })
 if ($pairs.Count -eq 0) { throw "no theme tuples found in $Mod" }
 
 foreach ($p in $pairs) {
@@ -102,24 +104,44 @@ function Draw-Card {
 }
 
 function Write-Sheet {
-    $CW = 248; $CH = 190; $COLS = 4; $GAP = 6
-    $rows = [Math]::Ceiling($pairs.Count / $COLS)
-    $c = New-Canvas ($COLS * $CW + $GAP) ($rows * $CH + $GAP)
+    $CW = 248; $CH = 190; $COLS = 4; $GAP = 6; $HEAD = 30
+
+    $groups = @(
+        , @('Squared', @($pairs | Where-Object { -not $_[2] }))
+        , @('Rounded (experimental)', @($pairs | Where-Object { $_[2] }))
+    )
+
+    $H = $GAP
+    foreach ($grp in $groups) {
+        $H += $HEAD + [Math]::Ceiling($grp[1].Count / $COLS) * $CH
+    }
+
+    $c = New-Canvas ($COLS * $CW + $GAP) $H
     $bmp = $c[0]; $g = $c[1]
 
     $name = New-Object System.Drawing.Font('Segoe UI', 11, [System.Drawing.FontStyle]::Bold)
     $small = New-Object System.Drawing.Font('Segoe UI', 8)
+    $groupFont = New-Object System.Drawing.Font('Segoe UI', 13, [System.Drawing.FontStyle]::Bold)
 
-    for ($i = 0; $i -lt $pairs.Count; $i++) {
-        $x = $GAP + ($i % $COLS) * $CW
-        $y = $GAP + [Math]::Floor($i / $COLS) * $CH
-        Draw-Card $g $pairs[$i][0] $pairs[$i][1] $x $y ($CW - $GAP * 2) ($CH - $GAP * 2) $name $small -WithTab
+    $top = $GAP
+    foreach ($grp in $groups) {
+        $g.DrawString($grp[0], $groupFont, [System.Drawing.Brushes]::White, $GAP, $top)
+        $top += $HEAD
+
+        $list = $grp[1]
+        for ($i = 0; $i -lt $list.Count; $i++) {
+            $x = $GAP + ($i % $COLS) * $CW
+            $y = $top + [Math]::Floor($i / $COLS) * $CH
+            Draw-Card $g $list[$i][0] $list[$i][1] $x $y ($CW - $GAP * 2) ($CH - $GAP * 2) $name $small -WithTab
+        }
+
+        $top += [Math]::Ceiling($list.Count / $COLS) * $CH
     }
 
     $out = Join-Path $Repo 'docs\themes.png'
     $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
     $g.Dispose(); $bmp.Dispose()
-    Write-Host "docs\themes.png  ($($pairs.Count) themes, $($COLS * $CW + $GAP)x$($rows * $CH + $GAP))" -ForegroundColor Green
+    Write-Host "docs\themes.png  ($($pairs.Count) themes, $($COLS * $CW + $GAP)x$H)" -ForegroundColor Green
 }
 
 function Write-Preview {
@@ -306,6 +328,125 @@ function Write-Architect {
     Write-Host "docs\architect.png  ($($Categories.Count) categories, $($families.Count) families, $Theme)" -ForegroundColor Green
 }
 
-if (-not $PreviewOnly -and -not $ArchitectOnly) { Write-Sheet }
-if (-not $SheetOnly -and -not $ArchitectOnly) { Write-Preview }
-if (-not $SheetOnly -and -not $PreviewOnly) { Write-Architect }
+function Write-Fonts {
+    $dir = Join-Path $Repo 'Fonts'
+    $files = @(Get-ChildItem $dir -Filter *.ttf | Sort-Object Name)
+    if ($files.Count -eq 0) { throw "no .ttf in $dir" }
+
+    $held = New-Object System.Collections.Generic.List[object]
+    $families = New-Object System.Collections.Generic.List[object]
+
+    foreach ($f in $files) {
+        $pfc = New-Object System.Drawing.Text.PrivateFontCollection
+        $pfc.AddFontFile($f.FullName)
+        $held.Add($pfc)
+        $families.Add($pfc.Families[0])
+    }
+
+    $families = @($families | Sort-Object Name)
+    $cols = 2
+    $rowH = 46
+    $rows = [Math]::Ceiling($families.Count / $cols)
+    $cw = 460
+    $W = $cols * $cw
+    $H = $rows * $rowH + 24
+
+    $c = New-Canvas $W $H
+    $bmp = $c[0]; $g = $c[1]
+
+    $ink = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 232, 226, 216))
+
+    for ($i = 0; $i -lt $families.Count; $i++) {
+        $fam = $families[$i]
+        $style = [System.Drawing.FontStyle]::Regular
+        if (-not $fam.IsStyleAvailable($style)) { $style = [System.Drawing.FontStyle]::Bold }
+        if (-not $fam.IsStyleAvailable($style)) { continue }
+
+        $font = New-Object System.Drawing.Font($fam, 21, $style)
+        $x = 24 + ($i % $cols) * $cw
+        $y = 14 + [Math]::Floor($i / $cols) * $rowH
+        $g.DrawString($fam.Name, $font, $ink, $x, $y)
+        $font.Dispose()
+    }
+
+    $out = Join-Path $Repo 'docs\fonts.png'
+    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    $g.Dispose(); $bmp.Dispose()
+    foreach ($p in $held) { $p.Dispose() }
+    Write-Host "docs\fonts.png  ($($families.Count) faces, ${W}x${H})" -ForegroundColor Green
+}
+
+function Write-Shapes {
+    param([string]$Theme = 'Foundry')
+
+    $plate = Join-Path $Repo 'Source\LizarbInterface\Architect\Patch_ArchitectPlate.cs'
+    $block = [regex]::Match((Get-Content $plate -Raw), 'string\[\] Styles\s*=\s*\{(.*?)\};',
+             [System.Text.RegularExpressions.RegexOptions]::Singleline)
+    $styles = @([regex]::Matches($block.Groups[1].Value, '"(\w+)"') |
+                ForEach-Object { $_.Groups[1].Value })
+    if ($styles.Count -eq 0) { throw "no plate styles found in $plate" }
+
+    $dir = Join-Path $Skins $Theme
+    $shared = Join-Path $Skins 'Shared'
+    $tint = New-Tint 205 137 95
+
+    $BW = 210; $BH = 34; $GAP = 6; $PAD = 10; $COLS = 3
+    $rows = [Math]::Ceiling($styles.Count / $COLS)
+    $c = New-Canvas ($COLS * ($BW + $GAP) + $PAD * 2) ($PAD * 2 + $rows * ($BH + $GAP))
+    $bmp = $c[0]; $g = $c[1]
+
+    $subtle = [System.Drawing.Image]::FromFile("$dir\ButtonSubtleAtlas.png")
+    $icon = [System.Drawing.Image]::FromFile("$shared\IconProduction.png")
+    $font = New-Object System.Drawing.Font('Segoe UI', 9.5)
+
+    for ($i = 0; $i -lt $styles.Count; $i++) {
+        $style = $styles[$i]
+        $x = $PAD + ($i % $COLS) * ($BW + $GAP)
+        $y = $PAD + [Math]::Floor($i / $COLS) * ($BH + $GAP)
+
+        Draw9 $g $subtle $x $y $BW $BH
+
+        $px = $x + 3; $py = $y + 3; $pw = $BW - 6; $ph = $BH - 6
+        $side = $ph
+
+        switch ($style) {
+            'Flat' {
+                $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 205, 137, 95))
+                $g.FillRectangle($brush, $px, $py, $pw, $ph)
+                $brush.Dispose()
+            }
+            { $_ -in @('Plate', 'Frame', 'Gradient') } {
+                $file = if ($_ -eq 'Plate') { 'Plate' } else { "Plate$_" }
+                $img = [System.Drawing.Image]::FromFile("$dir\$file.png")
+                Draw9Tinted $g $img $px $py $pw $ph $tint
+                $img.Dispose()
+            }
+            default {
+                $file = Join-Path $shared "Shape$style.png"
+                if (-not (Test-Path $file)) { throw "plate style $style has no Shape$style.png" }
+                $img = [System.Drawing.Image]::FromFile($file)
+                $g.DrawImage($img, (New-Object System.Drawing.Rectangle($px, $py, $side, $side)),
+                    0, 0, $img.Width, $img.Height, [System.Drawing.GraphicsUnit]::Pixel, $tint)
+                $img.Dispose()
+            }
+        }
+
+        $g.DrawImage($icon, (New-Object System.Drawing.Rectangle(($px + 5), ($py + 4), 20, 20)))
+        $g.DrawString($style, $font, [System.Drawing.Brushes]::White, ($px + 34), ($y + 9))
+    }
+
+    $subtle.Dispose(); $icon.Dispose()
+
+    $out = Join-Path $Repo 'docs\shapes.png'
+    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    $g.Dispose(); $bmp.Dispose()
+    Write-Host "docs\shapes.png  ($($styles.Count) shapes, $Theme)" -ForegroundColor Green
+}
+
+$only = $SheetOnly -or $PreviewOnly -or $ArchitectOnly -or $FontsOnly -or $ShapesOnly
+
+if ($SheetOnly -or -not $only) { Write-Sheet }
+if ($PreviewOnly -or -not $only) { Write-Preview }
+if ($ArchitectOnly -or -not $only) { Write-Architect }
+if ($FontsOnly -or -not $only) { Write-Fonts }
+if ($ShapesOnly -or -not $only) { Write-Shapes }
