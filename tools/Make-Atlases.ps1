@@ -613,6 +613,61 @@ function New-Knob {
     Write-Host "  $Name.png"
 }
 
+function New-Bar9 {
+    param(
+        [string]$Name, [int]$Size, [int]$Radius,
+        [int[]]$Top, [int[]]$Body, [int[]]$Bottom, [int[]]$Rim,
+        [double]$RimWidth = 2.0
+    )
+
+    $bmp = New-Object System.Drawing.Bitmap($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $max = $Size - 1
+    $q = $Size / 4.0
+    $r = [Math]::Min($Radius, [int]($Size / 2))
+
+    for ($y = 0; $y -le $max; $y++) {
+        if ($y -lt $q) {
+            $band = Blend $Top $Body ($y / $q)
+        } elseif ($y -gt $max - $q) {
+            $band = Blend $Body $Bottom (($y - ($max - $q)) / $q)
+        } else {
+            $band = $Body
+        }
+
+        for ($x = 0; $x -le $max; $x++) {
+            $cx = [Math]::Min($x, $max - $x)
+            $cy = [Math]::Min($y, $max - $y)
+
+            if ($cx -lt $r -and $cy -lt $r) {
+                $dx = $r - $cx
+                $dy = $r - $cy
+                $dist = $r - [Math]::Sqrt(($dx * $dx) + ($dy * $dy))
+            } else {
+                $dist = [Math]::Min($cx, $cy)
+            }
+
+            $cov = [Math]::Max(0.0, [Math]::Min(1.0, $dist + 0.5))
+            if ($cov -le 0.0) {
+                $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0))
+                continue
+            }
+
+            if ($dist -lt $RimWidth) {
+                $c = Blend $Rim $band ($dist / $RimWidth)
+            } else {
+                $c = $band
+            }
+
+            $a = [int][Math]::Round($cov * 255)
+            $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($a, $c[0], $c[1], $c[2]))
+        }
+    }
+
+    $bmp.Save((Join-Path $OutDir "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+    Write-Host "  $Name.png  ($Size x $Size)"
+}
+
 function New-Strip {
     param(
         [string]$Name, [int]$W, [int]$H,
@@ -1282,6 +1337,14 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
 
     New-Strip -Name 'BarBG' -W 16 -H 32 -Border 'Rows' `
         -Top (Blend $t.Section.Fill $Black 0.5) -Bottom $t.Section.Fill -Edge $t.Section.Dark
+
+    New-Bar9 -Name 'BarRound' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
+        -Top $t.Tab.Light -Body $t.Button.Light `
+        -Bottom (Blend $t.Button.Light $t.Button.Dark 0.55) -Rim $t.Button.Dark -RimWidth (2*$S)
+
+    New-Bar9 -Name 'BarTrough' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
+        -Top (Blend $t.Section.Fill $Black 0.6) -Body $t.Section.Fill `
+        -Bottom (Blend $t.Section.Fill $t.Section.Light 0.20) -Rim $Black -RimWidth (1.5*$S)
 
     New-Strip -Name 'ScrollTrack' -W 16 -H 32 `
         -Top $t.Window.Fill -Bottom $t.Section.Fill -Edge $t.Section.Dark -Outline $false

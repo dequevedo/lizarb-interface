@@ -9,25 +9,58 @@ namespace LizarbInterface
         typeof(Rect), typeof(float), typeof(Texture2D), typeof(Texture2D), typeof(bool))]
     internal static class Patch_FillableBar
     {
-        [HarmonyPriority(Priority.First)]
-        private static void Prefix(ref Texture2D bgTex)
+        private static bool Prefix(Rect rect, float fillPercent, Texture2D fillTex,
+                                   ref Texture2D bgTex, bool doBorder, ref Rect __result)
         {
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || !settings.skinWidgets || bgTex == null)
+            if (settings == null || !settings.enabled || !settings.skinWidgets)
             {
-                return;
+                return true;
             }
 
-            if (!ReferenceEquals(bgTex, BaseContent.BlackTex))
+            if (ReferenceEquals(fillTex, Widgets.BarFullTexHor) && Rounded(rect, fillPercent, doBorder, ref __result))
             {
-                return;
+                return false;
             }
 
-            Texture2D mine = AtlasSwap.Own("BarBG");
-            if (mine != null)
+            if (bgTex != null && ReferenceEquals(bgTex, BaseContent.BlackTex))
             {
-                bgTex = mine;
+                Texture2D flat = AtlasSwap.Own("BarBG");
+                if (flat != null)
+                {
+                    bgTex = flat;
+                }
             }
+
+            return true;
+        }
+
+        private static bool Rounded(Rect rect, float fillPercent, bool doBorder, ref Rect __result)
+        {
+            Texture2D trough = AtlasSwap.Own("BarTrough");
+            Texture2D bar = AtlasSwap.Own("BarRound");
+            if (trough == null || bar == null)
+            {
+                return false;
+            }
+
+            Rect outer = rect;
+            if (doBorder)
+            {
+                rect = rect.ContractedBy(3f);
+            }
+
+            __result = rect;
+
+            AtlasSwap.DrawScaled(outer, trough, true);
+
+            float pct = Mathf.Clamp01(fillPercent);
+            if (pct > 0.002f)
+            {
+                AtlasSwap.DrawScaled(new Rect(rect.x, rect.y, rect.width * pct, rect.height), bar, true);
+            }
+
+            return true;
         }
     }
 
