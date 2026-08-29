@@ -273,6 +273,7 @@ namespace LizarbInterface
 
             float a = atlas.width * 0.25f / Scale;
             a = UIScaling.AdjustCoordToUIScalingCeil(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
+            a = GenMath.Min(a, rect.height / 2f, rect.width / 2f);
 
             if (drawTop)
             {
@@ -345,6 +346,11 @@ namespace LizarbInterface
 
         private static void Part(Rect drawRect, Rect uv, Texture2D atlas)
         {
+            if (drawRect.width <= 0f || drawRect.height <= 0f)
+            {
+                return;
+            }
+
             Widgets.DrawTexturePart(drawRect, uv, atlas);
         }
 
