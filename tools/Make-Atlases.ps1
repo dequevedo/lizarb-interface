@@ -1003,20 +1003,22 @@ function New-Plate {
                 $dist = [Math]::Min($dx, $dy)
             }
 
+            if ($y -lt $band) { $vt = 0.5 * ($y / $band) }
+            elseif ($y -gt $max - $band) { $vt = 0.5 + 0.5 * (($y - ($max - $band)) / $band) }
+            else { $vt = 0.5 }
+
             $a = 0.0
             switch ($Style) {
                 'Plate' {
                     $edge = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.5))
-                    $t = $y / [double]$max
-                    $a = $edge * (0.80 + 0.20 * $t)
+                    $a = $edge * (0.80 + 0.20 * $vt)
                 }
                 'Bar' {
                     $a = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.5))
                 }
                 'Gradient' {
                     $edge = [Math]::Min(1.0, [Math]::Max(0.0, ($dist - 0.5) / 2.5))
-                    $t = $y / [double]$max
-                    $a = $edge * (0.80 + 0.20 * $t)
+                    $a = $edge * (0.80 + 0.20 * $vt)
                     if ($x -gt $band) {
                         $u = ($x - $band) / ($max - $band)
                         $a = $a * (1 - $u) * (1 - $u)
