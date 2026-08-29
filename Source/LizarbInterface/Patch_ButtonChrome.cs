@@ -97,28 +97,4 @@ namespace LizarbInterface
             }
         }
     }
-
-    [HarmonyPatch(typeof(Widgets), nameof(Widgets.CloseButtonFor))]
-    internal static class Patch_CloseButtonChrome
-    {
-        private const float Pad = 3f;
-
-        private static void Prefix(Rect rectToClose)
-        {
-            LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || !settings.skinWindows)
-            {
-                return;
-            }
-
-            Texture2D plate = AtlasSwap.Own("ButtonBG");
-            if (plate == null)
-            {
-                return;
-            }
-
-            Rect icon = new Rect(rectToClose.x + rectToClose.width - 22f, rectToClose.y + 4f, 18f, 18f);
-            AtlasSwap.DrawScaled(icon.ExpandedBy(Pad), plate, true);
-        }
-    }
 }

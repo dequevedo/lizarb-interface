@@ -59,7 +59,7 @@ namespace LizarbInterface
                 Icon("SearchButton"),
                 Icon("ShowVacuumOverlay"),
 
-                Icon("CloseXSmall", "IconCloseX"),
+                Icon("CloseXSmall", "IconCloseX", plate: true),
                 Element("SpeedButtonTextures", 0, "IconSpeedPause", plate: true),
                 Element("SpeedButtonTextures", 1, "IconSpeedNormal", plate: true),
                 Element("SpeedButtonTextures", 2, "IconSpeedFast", plate: true),
@@ -87,16 +87,9 @@ namespace LizarbInterface
             return new Entry { Vanilla = vanilla, File = file };
         }
 
-        private static Entry Icon(string field)
+        private static Entry Icon(string field, string file = null, bool plate = false)
         {
-            Entry e = Make(typeof(TexButton), field, "Icon" + field);
-            e.Shared = true;
-            return e;
-        }
-
-        private static Entry Icon(string field, string file, bool plate = false)
-        {
-            Entry e = Make(typeof(TexButton), field, file);
+            Entry e = Make(typeof(TexButton), field, file ?? "Icon" + field);
             e.Shared = true;
             e.Plate = plate;
             return e;

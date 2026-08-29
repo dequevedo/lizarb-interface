@@ -77,8 +77,8 @@ namespace LizarbInterface
                 return;
             }
 
-            float tileW = grain.width;
-            float tileH = grain.height;
+            float tileW = grain.width / AtlasSwap.Scale;
+            float tileH = grain.height / AtlasSwap.Scale;
 
             var uv = new Rect(
                 (band.x - interior.x) / tileW,

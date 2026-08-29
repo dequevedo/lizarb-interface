@@ -332,8 +332,8 @@ namespace LizarbInterface
                 return;
             }
 
-            float tileW = grain.width;
-            float tileH = grain.height;
+            float tileW = grain.width / Scale;
+            float tileH = grain.height / Scale;
 
             Color previous = GUI.color;
             GUI.color = new Color(1f, 1f, 1f, settings.backgroundGrain);

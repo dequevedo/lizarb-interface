@@ -394,6 +394,7 @@ function Get-PatternMap {
 
     if ($script:PatternMaps.ContainsKey($Kind)) { return $script:PatternMaps[$Kind] }
 
+    $M = $Size / 128.0
     $n = $Size * $Size
     $cov = New-Object 'double[]' $n
     $mix = New-Object 'double[]' $n
@@ -404,19 +405,21 @@ function Get-PatternMap {
     for ($y = 0; $y -lt $Size; $y++) {
         for ($x = 0; $x -lt $Size; $x++) {
 
+            $lx = $x / $M
+            $ly = $y / $M
             $d = 999.0
 
             switch ($Kind) {
 
                 'Hatch' {
-                    $a = ($x + $y) % 14
-                    $b = ($x - $y + 1024) % 14
+                    $a = ($lx + $ly) % 14
+                    $b = ($lx - $ly + 1024) % 14
                     $d = [Math]::Min([Math]::Min($a, 14 - $a), [Math]::Min($b, 14 - $b))
                 }
 
                 'Medieval' {
-                    $a = ($x + $y) % 32
-                    $b = ($x - $y + 1024) % 32
+                    $a = ($lx + $ly) % 32
+                    $b = ($lx - $ly + 1024) % 32
                     $lat = [Math]::Min([Math]::Min($a, 32 - $a), [Math]::Min($b, 32 - $b))
                     $da = $a - 16
                     $db = $b - 16
@@ -425,51 +428,51 @@ function Get-PatternMap {
                 }
 
                 'Scales' {
-                    $row = [int][Math]::Floor($y / 16)
+                    $row = [int][Math]::Floor($ly / 16)
                     $ox = 0
                     if ($row % 2 -ne 0) { $ox = 8 }
-                    $px = (($x + $ox) % 16) - 8
-                    $py = ($y % 16) - 16
+                    $px = (($lx + $ox) % 16) - 8
+                    $py = ($ly % 16) - 16
                     $d = [Math]::Abs([Math]::Sqrt($px * $px + $py * $py) - 15)
                 }
 
                 'Bricks' {
-                    $row = [int][Math]::Floor($y / 12)
+                    $row = [int][Math]::Floor($ly / 12)
                     $ox = 0
                     if ($row % 2 -ne 0) { $ox = 16 }
-                    $h = $y % 12
-                    $v = ($x + $ox) % 32
+                    $h = $ly % 12
+                    $v = ($lx + $ox) % 32
                     $d = [Math]::Min([Math]::Min($h, 12 - $h), [Math]::Min($v, 32 - $v))
                 }
 
                 'Dots' {
-                    $dx = ($x % 16) - 8
-                    $dy = ($y % 16) - 8
+                    $dx = ($lx % 16) - 8
+                    $dy = ($ly % 16) - 8
                     $d = [Math]::Max(0, [Math]::Sqrt($dx * $dx + $dy * $dy) - 1.6)
                 }
 
                 'Chevron' {
-                    $band = [int][Math]::Floor($y / 16)
-                    if ($band % 2 -eq 0) { $v = ($x + $y) % 16 } else { $v = ($x - $y + 1024) % 16 }
+                    $band = [int][Math]::Floor($ly / 16)
+                    if ($band % 2 -eq 0) { $v = ($lx + $ly) % 16 } else { $v = ($lx - $ly + 1024) % 16 }
                     $d = [Math]::Min($v, 16 - $v)
                 }
 
                 'Woodgrain' {
-                    $wobble = (ValueNoise $x $y 32 $Size 5) * 14
-                    $g = ($y + $wobble) % 9
+                    $wobble = (ValueNoise $x $y (32 * $M) $Size 5) * 14
+                    $g = ($ly + $wobble) % 9
                     $d = [Math]::Min($g, 9 - $g)
                 }
 
             }
 
-            $c = 1.0 - ($d / 1.4)
+            $c = 1.0 - ($d * $M / 1.4)
             if ($c -lt 0) { $c = 0 }
             if ($c -gt 1) { $c = 1 }
 
             $i = $y * $Size + $x
             $cov[$i] = $c
-            $mix[$i] = ValueNoise $x $y 42 $Size 71
-            $wsh[$i] = ValueNoise $x $y 64 $Size 23
+            $mix[$i] = ValueNoise $x $y (42 * $M) $Size 71
+            $wsh[$i] = ValueNoise $x $y (64 * $M) $Size 23
         }
     }
 
@@ -521,27 +524,29 @@ function New-Checkbox {
         [int[]]$Light, [int[]]$Dark, [int[]]$Fill, [int[]]$Mark
     )
 
-    $s = 32
-    $bmp = New-Object System.Drawing.Bitmap($s, $s, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-    $max = $s - 1
+    $px = 32 * $S
+    $bmp = New-Object System.Drawing.Bitmap($px, $px, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $max = 31.0
 
-    for ($y = 0; $y -le $max; $y++) {
-        for ($x = 0; $x -le $max; $x++) {
-            $d = [Math]::Min([Math]::Min($x, $y), [Math]::Min($max - $x, $max - $y))
-            $nearTopLeft = ($x + $y) -lt $max
+    for ($y = 0; $y -lt $px; $y++) {
+        for ($x = 0; $x -lt $px; $x++) {
+            $lx = $x / $S
+            $ly = $y / $S
+            $d = [Math]::Min([Math]::Min($lx, $ly), [Math]::Min($max - $lx, $max - $ly))
+            $nearTopLeft = ($lx + $ly) -lt $max
 
             if ($d -lt 1)      { $c = $Black }
             elseif ($d -lt 4)  { if ($nearTopLeft) { $c = $Light } else { $c = $Dark } }
             else               { $c = $Fill }
 
             if ($State -eq 'On') {
-                $a = [Math]::Abs(($x - 10) - ($y - 18))
-                $b = [Math]::Abs(($x - 12) + ($y - 24))
-                if (($a -le 2 -and $x -ge 8 -and $x -le 14) -or
-                    ($b -le 2 -and $x -ge 12 -and $x -le 24)) { $c = $Mark }
+                $a = [Math]::Abs(($lx - 10) - ($ly - 18))
+                $b = [Math]::Abs(($lx - 12) + ($ly - 24))
+                if (($a -le 2 -and $lx -ge 8 -and $lx -le 14) -or
+                    ($b -le 2 -and $lx -ge 12 -and $lx -le 24)) { $c = $Mark }
             }
             elseif ($State -eq 'Partial') {
-                if (($y -ge 14) -and ($y -le 17) -and ($x -ge 9) -and ($x -le 22)) { $c = $Mark }
+                if (($ly -ge 14) -and ($ly -le 17) -and ($lx -ge 9) -and ($lx -le 22)) { $c = $Mark }
             }
 
             $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $c[0], $c[1], $c[2]))
@@ -556,15 +561,15 @@ function New-Checkbox {
 function New-Radio {
     param([string]$Name, [bool]$On, [int[]]$Light, [int[]]$Dark, [int[]]$Fill, [int[]]$Mark)
 
-    $s = 32
-    $bmp = New-Object System.Drawing.Bitmap($s, $s, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $px = 32 * $S
+    $bmp = New-Object System.Drawing.Bitmap($px, $px, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $clear = [System.Drawing.Color]::FromArgb(0, 0, 0, 0)
-    $cen = 15.5
+    $cen = ($px - 1) / 2.0
 
-    for ($y = 0; $y -lt $s; $y++) {
-        for ($x = 0; $x -lt $s; $x++) {
-            $dx = $x - $cen
-            $dy = $y - $cen
+    for ($y = 0; $y -lt $px; $y++) {
+        for ($x = 0; $x -lt $px; $x++) {
+            $dx = ($x - $cen) / $S
+            $dy = ($y - $cen) / $S
             $r = [Math]::Sqrt($dx * $dx + $dy * $dy)
 
             if ($r -gt 15.0) { $bmp.SetPixel($x, $y, $clear); continue }
@@ -587,15 +592,15 @@ function New-Radio {
 function New-Knob {
     param([string]$Name, [int[]]$Light, [int[]]$Dark, [int[]]$Fill)
 
-    $s = 16
-    $bmp = New-Object System.Drawing.Bitmap($s, $s, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $px = 16 * $S
+    $bmp = New-Object System.Drawing.Bitmap($px, $px, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $clear = [System.Drawing.Color]::FromArgb(0, 0, 0, 0)
-    $cen = 7.5
+    $cen = ($px - 1) / 2.0
 
-    for ($y = 0; $y -lt $s; $y++) {
-        for ($x = 0; $x -lt $s; $x++) {
-            $dx = $x - $cen
-            $dy = $y - $cen
+    for ($y = 0; $y -lt $px; $y++) {
+        for ($x = 0; $x -lt $px; $x++) {
+            $dx = ($x - $cen) / $S
+            $dy = ($y - $cen) / $S
             $r = [Math]::Sqrt($dx * $dx + $dy * $dy)
 
             if ($r -gt 7.5) { $bmp.SetPixel($x, $y, $clear); continue }
@@ -672,7 +677,7 @@ function New-Strip {
     param(
         [string]$Name, [int]$W, [int]$H,
         [int[]]$Top, [int[]]$Bottom, [int[]]$Edge, [bool]$Outline = $true,
-        [ValidateSet("Frame", "Rows")][string]$Border = "Frame"
+        [ValidateSet("Frame", "Rows")][string]$Border = "Frame", [int]$Scale = 1
     )
 
     $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -687,8 +692,8 @@ function New-Strip {
             $d = if ($Border -eq "Rows") { [Math]::Min($y, $maxY - $y) }
                  else { [Math]::Min([Math]::Min($x, $y), [Math]::Min($maxX - $x, $maxY - $y)) }
 
-            if ($Outline -and $d -lt 1)     { $c = $Black }
-            elseif ($Outline -and $d -lt 2) { $c = $Edge }
+            if ($Outline -and $d -lt $Scale)         { $c = $Black }
+            elseif ($Outline -and $d -lt 2 * $Scale) { $c = $Edge }
             else                            { $c = $body }
 
             $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $c[0], $c[1], $c[2]))
@@ -1413,10 +1418,10 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     New-Plate -Name 'Plate'      -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Plate'
     New-Plate -Name 'PlateFrame' -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Frame'
 
-    New-Strip -Name 'BarFill' -W 16 -H 32 -Border 'Rows' `
+    New-Strip -Name 'BarFill' -W (16*$S) -H (32*$S) -Border 'Rows' -Scale $S `
         -Top $t.Tab.Light -Bottom (Blend $t.Button.Light $t.Button.Dark 0.45) -Edge $t.Button.Dark
 
-    New-Strip -Name 'BarBG' -W 16 -H 32 -Border 'Rows' `
+    New-Strip -Name 'BarBG' -W (16*$S) -H (32*$S) -Border 'Rows' -Scale $S `
         -Top (Blend $t.Section.Fill $Black 0.5) -Bottom $t.Section.Fill -Edge $t.Section.Dark
 
     New-Bar9 -Name 'BarRound' -Size (64*$S) -Radius ($t.Radius.Button*$S) `
@@ -1438,7 +1443,7 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
         -Top $t.Button.Light -Bottom $t.Button.Dark -Edge $t.Button.Dark
 
     foreach ($k in @('Hatch', 'Medieval', 'Scales', 'Bricks', 'Dots', 'Chevron', 'Woodgrain')) {
-        New-Pattern -Kind $k -InkA $t.Section.Light -InkB $t.Tab.Light -Wash $t.Window.Light
+        New-Pattern -Kind $k -Size (128*$S) -InkA $t.Section.Light -InkB $t.Tab.Light -Wash $t.Window.Light
     }
 }
 
