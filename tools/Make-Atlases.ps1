@@ -616,7 +616,8 @@ function New-Knob {
 function New-Strip {
     param(
         [string]$Name, [int]$W, [int]$H,
-        [int[]]$Top, [int[]]$Bottom, [int[]]$Edge, [bool]$Outline = $true
+        [int[]]$Top, [int[]]$Bottom, [int[]]$Edge, [bool]$Outline = $true,
+        [ValidateSet("Frame", "Rows")][string]$Border = "Frame"
     )
 
     $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -628,7 +629,8 @@ function New-Strip {
         $body = Blend $Top $Bottom $t
 
         for ($x = 0; $x -le $maxX; $x++) {
-            $d = [Math]::Min([Math]::Min($x, $y), [Math]::Min($maxX - $x, $maxY - $y))
+            $d = if ($Border -eq "Rows") { [Math]::Min($y, $maxY - $y) }
+                 else { [Math]::Min([Math]::Min($x, $y), [Math]::Min($maxX - $x, $maxY - $y)) }
 
             if ($Outline -and $d -lt 1)     { $c = $Black }
             elseif ($Outline -and $d -lt 2) { $c = $Edge }
@@ -1275,11 +1277,11 @@ foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -
     New-Plate -Name 'Plate'      -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Plate'
     New-Plate -Name 'PlateFrame' -Size (64*$S) -Radius ($t.Radius.Button*$S) -Style 'Frame'
 
-    New-Strip -Name 'BarFill' -W 16 -H 32 `
-        -Top $t.Tab.Light -Bottom $t.Button.Dark -Edge $t.Button.Dark
+    New-Strip -Name 'BarFill' -W 16 -H 32 -Border 'Rows' `
+        -Top $t.Tab.Light -Bottom (Blend $t.Button.Light $t.Button.Dark 0.45) -Edge $t.Button.Dark
 
-    New-Strip -Name 'BarBG' -W 16 -H 32 `
-        -Top $t.Section.Fill -Bottom $t.Window.Fill -Edge $t.Section.Dark
+    New-Strip -Name 'BarBG' -W 16 -H 32 -Border 'Rows' `
+        -Top (Blend $t.Section.Fill $Black 0.5) -Bottom $t.Section.Fill -Edge $t.Section.Dark
 
     New-Strip -Name 'ScrollTrack' -W 16 -H 32 `
         -Top $t.Window.Fill -Bottom $t.Section.Fill -Edge $t.Section.Dark -Outline $false
