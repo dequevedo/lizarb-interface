@@ -61,7 +61,7 @@
   <LizarbInterface.Theme.DebugSparse>One file, everything else derived</LizarbInterface.Theme.DebugSparse>
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
-  <LizarbInterface.Tab.Windows>Windows</LizarbInterface.Tab.Windows>
+  <LizarbInterface.Tab.Animation>Animation</LizarbInterface.Tab.Animation>
   <LizarbInterface.AnimationDuration>Animation length</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Which surfaces this mod is allowed to reskin. Turn one off to hand it back to the game, or to another mod, without giving up the rest.</LizarbInterface.ComponentsSection>
   <LizarbInterface.SkinButtons>Buttons, tooltips and menus</LizarbInterface.SkinButtons>

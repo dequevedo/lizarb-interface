@@ -61,7 +61,7 @@
   <LizarbInterface.Theme.DebugSparse>Um arquivo so, o resto derivado</LizarbInterface.Theme.DebugSparse>
   <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
-  <LizarbInterface.Tab.Windows>Janelas</LizarbInterface.Tab.Windows>
+  <LizarbInterface.Tab.Animation>Animação</LizarbInterface.Tab.Animation>
   <LizarbInterface.AnimationDuration>Duração da animação</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Quais superfícies este mod pode retexturizar. Desligue uma para devolvê-la ao jogo, ou a outro mod, sem abrir mão do resto.</LizarbInterface.ComponentsSection>
   <LizarbInterface.SkinButtons>Botões, dicas e menus</LizarbInterface.SkinButtons>

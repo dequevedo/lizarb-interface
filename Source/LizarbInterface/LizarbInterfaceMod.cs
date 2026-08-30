@@ -512,13 +512,13 @@ namespace LizarbInterface
             Presets,
             Icons,
             Architect,
-            Windows,
+            Animation,
             Compatibility,
         }
 
         private static readonly Tab[] TabOrder =
         {
-            Tab.Presets, Tab.Icons, Tab.Architect, Tab.Windows, Tab.Compatibility,
+            Tab.Presets, Tab.Icons, Tab.Architect, Tab.Animation, Tab.Compatibility,
         };
 
         private static Tab tab = Tab.Presets;
@@ -570,8 +570,8 @@ namespace LizarbInterface
                 case Tab.Architect:
                     Section(listing, "architect", DoArchitectTab);
                     break;
-                case Tab.Windows:
-                    Section(listing, "windows", DoWindowsTab);
+                case Tab.Animation:
+                    Section(listing, "animation", DoAnimationTab);
                     break;
                 case Tab.Compatibility:
                     Section(listing, "compatibility", DoCompatibilityTab);
@@ -1365,7 +1365,7 @@ namespace LizarbInterface
             Note(listing, "LizarbInterface.Architect.InPreset".Translate(), DimText);
         }
 
-        private void DoWindowsTab(Listing_Standard listing)
+        private void DoAnimationTab(Listing_Standard listing)
         {
             Head(listing, "LizarbInterface.AnimateSection");
 
