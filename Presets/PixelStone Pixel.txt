@@ -4,3 +4,4 @@ font=Jersey 10
 sizetiny=2
 sizesmall=2
 sizemedium=2
+background=false
