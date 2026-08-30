@@ -2,7 +2,8 @@
 param(
     [switch]$ListOnly,
     [switch]$NoDlcs,
-    [switch]$Quick
+    [switch]$Quick,
+    [switch]$Visuals
 )
 
 $ErrorActionPreference = 'Stop'
@@ -107,7 +108,98 @@ $SuspectsWide = @(
     'm00nl1ght.GeologicalLandforms'
 )
 
-if (-not $Quick) { $Suspects = $Suspects + $SuspectsWide }
+if (-not $Quick -and -not $Visuals) { $Suspects = $Suspects + $SuspectsWide }
+
+$Visual = [ordered]@{
+    '1668983184' = 'RimThemes'
+    '2916014613' = 'Basic RimThemes Recolours'
+    '3338215884' = 'RimThemes: Sci-Fi Dark Mode'
+    '3551233435' = 'Medieval Era RimTheme'
+    '3661802609' = 'PrettyUI'
+    '2588873455' = 'UI Not Included'
+    '2978831421' = 'UI Retexture'
+    '3141849282' = "Tang's Retexture UI"
+    '3649094165' = 'Declutter UI'
+
+    '3563882422' = 'Better Architect Menu'
+
+    '2882372932' = 'CustomUIScales'
+    '3231727915' = 'Custom Fonts - Forked'
+    '3762441264' = 'Readable Numbers'
+
+    '3786131805' = 'Radius UI - Inspector'
+    '3786129210' = 'Radius UI - Health Tab'
+    '3787806055' = 'Radius UI - Needs Tab'
+    '3788278207' = 'Radius UI - Colonist Bar'
+    '3786840944' = 'Radius UI - Quest Menu'
+    '3786945713' = 'Radius UI - Faction Menu'
+    '3788256848' = 'Radius UI - Mission Control'
+    '3789670069' = 'Radius UI - Xenotypes'
+    '3789690957' = 'Radius UI - Ideology'
+
+    '3740575493' = 'Modern Pawn Tabs'
+    '3740688691' = 'Modern Bio Tab'
+    '3743615382' = 'Modern Needs Tab'
+    '3742906203' = 'Modern Quest Menu'
+    '3752932665' = 'Modern Notifications'
+    '3762126187' = 'Modern Character Creator'
+    '3775737458' = 'Modern Expand Menu'
+    '3744201621' = 'True RPG Inventory'
+
+    '3742689571' = 'Sleek Work Schedule Tab'
+    '3764537806' = 'Sleek Work Priorities'
+    '3752835712' = 'Sleek Research Tab'
+
+    '3328729902' = 'Nice Health Tab'
+    '3520130671' = 'Nice Bill Tab'
+    '3609897594' = 'Nice Inventory Tab'
+    '3773496046' = 'Nice Research Tab'
+    '3685058533' = 'Nice Plants Menu'
+    '3506573327' = 'Useful Marks'
+
+    '1508850027' = 'RimHUD'
+    '1446523594' = 'Dubs Mint Menus'
+    '3020706506' = 'Dynamic Trade Interface'
+    '3745434121' = 'Yet Another Research Tree'
+    '3776660810' = 'Info Card Plus'
+    '3769342092' = "EPrime's Readouts"
+    '3714704223' = 'RPG Health Bar'
+    '3761551912' = 'Better Health Bar'
+    '3547971440' = 'RPG Dialog'
+    '3749216803' = 'Colonist Bar Dividers'
+    '3535481557' = 'Loading Progress'
+    '2466336893' = 'Optional Name Display'
+    '1516158345' = 'Interaction Bubbles'
+}
+
+function Resolve-Workshop([hashtable]$Wanted) {
+    $found = @()
+    $absent = @()
+
+    foreach ($wid in $Wanted.Keys) {
+        $dir = Join-Path $Workshop $wid
+        $about = Join-Path $dir 'About\About.xml'
+
+        if (-not (Test-Path $about)) {
+            $absent += "$($Wanted[$wid])  https://steamcommunity.com/sharedfiles/filedetails/?id=$wid"
+            continue
+        }
+
+        try { [xml]$x = Get-Content -Raw -LiteralPath $about } catch { continue }
+        $node = $x.ModMetaData.SelectSingleNode('packageId')
+        if (-not $node) { continue }
+        $found += $node.InnerText.Trim().ToLowerInvariant()
+    }
+
+    if ($absent.Count -gt 0) {
+        Write-Host ""
+        Write-Host "$($absent.Count) of the visual collection are not subscribed:" -ForegroundColor Yellow
+        foreach ($a in ($absent | Sort-Object)) { Write-Host "  $a" -ForegroundColor DarkGray }
+        Write-Host ""
+    }
+
+    return $found
+}
 
 $Ours = @('lizarb.interface')
 
@@ -174,6 +266,11 @@ $mods = Read-Mods @(
 )
 
 Write-Host "$($mods.Count) mods indexed." -ForegroundColor DarkGray
+
+if ($Visuals) {
+    $Suspects = @(Resolve-Workshop $Visual)
+    Write-Host "$($Suspects.Count) of the visual collection are installed." -ForegroundColor DarkGray
+}
 
 $wanted = New-Object System.Collections.Generic.HashSet[string]
 $seedKeys = New-Object System.Collections.Generic.HashSet[string]
