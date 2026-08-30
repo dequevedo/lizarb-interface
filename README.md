@@ -144,9 +144,10 @@ each licence file.
 The interface icons come from the Game Icon Pack v1.4 by Nieobie, released under
 CC0 1.0 Universal. That licence asks for nothing, so this credit is voluntary.
 
-`art/icons/pack/` holds the pack art untouched, as a reference to restore from.
-`art/icons/custom/` holds the 512px masters, one per icon, and is the only thing
-`tools/Make-Icons.ps1` reads. Neither folder ships: only the built icons do.
+Every icon has one 512px master and only one. `art/icons/pack/` holds the forty
+four that came from the pack, `art/icons/custom/` the nine drawn for this mod,
+and `tools/Make-Icons.ps1` builds both into `Skins/Shared/`. Neither folder
+ships: only the built icons do.
 
 
 ## Built with AI

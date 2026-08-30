@@ -84,6 +84,8 @@ $Missing = [ordered]@{
     'SpeedUltra'        = '9-media/fast-forward'
 }
 
+$Ours = @('SpeedPause', 'SpeedNormal', 'SpeedFast')
+
 function Copy-Source {
     param([string]$Root, [string]$Rel, [string]$Dest)
 
@@ -113,23 +115,31 @@ if ($Extract) {
     $root = Join-Path $PackDir 'no-padding\256px\white'
     if (-not (Test-Path $root)) { throw "expected $root" }
 
+    $scratch = Join-Path $env:TEMP 'lizarb-icon-source.png'
     $kept = 0
+    $fromPack = 0
+
     foreach ($name in (@($Map.Keys) + @($Missing.Keys))) {
         $rel = if ($Map.Contains($name)) { $Map[$name] } else { $Missing[$name] }
-        $reference = Join-Path $PackArt "Icon$name.png"
-        Copy-Source $root $rel $reference
+        $byHand = $Missing.Contains($name) -or $Ours -contains $name
 
-        $master = Join-Path $CustomArt "$Prefix$name.png"
+        $dir = if ($byHand) { $CustomArt } else { $PackArt }
+        $master = Join-Path $dir "$Prefix$name.png"
+        if (-not $byHand) { $fromPack++ }
+
         if ((Test-Path $master) -and -not $Force) {
             $kept++
             continue
         }
 
-        New-Master $reference $master
+        Copy-Source $root $rel $scratch
+        New-Master $scratch $master
     }
 
-    Write-Host "$($Map.Count + $Missing.Count) references in art\icons\pack" -ForegroundColor Green
-    Write-Host "$($Map.Count + $Missing.Count - $kept) masters written, $kept kept" -ForegroundColor Green
+    if (Test-Path $scratch) { Remove-Item $scratch -Force }
+
+    Write-Host "$fromPack masters in art\icons\pack, $($Map.Count + $Missing.Count - $fromPack) in art\icons\custom" -ForegroundColor Green
+    Write-Host "$($Map.Count + $Missing.Count - $kept) written, $kept kept" -ForegroundColor Green
 }
 
 function New-Composed {
@@ -214,7 +224,14 @@ $all = @($Map.Keys) + @($Missing.Keys)
 $built = 0
 
 foreach ($name in $all) {
-    $master = Join-Path $CustomArt "$Prefix$name.png"
+    $custom = Join-Path $CustomArt "$Prefix$name.png"
+    $pack = Join-Path $PackArt "$Prefix$name.png"
+
+    if ((Test-Path $custom) -and (Test-Path $pack)) {
+        throw "Icon$name has a master in both folders, keep one"
+    }
+
+    $master = if (Test-Path $custom) { $custom } else { $pack }
     if (-not (Test-Path $master)) { throw "no master for Icon$name, run -Extract first" }
 
     New-Composed $master (Join-Path $OutDir "Icon$name.png")
