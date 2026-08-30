@@ -13,7 +13,7 @@ widgets, scrollbars, fonts and the Architect menu.
   sizes, the text outline, the background pattern and its strength, and how the Architect
   menu is coloured. Two presets can share one texture set and read completely differently,
   which is how PixelStone and PixelStone Fake are the same pixels with different type.
-- **Themes**, squared and rounded, are the texture sets a preset draws with. Each changes
+- **Themes**, hand painted or Legacy, are the texture sets a preset draws with. Each changes
   palette, corner radius, fillet weight, corner ornament and background pattern. Iron is
   square and austere, Royal is wide and heavy, Aero is a translucent bubble with no
   outline at all.

@@ -25,7 +25,7 @@
 - Presets: one click sets the textures, the typeface and its sizes, the text outline, the background pattern and how the Architect menu is coloured
 - Two presets can share one texture set and still read completely differently
 - Save your own, or drop a folder of art into Skins and it shows up on its own
-- Texture sets squared and rounded, each with its own palette, corner geometry and ornament
+- Texture sets, hand painted and Legacy, each with its own palette, corner geometry and ornament
 - Window frames, tabs, buttons, tooltips, checkboxes, gizmos, scrollbars
 
 Compatibility: this mod replaces the drawing of tabs, window backgrounds and menu sections rather than adding to them. Another mod that redraws those same surfaces will lose whichever of the two loads first, so load this one last if you want its look to win. Buttons, windows, tabs, widgets and scrollbars can each be turned off on their own, so a clash costs one checkbox instead of the whole skin.

@@ -11,7 +11,6 @@
   <LizarbInterface.FontSize.Tiny>Tiny text size</LizarbInterface.FontSize.Tiny>
   <LizarbInterface.FontSize.Small>Normal text size</LizarbInterface.FontSize.Small>
   <LizarbInterface.FontSize.Medium>Heading text size</LizarbInterface.FontSize.Medium>
-  <LizarbInterface.FontReset>Reset font</LizarbInterface.FontReset>
   <LizarbInterface.BackgroundSection>Background</LizarbInterface.BackgroundSection>
   <LizarbInterface.TexturedBackground>Textured background</LizarbInterface.TexturedBackground>
   <LizarbInterface.TexturedBackground.Tip>Lays a tiling two-tone grunge over window and panel interiors instead of a flat colour. It repeats at its own size rather than stretching, so it looks the same in a small panel and a full-screen window.</LizarbInterface.TexturedBackground.Tip>

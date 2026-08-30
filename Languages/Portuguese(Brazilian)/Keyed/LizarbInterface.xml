@@ -11,7 +11,6 @@
   <LizarbInterface.FontSize.Tiny>Tamanho do texto miúdo</LizarbInterface.FontSize.Tiny>
   <LizarbInterface.FontSize.Small>Tamanho do texto normal</LizarbInterface.FontSize.Small>
   <LizarbInterface.FontSize.Medium>Tamanho dos títulos</LizarbInterface.FontSize.Medium>
-  <LizarbInterface.FontReset>Restaurar fonte</LizarbInterface.FontReset>
   <LizarbInterface.BackgroundSection>Fundo</LizarbInterface.BackgroundSection>
   <LizarbInterface.TexturedBackground>Fundo com textura</LizarbInterface.TexturedBackground>
   <LizarbInterface.TexturedBackground.Tip>Aplica um grunge ladrilhado de dois tons no interior de janelas e painéis, no lugar da cor chapada. Ele repete no tamanho próprio em vez de esticar, então fica igual num painel pequeno e numa janela de tela cheia.</LizarbInterface.TexturedBackground.Tip>
