@@ -158,4 +158,7 @@
   <LizarbInterface.PresetNewName>Meu preset</LizarbInterface.PresetNewName>
   <LizarbInterface.PresetNamePrompt>Nome deste preset</LizarbInterface.PresetNamePrompt>
   <LizarbInterface.Architect.InPreset>As cores das categorias, a forma e a força dela fazem parte do preset, na aba Presets.</LizarbInterface.Architect.InPreset>
+  <LizarbInterface.PresetTheme>Tema</LizarbInterface.PresetTheme>
+  <LizarbInterface.PresetThemeRow>Conjunto de texturas</LizarbInterface.PresetThemeRow>
+  <LizarbInterface.PresetThemeRow.Tip>Com qual pasta de texturas este preset desenha. Preset não é tema: dois presets podem usar o mesmo conjunto e escolher fonte, fundo ou cores diferentes.</LizarbInterface.PresetThemeRow.Tip>
 </LanguageData>

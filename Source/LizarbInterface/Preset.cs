@@ -262,7 +262,7 @@ namespace LizarbInterface
 
         internal static Preset FromTheme(ThemeInfo theme)
         {
-            var preset = new Preset { name = theme.Id, theme = theme.Id };
+            var preset = new Preset { name = theme.Id, theme = theme.Id, label = theme.Label ?? "" };
 
             preset.backgroundPattern = theme.Pattern;
 

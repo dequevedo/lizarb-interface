@@ -1,4 +1,4 @@
-name=PixelStone Chunky
+name=PixelStone
 theme=PixelStone
 font=Jersey 10
 sizetiny=2

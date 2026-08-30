@@ -209,6 +209,8 @@ namespace LizarbInterface
         internal readonly Color Outline;
         internal readonly string Group;
 
+        internal string Label;
+
         internal float Grain;
         internal float Scale;
         internal bool Tile;
@@ -337,8 +339,11 @@ namespace LizarbInterface
                 outline = c;
             }
 
+            read.TryGetValue("name", out string named2);
+
             var info = new ThemeInfo(id, pattern, outline, group)
             {
+                Label = named2.NullOrEmpty() ? null : named2,
                 Grain = Mathf.Clamp01(Number(read, "grain", 0f)),
                 Scale = Number(read, "scale", 0f),
                 Tile = Flag(read, "tile") == true,
@@ -878,6 +883,10 @@ namespace LizarbInterface
                 }
             }
 
+            Head(listing, "LizarbInterface.PresetTheme");
+
+            Pick(listing, "LizarbInterface.PresetThemeRow", ThemeLabel(Settings.theme), OpenThemeMenu);
+
             Head(listing, "LizarbInterface.FontSection");
 
             string face = Settings.fontName.NullOrEmpty()
@@ -1170,6 +1179,39 @@ namespace LizarbInterface
                 style.font = previousFont;
                 style.fontSize = previousSize;
             }
+        }
+
+        private static string ThemeLabel(string id)
+        {
+            ThemeInfo info = Info(id);
+            if (info != null && !info.Label.NullOrEmpty())
+            {
+                return info.Label;
+            }
+
+            string key = "LizarbInterface.Theme." + id;
+            return key.CanTranslate() ? key.Translate().ToString() : id;
+        }
+
+        private void OpenThemeMenu()
+        {
+            var options = new List<FloatMenuOption>();
+            foreach (ThemeInfo info in AllThemes)
+            {
+                if (info.Group == "Development" && !Prefs.DevMode)
+                {
+                    continue;
+                }
+
+                string captured = info.Id;
+                options.Add(new FloatMenuOption(ThemeLabel(captured), () =>
+                {
+                    Settings.theme = captured;
+                    QueueFontApply();
+                }));
+            }
+
+            Find.WindowStack.Add(new FloatMenu(options));
         }
 
         private void OpenPatternMenu()

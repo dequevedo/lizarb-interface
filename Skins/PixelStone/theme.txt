@@ -1,3 +1,4 @@
+name=PixelStone Fake
 pattern=Hatch
 grain=0.1
 background=true
