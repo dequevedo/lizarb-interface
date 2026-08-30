@@ -65,42 +65,10 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectColorLabels, "architectColorLabels", defaultValue: false);
         }
 
-        public Preset Copy()
-        {
-            return (Preset)MemberwiseClone();
-        }
-
-        public bool SameAs(Preset other)
-        {
-            return other != null &&
-                   theme == other.theme &&
-                   fontName == other.fontName &&
-                   fontOffsetTiny == other.fontOffsetTiny &&
-                   fontOffsetSmall == other.fontOffsetSmall &&
-                   fontOffsetMedium == other.fontOffsetMedium &&
-                   textOutline == other.textOutline &&
-                   Mathf.Approximately(outlineThickness, other.outlineThickness) &&
-                   Mathf.Approximately(outlineOpacity, other.outlineOpacity) &&
-                   outlineTinyText == other.outlineTinyText &&
-                   texturedBackground == other.texturedBackground &&
-                   backgroundPattern == other.backgroundPattern &&
-                   Mathf.Approximately(backgroundGrain, other.backgroundGrain) &&
-                   grainOnButtons == other.grainOnButtons &&
-                   Mathf.Approximately(inset, other.inset) &&
-                   pointFilter == other.pointFilter &&
-                   architectColors == other.architectColors &&
-                   architectAutoColor == other.architectAutoColor &&
-                   architectPlateStyle == other.architectPlateStyle &&
-                   Mathf.Approximately(architectPlateAlpha, other.architectPlateAlpha) &&
-                   architectShapeOutline == other.architectShapeOutline &&
-                   architectColorLabels == other.architectColorLabels;
-        }
     }
 
     internal static class Presets
     {
-        internal const string Vanilla = "";
-
         internal static List<Preset> All()
         {
             var all = new List<Preset>();

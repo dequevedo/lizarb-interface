@@ -1,7 +1,7 @@
 # Lizarb Interface
 
 A complete reskin of RimWorld 1.6's interface: window frames, buttons, tabs, tooltips,
-widgets, scrollbars, fonts and the Architect menu, in 20 themes.
+widgets, scrollbars, fonts and the Architect menu.
 
 ![Themes](docs/themes.png)
 
@@ -9,11 +9,16 @@ widgets, scrollbars, fonts and the Architect menu, in 20 themes.
 
 ## What it does
 
-- **20 themes**, ten squared and ten rounded. Each one changes palette, corner radius, fillet weight, corner ornament
-  and background pattern. Iron is square and austere, Royal is wide and heavy, Aero is a
-  translucent bubble with no outline at all.
-- **7 tileable background patterns**, baked per theme so they carry the theme's own inks.
-- **Fonts.** Twenty-eight faces ship inside an AssetBundle, so they are there with nothing
+- **Presets.** A preset is the whole look in one click: a texture set, a typeface and its
+  sizes, the text outline, the background pattern and its strength, and how the Architect
+  menu is coloured. Two presets can share one texture set and read completely differently,
+  which is how PixelStone and PixelStone Fake are the same pixels with different type.
+- **Themes**, squared and rounded, are the texture sets a preset draws with. Each changes
+  palette, corner radius, fillet weight, corner ornament and background pattern. Iron is
+  square and austere, Royal is wide and heavy, Aero is a translucent bubble with no
+  outline at all.
+- **Tileable background patterns**, baked per theme so they carry the theme's own inks.
+- **Fonts.** Every face ships inside an AssetBundle, so they are there with nothing
   to install; any font already on the machine can be picked as well. Three text sizes
   are adjustable, and every label can carry a real outline at a chosen opacity.
 - **Architect colours.** Every category button is coloured by what the category is for.
@@ -23,9 +28,9 @@ widgets, scrollbars, fonts and the Architect menu, in 20 themes.
   lands with storage and Genetics with the medical group, with no patch on their side.
   The colour is drawn through a 9-slice, so it follows the theme corner radius: fill the
   button, a stripe down one edge, a border, or a flat rectangle.
-- **Architect icons.** An optional set of 25 icons of this mod's own making, white with a
-  black outline. They are distance fields rather than drawn pixels, so the outline is the
-  same field at a wider cutoff and cannot gap or drift.
+- **Icons.** An optional set this mod draws itself, white with a black outline, covering
+  the Architect categories, the play settings row, search and codex, and the game speed
+  controls. Icons that belong to other mods are never replaced.
 - **Spacing.** Paints each element slightly inside its own rect, so neighbouring buttons
   stop touching. No layout number is changed, so nothing moves.
 
@@ -73,14 +78,25 @@ References come from NuGet (`Krafs.Rimworld.Ref`, `Lib.Harmony`); no game DLL is
 into the repository. Output goes straight to `Assemblies/`.
 
 `tools/Make-Atlases.ps1` regenerates every texture in `Skins/` from the theme table at the
-bottom of that script. Adding a theme is one entry there plus one tuple in
+bottom of that script. Adding a generated theme is one entry there plus one line in
 `LizarbInterfaceMod.Themes` and two language keys.
 
+A hand painted theme needs neither: any folder dropped into `Skins/` with a `ButtonBG.png`
+in it is found on its own and appears in the list. Anything it does not draw is filled in
+from its own files first and then from a complete theme, so one file is already a theme. A
+`theme.txt` beside it names the background pattern, its strength, the pixel density and
+whether the edges tile.
+
+A preset that ships with the mod is a `Presets/<file>.txt`. It starts from its theme's own
+preset and overrides only what it names, so `Presets/PixelStone Pixel.txt` is six lines: the
+same textures with a pixel typeface and no background.
+
 The Architect icons in `Skins/Shared` are ordinary PNGs, and the game loads those files, not
-the script. They happen to be generated from signed distance fields so that all 25 carry the
-same outline weight, but any of them can simply be replaced with a drawn file: the generator
-records a hash of what it produced in `tools/generated-icons.txt`, and an icon whose bytes no
-longer match is reported and left alone. `-Force` overrides that and regenerates everything.
+the script. Most come from the Game Icon Pack; the rest were drawn for this mod. `tools/Make-Icons.ps1`
+builds them from the masters in `art/icons/`, adding the black outline from the alpha so
+hand drawn art does not have to carry one. The same hash guard protects `docs/` and the
+textures in `Skins/`: anything whose bytes no longer match what the generator produced is
+reported and left alone, and `-Force` overrides that.
 
 `tools/Make-FontBundle.ps1` builds the font AssetBundles. It reads the required Unity
 version out of the game's own `globalgamemanagers` rather than hardcoding it, because a

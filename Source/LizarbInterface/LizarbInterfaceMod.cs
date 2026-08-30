@@ -528,9 +528,9 @@ namespace LizarbInterface
 
         private static Tab tab = Tab.Presets;
 
-        private readonly float[] contentHeight = { 600f, 600f, 600f, 600f, 600f, 600f };
+        private readonly float[] contentHeight = { 600f, 600f, 600f, 600f, 600f };
 
-        private readonly Vector2[] scrolls = new Vector2[6];
+        private readonly Vector2[] scrolls = new Vector2[5];
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
@@ -1257,48 +1257,6 @@ namespace LizarbInterface
         }
 
 
-        private void DoTextTab(Listing_Standard listing)
-        {
-            Head(listing, "LizarbInterface.FontSection");
-
-            string current = Settings.fontName.NullOrEmpty()
-                ? "LizarbInterface.FontVanilla".Translate().ToString()
-                : Settings.fontName;
-
-            Pick(listing, "LizarbInterface.FontFace", current, OpenFontPicker);
-
-            Settings.showAllFonts = Toggle(listing, "LizarbInterface.ShowAllFonts", Settings.showAllFonts);
-
-            Settings.fontOffsetTiny = SizeSlide(listing, "LizarbInterface.FontSize.Tiny", Settings.fontOffsetTiny);
-            Settings.fontOffsetSmall = SizeSlide(listing, "LizarbInterface.FontSize.Small", Settings.fontOffsetSmall);
-            Settings.fontOffsetMedium = SizeSlide(listing, "LizarbInterface.FontSize.Medium", Settings.fontOffsetMedium);
-
-            Rect reset = listing.GetRect(RowHeight);
-            listing.Gap(2f);
-            if (Widgets.ButtonText(new Rect(reset.x, reset.y + 2f, 200f, reset.height - 4f),
-                                   "LizarbInterface.FontReset".Translate()))
-            {
-                Settings.fontOffsetTiny = 0;
-                Settings.fontOffsetSmall = 0;
-                Settings.fontOffsetMedium = 0;
-                SetFont(LizarbInterfaceSettings.DefaultFont);
-            }
-
-            Head(listing, "LizarbInterface.OutlineSection");
-
-            Settings.textOutline = Toggle(listing, "LizarbInterface.TextOutline", Settings.textOutline);
-
-            bool outline = Settings.textOutline;
-
-            Settings.outlineThickness = Slide(listing, "LizarbInterface.OutlineThickness",
-                                              Settings.outlineThickness, 1f, 2f, Pixels, 1f, outline);
-
-            Settings.outlineOpacity = Slide(listing, "LizarbInterface.OutlineOpacity",
-                                            Settings.outlineOpacity, 0f, 1f, Percent, -1f, outline);
-
-            Settings.outlineTinyText = Toggle(listing, "LizarbInterface.OutlineTiny",
-                                              Settings.outlineTinyText, outline);
-        }
 
         private void OpenFontPicker()
         {
