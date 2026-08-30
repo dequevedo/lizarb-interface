@@ -3,7 +3,8 @@ param(
     [switch]$ListOnly,
     [switch]$NoDlcs,
     [switch]$Quick,
-    [switch]$Visuals
+    [switch]$Visuals,
+    [switch]$Without
 )
 
 $ErrorActionPreference = 'Stop'
@@ -202,7 +203,14 @@ function Resolve-Workshop([hashtable]$Wanted) {
     return $found
 }
 
-$Ours = @('lizarb.interface')
+$Ours = if ($Without) { @() } else { @('lizarb.interface') }
+
+if ($Without) {
+    Write-Host ""
+    Write-Host "CONTROL RUN: this mod is left out. Everything else is the same." -ForegroundColor Magenta
+    Write-Host "Anything that still misbehaves is not ours." -ForegroundColor Magenta
+    Write-Host ""
+}
 
 $Core = 'ludeon.rimworld'
 $Dlc  = @(
