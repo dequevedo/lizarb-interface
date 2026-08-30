@@ -16,6 +16,9 @@ $Size = 64
 $Fill = 52
 $Outline = 2
 
+$Prefix = 'Src_'
+$Canvas = 512
+
 foreach ($d in @($PackArt, $CustomArt, $OutDir)) {
     if (-not (Test-Path $d)) { New-Item -ItemType Directory -Path $d -Force | Out-Null }
 }
@@ -89,26 +92,44 @@ function Copy-Source {
     Copy-Item $src $Dest -Force
 }
 
+function New-Master {
+    param([string]$Src, [string]$Dest)
+
+    $raw = [System.Drawing.Bitmap]::FromFile($Src)
+
+    $bmp = New-Object System.Drawing.Bitmap($Canvas, $Canvas, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $g = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.DrawImageUnscaled($raw, [int](($Canvas - $raw.Width) / 2), [int](($Canvas - $raw.Height) / 2))
+    $g.Dispose()
+    $raw.Dispose()
+
+    $bmp.Save($Dest, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+}
+
 if ($Extract) {
     if (-not $PackDir) { throw 'pass -PackDir pointing at the extracted Game Icon Pack' }
 
     $root = Join-Path $PackDir 'no-padding\256px\white'
     if (-not (Test-Path $root)) { throw "expected $root" }
 
-    foreach ($name in $Map.Keys) {
-        Copy-Source $root $Map[$name] (Join-Path $PackArt "Icon$name.png")
-    }
+    $kept = 0
+    foreach ($name in (@($Map.Keys) + @($Missing.Keys))) {
+        $rel = if ($Map.Contains($name)) { $Map[$name] } else { $Missing[$name] }
+        $reference = Join-Path $PackArt "Icon$name.png"
+        Copy-Source $root $rel $reference
 
-    foreach ($name in $Missing.Keys) {
-        $dest = Join-Path $CustomArt "Icon$name.png"
-        if ((Test-Path $dest) -and -not $Force) {
-            Write-Host "  kept $name" -ForegroundColor Yellow
+        $master = Join-Path $CustomArt "$Prefix$name.png"
+        if ((Test-Path $master) -and -not $Force) {
+            $kept++
             continue
         }
-        Copy-Source $root $Missing[$name] $dest
+
+        New-Master $reference $master
     }
 
-    Write-Host "extracted $($Map.Count) pack icons and $($Missing.Count) drawing bases" -ForegroundColor Green
+    Write-Host "$($Map.Count + $Missing.Count) references in art\icons\pack" -ForegroundColor Green
+    Write-Host "$($Map.Count + $Missing.Count - $kept) masters written, $kept kept" -ForegroundColor Green
 }
 
 function New-Composed {
@@ -116,15 +137,18 @@ function New-Composed {
 
     $raw = [System.Drawing.Bitmap]::FromFile($Src)
 
-    $scale = $Fill / [Math]::Max($raw.Width, $raw.Height)
-    $w = [Math]::Max(1, [int][Math]::Round($raw.Width * $scale))
-    $h = [Math]::Max(1, [int][Math]::Round($raw.Height * $scale))
+    if ($raw.Width -ne $Canvas -or $raw.Height -ne $Canvas) {
+        throw "$Src is $($raw.Width)x$($raw.Height), every master has to be ${Canvas}x${Canvas}"
+    }
+
+    $scale = $Fill / $Canvas
+    $w = [int][Math]::Round($Canvas * $scale)
 
     $flat = New-Object System.Drawing.Bitmap($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $g = [System.Drawing.Graphics]::FromImage($flat)
     $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
     $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
-    $g.DrawImage($raw, [int](($Size - $w) / 2), [int](($Size - $h) / 2), $w, $h)
+    $g.DrawImage($raw, [int](($Size - $w) / 2), [int](($Size - $w) / 2), $w, $w)
     $g.Dispose()
     $raw.Dispose()
 
@@ -190,11 +214,10 @@ $all = @($Map.Keys) + @($Missing.Keys)
 $built = 0
 
 foreach ($name in $all) {
-    $custom = Join-Path $CustomArt "Icon$name.png"
-    $src = if (Test-Path $custom) { $custom } else { Join-Path $PackArt "Icon$name.png" }
-    if (-not (Test-Path $src)) { throw "no source art for Icon$name, run -Extract first" }
+    $master = Join-Path $CustomArt "$Prefix$name.png"
+    if (-not (Test-Path $master)) { throw "no master for Icon$name, run -Extract first" }
 
-    New-Composed $src (Join-Path $OutDir "Icon$name.png")
+    New-Composed $master (Join-Path $OutDir "Icon$name.png")
     $built++
 }
 
