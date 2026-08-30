@@ -428,7 +428,7 @@ namespace LizarbInterface
             Log.Warning("[LizarbInterface] unreadable atlas scale in " + path + "; assuming 1.");
         }
 
-        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop, ThemeInfo skin = null)
+        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop, ThemeInfo skin = null, bool tiled = false)
         {
             if (atlas == null || Event.current.type != EventType.Repaint)
             {
@@ -446,7 +446,7 @@ namespace LizarbInterface
             float a = atlas.width * 0.25f / DensityOf(use);
             a = UIScaling.AdjustCoordToUIScalingFloor(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
 
-            float band = use != null && use.Tile ? a * 2f : 0f;
+            float band = tiled && use != null && use.Tile ? a * 2f : 0f;
 
             if (drawTop)
             {
@@ -626,7 +626,7 @@ namespace LizarbInterface
             }
 
             Rect painted = LizarbInterfaceMod.Inset(rect);
-            AtlasSwap.DrawScaled(painted, mine, drawTop);
+            AtlasSwap.DrawScaled(painted, mine, drawTop, null, tiled: true);
             AtlasSwap.DrawFaceGrain(painted, mine.width * 0.25f / AtlasSwap.Scale);
             return false;
         }

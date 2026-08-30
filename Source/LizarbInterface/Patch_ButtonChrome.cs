@@ -68,7 +68,7 @@ namespace LizarbInterface
             Vector2 size = Text.CalcSize(label);
             float side = Mathf.Max(size.y, size.x + PadX * 2f);
 
-            AtlasSwap.DrawScaled(new Rect(rect.x, rect.y, side, size.y), plate, true);
+            AtlasSwap.DrawScaled(new Rect(rect.x, rect.y, side, size.y), plate, true, null, tiled: true);
             rect.x += (side - size.x) * 0.5f;
         }
     }
@@ -95,7 +95,7 @@ namespace LizarbInterface
             Texture2D plate = AtlasSwap.Own("ButtonBG");
             if (plate != null)
             {
-                AtlasSwap.DrawScaled(butRect, plate, true);
+                AtlasSwap.DrawScaled(butRect, plate, true, null, tiled: true);
             }
         }
     }

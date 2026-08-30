@@ -938,13 +938,13 @@ namespace LizarbInterface
 
                 if (frame != null)
                 {
-                    AtlasSwap.DrawScaled(area, frame, true, skin);
+                    AtlasSwap.DrawScaled(area, frame, true, skin, tiled: true);
                 }
 
                 if (button != null)
                 {
                     AtlasSwap.DrawScaled(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f),
-                                         button, true, skin);
+                                         button, true, skin, tiled: true);
                 }
             }
 
@@ -1157,7 +1157,7 @@ namespace LizarbInterface
 
                 if (plate != null)
                 {
-                    AtlasSwap.DrawScaled(cell, plate, true);
+                    AtlasSwap.DrawScaled(cell, plate, true, null, tiled: true);
                 }
 
                 Texture2D icon = AtlasSwap.Shared(IconSamples[i]);
@@ -1401,7 +1401,7 @@ namespace LizarbInterface
             }
             else
             {
-                AtlasSwap.DrawScaled(rect, button, true);
+                AtlasSwap.DrawScaled(rect, button, true, null, tiled: true);
             }
 
             Color tint = new Color(205f / 255f, 137f / 255f, 95f / 255f, Settings.architectPlateAlpha);

@@ -108,7 +108,7 @@ namespace LizarbInterface
                 Color previous = GUI.color;
                 GUI.color = Color.white;
                 Rect area = LizarbInterfaceMod.Inset(rect);
-                AtlasSwap.DrawScaled(area, frame, true);
+                AtlasSwap.DrawScaled(area, frame, true, null, tiled: true);
                 DrawGrain(area, 5f, 22f);
                 GUI.color = previous;
                 return false;
@@ -134,7 +134,7 @@ namespace LizarbInterface
                 Color previous = GUI.color;
                 GUI.color = colorFactor;
                 Rect area = LizarbInterfaceMod.Inset(rect);
-                AtlasSwap.DrawScaled(area, frame, true);
+                AtlasSwap.DrawScaled(area, frame, true, null, tiled: true);
                 DrawGrain(area, 5f, 22f);
                 GUI.color = previous;
                 return false;
@@ -160,7 +160,7 @@ namespace LizarbInterface
                 Color previous = GUI.color;
                 GUI.color = new Color(1f, 1f, 1f, previous.a);
                 Rect area = LizarbInterfaceMod.Inset(rect);
-                AtlasSwap.DrawScaled(area, frame, true);
+                AtlasSwap.DrawScaled(area, frame, true, null, tiled: true);
                 DrawGrain(area, 3f, 10f);
                 GUI.color = previous;
                 return false;
