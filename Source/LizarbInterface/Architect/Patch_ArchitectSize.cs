@@ -12,12 +12,14 @@ namespace LizarbInterface
         private static void Postfix(ref Vector2 __result)
         {
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || !settings.architectAutoWidth)
+            if (settings != null && settings.enabled && settings.architectAutoWidth)
             {
-                return;
+                __result.x = Mathf.Max(__result.x, ArchitectWidth.Required());
             }
 
-            __result.x = Mathf.Max(__result.x, ArchitectWidth.Required());
+            float pad = ArchitectPadding.Amount;
+            __result.x += pad * 2f;
+            __result.y += pad * 2f;
         }
     }
 
