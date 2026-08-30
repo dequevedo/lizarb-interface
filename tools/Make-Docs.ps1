@@ -601,7 +601,7 @@ function Strip {
 }
 
 function Draw9Scaled {
-    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density, [bool]$Tile = $false)
+    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density, [bool]$Tile = $false, [bool]$Flat = $false)
 
     $c = [int][Math]::Min($img.Width * 0.25 / $Density, [Math]::Min($H / 2, $W / 2))
     $sc = [int]($img.Width * 0.25)
@@ -623,7 +623,17 @@ function Draw9Scaled {
             if ($i -eq 1 -and $j -ne 1) { $uw = $band }
             if ($j -eq 1 -and $i -ne 1) { $uh = $band }
 
-            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $sx[$i] $sy[$j] $sw[$i] $sh[$j] $uw $uh
+            $ssx = $sx[$i]; $ssw = $sw[$i]
+            $ssy = $sy[$j]; $ssh = $sh[$j]
+
+            if ($Flat -and $i -eq 1 -and $ssw -gt 1) {
+                $ssx = $ssx + [int]($ssw / 2); $ssw = 1
+            }
+            if ($Flat -and $j -eq 1 -and $ssh -gt 1) {
+                $ssy = $ssy + [int]($ssh / 2); $ssh = 1
+            }
+
+            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $ssx $ssy $ssw $ssh $uw $uh
         }
     }
 }
@@ -632,7 +642,7 @@ function Write-Titles {
     $Skin = 'EnhancedPixelStone'
     $Face = 'Rajdhani'
     $W = 630
-    $H = 110
+    $H = 64
     $Size = 28
 
     $dir = Join-Path $Repo 'docs\titles'
@@ -690,7 +700,7 @@ function Write-Titles {
         $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
         $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::SingleBitPerPixelGridFit
 
-        Draw9Scaled $g $plate 0 0 $W $H $density $false
+        Draw9Scaled $g $plate 0 0 $W $H $density $false $true
 
         $sf = New-Object System.Drawing.StringFormat
         $sf.Alignment = [System.Drawing.StringAlignment]::Near
