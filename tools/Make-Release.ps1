@@ -14,7 +14,7 @@ $ModName = 'LizarbInterface'
 $Dist    = if ($Out) { $Out } else { Join-Path $Repo "dist\$ModName" }
 $GameDir = if ($env:RIMWORLD_DIR) { $env:RIMWORLD_DIR } else { 'D:\Steam\steamapps\common\RimWorld' }
 
-$Dirs = @('About', 'Assemblies', 'Patches', 'Languages', 'Skins')
+$Dirs = @('About', 'Assemblies', 'Patches', 'Languages', 'Skins', 'Presets')
 $Files = @('LICENSE', 'README.md')
 $SourceExclude = @('bin', 'obj')
 

@@ -1,0 +1,6 @@
+name=PixelStone Chunky
+theme=PixelStone
+font=Jersey 10
+sizetiny=2
+sizesmall=2
+sizemedium=2

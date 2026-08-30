@@ -989,17 +989,19 @@ namespace LizarbInterface
 
             foreach (Preset p in Presets.All())
             {
-                ThemeInfo theme = Info(p.name);
-                if (theme == null)
+                if (p.user)
                 {
                     mine.Add(p);
                     continue;
                 }
 
-                if (!builtIn.TryGetValue(theme.Group, out List<Preset> bucket))
+                ThemeInfo theme = Info(p.theme);
+                string group = theme == null ? "Squared" : theme.Group;
+
+                if (!builtIn.TryGetValue(group, out List<Preset> bucket))
                 {
                     bucket = new List<Preset>();
-                    builtIn[theme.Group] = bucket;
+                    builtIn[group] = bucket;
                 }
 
                 bucket.Add(p);
@@ -1057,10 +1059,15 @@ namespace LizarbInterface
             }
         }
 
-        private static string Label(string id)
+        private static string Label(Preset preset)
         {
-            string key = "LizarbInterface.Theme." + id;
-            return key.CanTranslate() ? key.Translate().ToString() : id;
+            if (!preset.label.NullOrEmpty())
+            {
+                return preset.label;
+            }
+
+            string key = "LizarbInterface.Theme." + preset.name;
+            return key.CanTranslate() ? key.Translate().ToString() : preset.name;
         }
 
         private void DrawPresetSwatch(Rect area, Preset preset)
@@ -1138,7 +1145,7 @@ namespace LizarbInterface
             }
 
             WriteInFont(new Rect(area.x + 4f, area.y + 10f, area.width - 8f, 28f),
-                        Label(preset.name), preset);
+                        Label(preset), preset);
         }
 
         private static void WriteInFont(Rect rect, string text, Preset preset)

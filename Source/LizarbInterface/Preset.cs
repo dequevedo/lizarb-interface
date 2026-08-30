@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using Verse;
 
@@ -7,7 +8,10 @@ namespace LizarbInterface
     public class Preset : IExposable
     {
         public string name = "";
+        public string label = "";
         public string theme = LizarbInterfaceSettings.DefaultTheme;
+
+        internal bool user;
 
         public string fontName = LizarbInterfaceSettings.DefaultFont;
         public int fontOffsetTiny;
@@ -37,6 +41,7 @@ namespace LizarbInterface
         public void ExposeData()
         {
             Scribe_Values.Look(ref name, "name", "");
+            Scribe_Values.Look(ref label, "label", "");
             Scribe_Values.Look(ref theme, "theme", LizarbInterfaceSettings.DefaultTheme);
             Scribe_Values.Look(ref fontName, "fontName", LizarbInterfaceSettings.DefaultFont);
             Scribe_Values.Look(ref fontOffsetTiny, "fontOffsetTiny", 0);
@@ -105,13 +110,154 @@ namespace LizarbInterface
                 all.Add(FromTheme(theme));
             }
 
+            all.AddRange(Bundled());
+
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
             if (settings?.presets != null)
             {
-                all.AddRange(settings.presets);
+                foreach (Preset p in settings.presets)
+                {
+                    p.user = true;
+                    all.Add(p);
+                }
             }
 
             return all;
+        }
+
+        private static List<Preset> bundled;
+
+        internal static void Forget()
+        {
+            bundled = null;
+        }
+
+        private static List<Preset> Bundled()
+        {
+            if (bundled != null)
+            {
+                return bundled;
+            }
+
+            bundled = new List<Preset>();
+
+            string dir = LizarbInterfaceMod.RootDir.NullOrEmpty()
+                ? null
+                : Path.Combine(LizarbInterfaceMod.RootDir, "Presets");
+
+            if (dir == null || !Directory.Exists(dir))
+            {
+                return bundled;
+            }
+
+            foreach (string file in Directory.GetFiles(dir, "*.txt"))
+            {
+                try
+                {
+                    Preset p = FromFile(file);
+                    if (p != null)
+                    {
+                        bundled.Add(p);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Log.Warning("[LizarbInterface] could not read preset " + Path.GetFileName(file) + ": " + e.Message);
+                }
+            }
+
+            return bundled;
+        }
+
+        private static Preset FromFile(string file)
+        {
+            var read = new Dictionary<string, string>();
+            foreach (string line in File.ReadAllLines(file))
+            {
+                string[] parts = line.Split('=');
+                if (parts.Length == 2)
+                {
+                    read[parts[0].Trim().ToLowerInvariant()] = parts[1].Trim();
+                }
+            }
+
+            string themeId = Text(read, "theme", LizarbInterfaceSettings.DefaultTheme);
+            ThemeInfo theme = LizarbInterfaceMod.Info(themeId);
+            if (theme == null)
+            {
+                Log.Warning("[LizarbInterface] preset " + Path.GetFileName(file) +
+                            " names theme '" + themeId + "', which has no folder.");
+                return null;
+            }
+
+            Preset p = FromTheme(theme);
+            p.name = Path.GetFileNameWithoutExtension(file);
+            p.label = Text(read, "name", p.name);
+
+            p.fontName = Text(read, "font", p.fontName);
+            p.fontOffsetTiny = (int)Number(read, "sizetiny", p.fontOffsetTiny);
+            p.fontOffsetSmall = (int)Number(read, "sizesmall", p.fontOffsetSmall);
+            p.fontOffsetMedium = (int)Number(read, "sizemedium", p.fontOffsetMedium);
+
+            p.textOutline = Flag(read, "outline", p.textOutline);
+            p.outlineThickness = Number(read, "outlinethickness", p.outlineThickness);
+            p.outlineOpacity = Number(read, "outlineopacity", p.outlineOpacity);
+            p.outlineTinyText = Flag(read, "outlinetiny", p.outlineTinyText);
+
+            p.texturedBackground = Flag(read, "background", p.texturedBackground);
+            p.backgroundPattern = Text(read, "pattern", p.backgroundPattern);
+            p.backgroundGrain = Number(read, "grain", p.backgroundGrain);
+            p.grainOnButtons = Flag(read, "grainonbuttons", p.grainOnButtons);
+
+            p.inset = Number(read, "inset", p.inset);
+            p.pointFilter = Flag(read, "pointfilter", p.pointFilter);
+
+            p.architectColors = Flag(read, "architectcolors", p.architectColors);
+            p.architectAutoColor = Flag(read, "architectautocolor", p.architectAutoColor);
+            p.architectPlateStyle = Text(read, "plateshape", p.architectPlateStyle);
+            p.architectPlateAlpha = Number(read, "platealpha", p.architectPlateAlpha);
+            p.architectShapeOutline = Flag(read, "plateoutline", p.architectShapeOutline);
+            p.architectColorLabels = Flag(read, "platelabels", p.architectColorLabels);
+
+            return p;
+        }
+
+        private static string Text(Dictionary<string, string> read, string key, string fallback)
+        {
+            return read.TryGetValue(key, out string value) && !value.NullOrEmpty() ? value : fallback;
+        }
+
+        private static float Number(Dictionary<string, string> read, string key, float fallback)
+        {
+            if (read.TryGetValue(key, out string text) &&
+                float.TryParse(text, System.Globalization.NumberStyles.Float,
+                               System.Globalization.CultureInfo.InvariantCulture, out float value))
+            {
+                return value;
+            }
+
+            return fallback;
+        }
+
+        private static bool Flag(Dictionary<string, string> read, string key, bool fallback)
+        {
+            if (!read.TryGetValue(key, out string text))
+            {
+                return fallback;
+            }
+
+            text = text.ToLowerInvariant();
+            if (text == "true" || text == "on" || text == "yes" || text == "1")
+            {
+                return true;
+            }
+
+            if (text == "false" || text == "off" || text == "no" || text == "0")
+            {
+                return false;
+            }
+
+            return fallback;
         }
 
         internal static Preset FromTheme(ThemeInfo theme)
@@ -227,11 +373,11 @@ namespace LizarbInterface
 
         internal static bool IsBuiltIn(string name)
         {
-            foreach (ThemeInfo theme in LizarbInterfaceMod.AllThemes)
+            foreach (Preset p in All())
             {
-                if (theme.Id == name)
+                if (p.name == name)
                 {
-                    return true;
+                    return !p.user;
                 }
             }
 
