@@ -119,7 +119,7 @@ namespace LizarbInterface
             s.enabled = true;
             s.theme = theme;
 
-            foreach (var entry in LizarbInterfaceMod.Themes)
+            foreach (var entry in LizarbInterfaceMod.AllThemes)
             {
                 if (entry.Id == theme)
                 {
@@ -202,7 +202,7 @@ namespace LizarbInterface
                 themes.Add(ThemeShotSequence.Vanilla);
             }
 
-            foreach (var entry in LizarbInterfaceMod.Themes)
+            foreach (var entry in LizarbInterfaceMod.AllThemes)
             {
                 themes.Add(entry.Id);
             }

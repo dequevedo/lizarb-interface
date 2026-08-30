@@ -243,13 +243,13 @@ namespace LizarbInterface
                 return tex;
             }
 
-            string path = Path.Combine(root, "Skins/" + theme + "/" + fileName + ".png");
-            if (!File.Exists(path))
+            string path = Resolve(fileName, theme, out float shade);
+            if (path == null)
             {
                 return null;
             }
 
-            var slot = new Slot { Name = fileName, Png = File.ReadAllBytes(path) };
+            var slot = new Slot { Name = fileName, Png = File.ReadAllBytes(path), Shade = shade };
             tex = Build(slot);
             previews[key] = tex;
             return tex;

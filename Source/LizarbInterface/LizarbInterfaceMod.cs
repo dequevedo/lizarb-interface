@@ -186,44 +186,44 @@ namespace LizarbInterface
 
         public static ModContentPack Pack { get; private set; }
 
-        internal static readonly (string Id, string Pattern, Color Outline, string Group)[] Themes =
+        internal static readonly (string Id, string Pattern, Color Outline, string Group, float Grain)[] Themes =
         {
-            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared"),
-            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared"),
-            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared"),
-            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared"),
-            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared"),
-            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared"),
-            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared"),
-            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared"),
-            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared"),
-            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared"),
+            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared", 0f),
+            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared", 0f),
+            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared", 0f),
+            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared", 0f),
+            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared", 0f),
+            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared", 0f),
+            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared", 0f),
+            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared", 0f),
+            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared", 0f),
+            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared", 0f),
 
-            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded"),
-            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded"),
-            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded"),
-            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded"),
-            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded"),
-            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded"),
-            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded"),
-            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded"),
-            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded"),
-            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded"),
+            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded", 0f),
+            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded", 0f),
+            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded", 0f),
+            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded", 0f),
+            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded", 0f),
+            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded", 0f),
+            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded", 0f),
+            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded", 0f),
+            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded", 0f),
+            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded", 0f),
 
-            ("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
-            ("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
-            ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
+            ("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f),
+            ("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f),
+            ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f),
         };
 
-        private static List<(string Id, string Pattern, Color Outline, string Group)> all;
+        private static List<(string Id, string Pattern, Color Outline, string Group, float Grain)> all;
 
-        internal static List<(string Id, string Pattern, Color Outline, string Group)> AllThemes
+        internal static List<(string Id, string Pattern, Color Outline, string Group, float Grain)> AllThemes
         {
             get
             {
                 if (all == null)
                 {
-                    all = new List<(string, string, Color, string)>(Themes);
+                    all = new List<(string, string, Color, string, float)>(Themes);
                     Discover();
                 }
 
@@ -258,8 +258,70 @@ namespace LizarbInterface
                 }
 
                 string group = id.StartsWith("Debug") ? "Development" : "Handpainted";
-                all.Add((id, LizarbInterfaceSettings.DefaultPattern, new Color(0.05f, 0.05f, 0.05f), group));
+                all.Add(Describe(id, group, dir));
             }
+        }
+
+        private static (string, string, Color, string, float) Describe(string id, string group, string dir)
+        {
+            string pattern = LizarbInterfaceSettings.DefaultPattern;
+            Color outline = new Color(0.05f, 0.05f, 0.05f);
+            float grain = 0f;
+
+            string file = Path.Combine(dir, "theme.txt");
+            if (File.Exists(file))
+            {
+                foreach (string line in File.ReadAllLines(file))
+                {
+                    string[] parts = line.Split('=');
+                    if (parts.Length != 2)
+                    {
+                        continue;
+                    }
+
+                    string key = parts[0].Trim().ToLowerInvariant();
+                    string value = parts[1].Trim();
+
+                    if (key == "pattern" && System.Array.IndexOf(Patterns, value) >= 0)
+                    {
+                        pattern = value;
+                    }
+                    else if (key == "grain" && float.TryParse(value, System.Globalization.NumberStyles.Float,
+                                                              System.Globalization.CultureInfo.InvariantCulture, out float g))
+                    {
+                        grain = Mathf.Clamp01(g);
+                    }
+                    else if (key == "outline" && ParseColor(value, out Color c))
+                    {
+                        outline = c;
+                    }
+                }
+            }
+
+            return (id, pattern, outline, group, grain);
+        }
+
+        private static bool ParseColor(string text, out Color colour)
+        {
+            colour = Color.black;
+            string[] parts = text.Split(',');
+            if (parts.Length != 3)
+            {
+                return false;
+            }
+
+            var v = new float[3];
+            for (int i = 0; i < 3; i++)
+            {
+                if (!float.TryParse(parts[i].Trim(), System.Globalization.NumberStyles.Float,
+                                    System.Globalization.CultureInfo.InvariantCulture, out v[i]))
+                {
+                    return false;
+                }
+            }
+
+            colour = new Color(v[0], v[1], v[2]);
+            return true;
         }
 
         private static bool IsBuiltIn(string id)
@@ -445,7 +507,7 @@ namespace LizarbInterface
 
         private void DoThemeSection(Listing_Standard listing)
         {
-            var squared = new List<string> { null };
+            var squared = new List<string>();
             var rounded = new List<string>();
             var handpainted = new List<string>();
             var development = new List<string>();
@@ -461,15 +523,18 @@ namespace LizarbInterface
                 }
             }
 
-            DrawThemeGrid(listing, "LizarbInterface.ThemeSquared", squared);
+            DrawThemeGrid(listing, null, new List<string> { null });
             listing.Gap(6f);
-            DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
 
             if (handpainted.Count > 0)
             {
-                listing.Gap(6f);
                 DrawThemeGrid(listing, "LizarbInterface.ThemeHandpainted", handpainted);
+                listing.Gap(6f);
             }
+
+            DrawThemeGrid(listing, "LizarbInterface.ThemeSquared", squared);
+            listing.Gap(6f);
+            DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
 
             if (Prefs.DevMode && development.Count > 0)
             {
@@ -483,7 +548,10 @@ namespace LizarbInterface
             const float SwatchHeight = 74f;
             const int PerRow = 4;
 
-            listing.Label(heading.Translate());
+            if (heading != null)
+            {
+                listing.Label(heading.Translate());
+            }
 
             int rows = Mathf.CeilToInt(ids.Count / (float)PerRow);
             Rect block = listing.GetRect(rows * (SwatchHeight + 6f));
@@ -556,11 +624,18 @@ namespace LizarbInterface
                     Settings.enabled = true;
                     Settings.theme = theme;
 
-                    foreach (var entry in Themes)
+                    foreach (var entry in AllThemes)
                     {
                         if (entry.Id == theme)
                         {
                             Settings.backgroundPattern = entry.Pattern;
+
+                            if (entry.Grain > 0f)
+                            {
+                                Settings.texturedBackground = true;
+                                Settings.backgroundGrain = entry.Grain;
+                            }
+
                             break;
                         }
                     }

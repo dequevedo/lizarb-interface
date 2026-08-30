@@ -19,7 +19,7 @@ $Cats  = Join-Path $Repo 'Source\LizarbInterface\Architect\CategoryPalette.cs'
 $Featured = @('Foundry', 'Royal', 'Verdant', 'Crimson', 'Wood', 'Aero')
 
 $src = Get-Content $Mod -Raw
-$pairs = @([regex]::Matches($src, '\("([A-Za-z]+)",\s*"([A-Za-z]+)",\s*new Color\([^)]*\),\s*"(\w+)"\)') |
+$pairs = @([regex]::Matches($src, '\("([A-Za-z]+)",\s*"([A-Za-z]+)",\s*new Color\([^)]*\),\s*"(\w+)"') |
            ForEach-Object { , @($_.Groups[1].Value, $_.Groups[2].Value, $_.Groups[3].Value) } |
            Where-Object { $_[2] -ne 'Development' })
 if ($pairs.Count -eq 0) { throw "no theme tuples found in $Mod" }
