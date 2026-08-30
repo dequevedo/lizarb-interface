@@ -1,5 +1,4 @@
 ﻿param(
-    [switch]$IconsOnly,
     [switch]$Force,
     [switch]$DefineOnly,
     [int]$Scale = 2,
@@ -1296,132 +1295,6 @@ function Zone-Shapes {
     , $s.ToArray()
 }
 
-$Icons = @{
-    'Orders'      = @(@('seg', 19, 52, 19, 11, 5), @('tri', 19, 11, 47, 19, 19, 29))
-    'Zone'        = (Zone-Shapes)
-    'Structure'   = @(@('box', 10, 19, 30, 31, 1.5), @('box', 34, 19, 54, 31, 1.5),
-                      @('box', 10, 35, 21, 47, 1.5), @('box', 25, 35, 45, 47, 1.5), @('box', 49, 35, 54, 47, 1.5))
-    'Production'  = @(@('box', 16, 13, 48, 27, 2.5), @('seg', 32, 27, 32, 53, 7))
-    'Furniture'   = @(@('box', 9, 17, 17, 52, 2.5), @('box', 9, 31, 55, 43, 3), @('box', 48, 37, 55, 52, 2.5),
-                      @('-box', 21, 33, 33, 41, 2))
-    'Power'       = @(@('tri', 38, 9, 19, 35, 34, 35), @('tri', 30, 31, 45, 31, 25, 55))
-    'Security'    = @(@('box', 12, 10, 52, 56, 10),
-                      @('-tri', 0, 12, 45, 70, -40, 110),
-                      @('-tri', 64, 12, 19, 70, 104, 110))
-    'Misc'        = @(@('disc', 17, 32, 5.5), @('disc', 32, 32, 5.5), @('disc', 47, 32, 5.5))
-    'Floors'      = @(@('box', 11, 11, 30, 30, 1.5), @('box', 34, 11, 53, 30, 1.5),
-                      @('box', 11, 34, 30, 53, 1.5), @('box', 34, 34, 53, 53, 1.5))
-    'Joy'         = @(@('disc', 21, 45, 8.5), @('seg', 29, 45, 29, 13, 5), @('seg', 29, 13, 48, 9, 5))
-    'Ship'        = @(@('seg', 32, 16, 32, 42, 15), @('tri', 23, 35, 23, 53, 12, 53), @('tri', 41, 35, 41, 53, 52, 53))
-    'Temperature' = @(@('disc', 32, 45, 9.5), @('seg', 32, 14, 32, 43, 9))
-
-    'Ideology'    = (Sun-Shapes)
-    'Biotech'     = @(@('seg', 38, 38, 48, 48, 10), @('seg', 26, 38, 16, 48, 10),
-                      @('seg', 26, 26, 16, 16, 10), @('seg', 38, 26, 48, 16, 10))
-    'Anomaly'     = @(@('tri', 32, 5, 24, 32, 40, 32), @('tri', 32, 59, 24, 32, 40, 32),
-                      @('tri', 5, 32, 32, 24, 32, 40), @('tri', 59, 32, 32, 24, 32, 40))
-    'Odyssey'     = @(@('disc', 32, 32, 11), @('ering', 32, 32, 24, 6, 3.5, -20))
-
-    'Storage'     = @(@('box', 9, 14, 55, 25, 2), @('box', 14, 30, 50, 53, 2.5),
-                      @('-box', 27, 36, 37, 47, 1.5))
-    'Medical'     = @(@('seg', 32, 14, 32, 50, 12), @('seg', 14, 32, 50, 32, 12))
-    'Vehicle'     = @(@('ring', 32, 32, 18, 6), @('disc', 32, 32, 7),
-                      @('seg', 21, 21, 43, 43, 4), @('seg', 43, 21, 21, 43, 4))
-    'Industry'    = (Gear-Shapes)
-    'Nature'      = @(@('tri', 32, 8, 14, 40, 32, 54), @('tri', 32, 8, 50, 40, 32, 54), @('seg', 32, 44, 32, 58, 4))
-    'Arcane'      = @(@('tri', 32, 8, 12, 43, 52, 43), @('tri', 32, 56, 12, 21, 52, 21))
-    'Water'       = @(@('tri', 32, 9, 21, 33, 43, 33), @('disc', 32, 38, 12.5))
-
-    'Blueprint'   = @(@('seg', 11, 13, 53, 13, 4.5), @('seg', 11, 51, 53, 51, 4.5),
-                      @('seg', 11, 13, 11, 51, 4.5), @('seg', 53, 13, 53, 51, 4.5),
-                      @('seg', 22, 24, 43, 24, 4), @('seg', 22, 24, 22, 41, 4))
-    'Sign'        = @(@('box', 21, 14, 54, 50, 3), @('tri', 21, 11, 21, 53, 5, 32),
-                      @('-disc', 25, 32, 4.5))
-
-    'ShowZones'    = @(@('seg', 12, 13, 27, 13, 4), @('seg', 37, 13, 52, 13, 4),
-                       @('seg', 12, 51, 27, 51, 4), @('seg', 37, 51, 52, 51, 4),
-                       @('seg', 13, 14, 13, 26, 4), @('seg', 13, 38, 13, 50, 4),
-                       @('seg', 51, 14, 51, 26, 4), @('seg', 51, 38, 51, 50, 4))
-
-    'ShowBeauty'   = @(@('disc', 32, 32, 7), @('disc', 32, 17, 8), @('disc', 32, 47, 8),
-                       @('disc', 17, 32, 8), @('disc', 47, 32, 8))
-
-    'ShowRoomStats' = @(@('seg', 11, 11, 53, 11, 3), @('seg', 11, 53, 53, 53, 3),
-                        @('seg', 11, 11, 11, 53, 3), @('seg', 53, 11, 53, 53, 3),
-                        @('seg', 23, 45, 23, 28, 5), @('seg', 33, 45, 33, 20, 5),
-                        @('seg', 43, 45, 43, 34, 5))
-
-    'CategorizedResourceReadout' = @(@('disc', 14, 19, 4), @('seg', 25, 19, 52, 19, 5),
-                                     @('disc', 14, 32, 4), @('seg', 25, 32, 52, 32, 5),
-                                     @('disc', 14, 45, 4), @('seg', 25, 45, 52, 45, 5))
-
-    'ShowColonistBar' = @(@('box', 8, 19, 22, 45, 3), @('box', 25, 19, 39, 45, 3),
-                          @('box', 42, 19, 56, 45, 3))
-
-    'ShowRoofOverlay' = @(@('seg', 7, 37, 32, 13, 6), @('seg', 32, 13, 57, 37, 6),
-                          @('seg', 10, 50, 54, 50, 5))
-
-    'ShowTemperatureOverlay' = @(@('disc', 25, 46, 10), @('seg', 25, 13, 25, 44, 8),
-                                 @('seg', 43, 20, 53, 20, 4), @('seg', 43, 32, 53, 32, 4),
-                                 @('seg', 43, 44, 53, 44, 4))
-
-    'ShowFertilityOverlay' = @(@('seg', 32, 56, 32, 30, 5),
-                               @('tri', 31, 38, 8, 32, 20, 14),
-                               @('tri', 33, 38, 56, 32, 44, 14))
-
-    'ShowTerrainAffordanceOverlay' = @(@('seg', 7, 24, 57, 24, 6), @('seg', 12, 39, 52, 39, 6),
-                                       @('seg', 19, 53, 45, 53, 6))
-
-    'ShowPollutionOverlay' = @(@('box', 15, 32, 30, 57, 2), @('disc', 35, 26, 7),
-                               @('disc', 45, 17, 6), @('disc', 53, 9, 4.5))
-
-    'ShowLearningHelper' = @(@('disc', 32, 25, 14), @('box', 25, 37, 39, 46, 2),
-                             @('seg', 27, 51, 37, 51, 4))
-
-    'AutoHomeArea' = @(@('tri', 32, 8, 5, 30, 59, 30), @('box', 13, 30, 51, 55, 2),
-                       @('-box', 26, 41, 38, 56, 1))
-
-    'AutoRebuild' = @(@('ring', 32, 34, 17, 6), @('-box', 24, 2, 44, 22, 0),
-                      @('tri', 24, 6, 24, 26, 8, 16))
-
-    'LockNorthUp' = @(@('ring', 32, 32, 20, 4), @('tri', 32, 12, 22, 34, 42, 34),
-                      @('seg', 23, 41, 41, 41, 5))
-
-    'ShowWorldFeatures' = @(@('ring', 32, 32, 20, 4), @('ering', 32, 32, 9, 20, 4, 0),
-                            @('seg', 12, 32, 52, 32, 4))
-
-    'UsePlanetDayNightSystem' = @(@('disc', 34, 32, 18), @('-disc', 47, 23, 17),
-                                  @('seg', 5, 32, 13, 32, 4), @('seg', 8, 15, 15, 21, 4),
-                                  @('seg', 8, 49, 15, 43, 4))
-
-    'ShowImportantLocations' = @(@('disc', 32, 23, 14), @('tri', 21, 31, 43, 31, 32, 56),
-                                 @('-disc', 32, 23, 5))
-
-    'ShowLandmarkIcons' = @(@('tri', 3, 53, 29, 53, 16, 26),
-                            @('tri', 33, 53, 61, 53, 47, 19))
-
-    'ShowOtherFactionBases' = @(@('seg', 19, 9, 19, 54, 5), @('tri', 21, 11, 51, 20, 21, 29),
-                                @('seg', 10, 55, 32, 55, 4))
-
-    'CodexButton' = @(@('tri', 32, 18, 5, 25, 5, 51), @('tri', 32, 18, 59, 25, 59, 51),
-                      @('seg', 5, 51, 32, 44, 5), @('seg', 59, 51, 32, 44, 5),
-                      @('seg', 32, 17, 32, 46, 4))
-
-    'SearchButton' = @(@('ring', 27, 27, 14, 5), @('seg', 37, 37, 53, 53, 7))
-
-    'ShowVacuumOverlay' = @(@('ring', 30, 36, 16, 5), @('disc', 47, 20, 5),
-                            @('disc', 56, 10, 3.5))
-
-    'CloseX'      = @(@('seg', 17, 17, 47, 47, 8), @('seg', 47, 17, 17, 47, 8))
-
-    'SpeedPause'  = @(@('box', 17, 13, 29, 51, 2), @('box', 35, 13, 47, 51, 2))
-    'SpeedNormal' = @(, @('tri', 21, 11, 21, 53, 51, 32))
-    'SpeedFast'   = @(@('tri', 10, 14, 10, 50, 32, 32), @('tri', 32, 14, 32, 50, 54, 32))
-    'SpeedSuper'  = @(@('tri', 3, 16, 3, 48, 21, 32), @('tri', 22, 16, 22, 48, 40, 32),
-                      @('tri', 41, 16, 41, 48, 59, 32))
-    'SpeedUltra'  = @(@('tri', 1, 18, 1, 46, 15, 32), @('tri', 16, 18, 16, 46, 30, 32),
-                      @('tri', 31, 18, 31, 46, 45, 32), @('tri', 46, 18, 46, 46, 60, 32))
-}
 $Shapes = @{
     'Square'  = @(, @('box', 4, 4, 60, 60, 9))
     'Circle'  = @(, @('disc', 32, 32, 27))
@@ -1433,12 +1306,12 @@ $Shapes = @{
 $Shapes['Diamond'] = @(, @('diam', 32, 32, 22, 5))
 $SkinsRoot = Join-Path $PSScriptRoot '..\Skins'
 
-if (-not $DefineOnly -and -not $IconsOnly) {
+if (-not $DefineOnly) {
     if (-not (Test-Path $SkinsRoot)) { New-Item -ItemType Directory -Path $SkinsRoot -Force | Out-Null }
     [IO.File]::WriteAllText((Join-Path $SkinsRoot 'atlas-scale.txt'), "$Scale", (New-Object Text.UTF8Encoding($false)))
 }
 
-foreach ($id in ($(if ($IconsOnly -or $DefineOnly) { @() } elseif ($Only.Count -gt 0) { @($Themes.Keys | Where-Object { $Only -contains $_ } | Sort-Object) } else { $Themes.Keys | Sort-Object }))) {
+foreach ($id in ($(if ($DefineOnly) { @() } elseif ($Only.Count -gt 0) { @($Themes.Keys | Where-Object { $Only -contains $_ } | Sort-Object) } else { $Themes.Keys | Sort-Object }))) {
     $t = $Themes[$id]
     $S = $Scale
 
@@ -1608,7 +1481,7 @@ function New-DebugTheme {
     }
 }
 
-if (-not $DefineOnly -and -not $IconsOnly -and $Only.Count -eq 0) {
+if (-not $DefineOnly -and $Only.Count -eq 0) {
     New-DebugTheme -Id 'DebugSlices'
     New-DebugTheme -Id 'DebugCoarse' -Divide 2
     New-DebugTheme -Id 'DebugSparse' -Sparse
@@ -1618,11 +1491,7 @@ $OutDir = Join-Path $SkinsRoot 'Shared'
 if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
 
 Write-Host ""
-Write-Host "=== icons -> $OutDir ===" -ForegroundColor Cyan
-foreach ($name in ($(if ($DefineOnly) { @() } else { $Icons.Keys | Sort-Object }))) {
-    New-Icon -Name "Icon$name" -Shapes $Icons[$name]
-}
-
+Write-Host "=== plate shapes -> $OutDir ===" -ForegroundColor Cyan
 foreach ($name in ($(if ($DefineOnly) { @() } else { $Shapes.Keys | Sort-Object }))) {
     New-Icon -Name "Shape$name" -Shapes $Shapes[$name] -Outline 0.0
 }
@@ -1640,4 +1509,4 @@ if (-not $DefineOnly) {
 }
 
 Write-Host ""
-Write-Host "OK: $($Themes.Count) themes, $($Icons.Count) icons (scale ${Scale}x)" -ForegroundColor Green
+Write-Host "OK: $($Themes.Count) themes, $($Shapes.Count) plate shapes (scale ${Scale}x)" -ForegroundColor Green

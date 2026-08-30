@@ -30,9 +30,9 @@
 
 Compatibility: this mod replaces the drawing of tabs, window backgrounds and menu sections rather than adding to them. Another mod that redraws those same surfaces will lose whichever of the two loads first, so load this one last if you want its look to win. Buttons, windows, tabs, widgets and scrollbars can each be turned off on their own, so a clash costs one checkbox instead of the whole skin.
 
-Twenty-eight fonts ship with the mod under the SIL Open Font License. Full credits and licence files are included.
+Twenty-eight fonts ship with the mod under the SIL Open Font License. Full credits and licence files are included. The icons come from the Game Icon Pack v1.4 by Nieobie, released under CC0.
 
-Built with AI: the code was written with Claude, Anthropic's assistant, with me directing and testing. The textures and icons are not generated images, they are drawn by the generator scripts in the repository.
+Built with AI: the code was written with Claude, Anthropic's assistant, with me directing and testing. The textures are not generated images, they are drawn by the generator scripts in the repository.
 
 Source: https://github.com/dequevedo/lizarb-interface</description>
 </ModMetaData>
