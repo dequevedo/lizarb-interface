@@ -1,62 +1,6 @@
-Themes became presets
+New cover art
 
-A theme was a folder of textures, and everything else about the look was one
-flat set of settings, so two skins could never differ in anything but their
-pixels. A preset is the whole look in one click: a skin, a typeface and its
-sizes, the text outline, the background pattern and its strength, and how the
-Architect menu is coloured.
+The thumbnail now shows the mod doing its job: the preset grid, the settings
+and a coloured Architect menu, instead of a painting.
 
-That is what makes PixelStone and PixelStone Fake possible. They are the same
-pixel art. One pairs it with a pixel typeface and a flat background, the other
-with ordinary type and a hatch behind it.
-
-Change anything and save it as a preset of your own, from the Presets tab. Your
-presets sit under Yours, next to the ones the mod ships. The skin is a picker
-of its own inside a preset, so you can put any art with any type.
-
-Nothing you had is lost. Your skin, your font and every setting come across
-exactly as you left them; what moved is where they are edited.
-
-Where things went
-
-The settings screen is Presets, Icons, Architect, Animation and Compatibility.
-The Text tab is gone: the font, the sizes and the outline are part of a preset
-now, and so are the background, the element gap and the Architect colours. The
-tabs above hold only what is genuinely global, like the surface switches and
-the icon set.
-
-Four new hand painted skins
-
-Orcish, PixelStone, IronPlate and IronPlate Dark, drawn rather than generated.
-Making one is a folder in Skins with a single ButtonBG.png in it: it is found on
-its own, and anything you do not draw is filled in from a complete skin.
-
-Pixel art is possible now
-
-A skin can say how many texels it draws per interface pixel, so small pixel art
-stays chunky instead of being shrunk into a blur. It can also ask for its edges
-to repeat at their own size rather than stretch, the way a tiled nine slice
-does, so detail drawn along an edge survives.
-
-Tabs no longer stretch their art either. When a skin has no tab texture of its
-own, the tab is drawn the way its button is instead of being squeezed into a
-shape it was not made for.
-
-Three pixel typefaces ship with the mod: Jersey 10, Pixelify Sans and Jacquard
-24, all under the Open Font License.
-
-The Architect menu has room to breathe
-
-Vanilla gives it no margin, so the buttons touch the panel on all four sides,
-and the info panel, the rotation controls and the shape picker stack flush
-against it. There is a gap around and between all of them now, and the menu
-widens to match so nothing gets narrower. One switch turns it off.
-
-Smaller things
-
-- Point filtering no longer touches the icons. They are drawn small and only
-  came out ragged.
-- Aero, Ash, Arcane and Bone start with no background texture. Glass, ash, void
-  and bone do not carry grain.
-- The warning about Architect Icons is gone. The two have composed properly for
-  a while and it was describing a bug that was already fixed.
+Nothing else in this update.
