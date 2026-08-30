@@ -3,7 +3,7 @@
   <packageId>lizarb.interface</packageId>
   <name>Lizarb Interface</name>
   <author>Lizarb</author>
-  <modVersion>1.1.0</modVersion>
+  <modVersion>1.2.0</modVersion>
   <url>https://github.com/dequevedo/lizarb-interface</url>
   <supportedVersions>
     <li>1.6</li>
