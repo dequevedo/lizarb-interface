@@ -112,6 +112,8 @@ namespace LizarbInterface
             return Path.Combine(dir, fileName + ".png");
         }
 
+        private const string FallbackTheme = "Foundry";
+
         private static readonly System.Collections.Generic.Dictionary<string, string[]> Instead =
             new System.Collections.Generic.Dictionary<string, string[]>
             {
@@ -166,7 +168,7 @@ namespace LizarbInterface
                 }
             }
 
-            string standard = SkinPath(fileName, LizarbInterfaceSettings.DefaultTheme);
+            string standard = SkinPath(fileName, FallbackTheme);
             return File.Exists(standard) ? standard : null;
         }
 

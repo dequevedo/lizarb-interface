@@ -14,9 +14,11 @@ namespace LizarbInterface
     {
         public bool enabled = true;
 
-        public const string DefaultTheme = "Foundry";
+        public const string DefaultTheme = "Orcish";
 
         public const string DefaultPattern = "Hatch";
+
+        public const float DefaultGrain = 0.15f;
 
         public string theme = DefaultTheme;
 
@@ -38,7 +40,7 @@ namespace LizarbInterface
 
         public float outlineOpacity = 0.7f;
 
-        public bool outlineTinyText;
+        public bool outlineTinyText = true;
 
         public bool showAllFonts;
 
@@ -46,7 +48,7 @@ namespace LizarbInterface
 
         public string backgroundPattern = DefaultPattern;
 
-        public float backgroundGrain = 0.05f;
+        public float backgroundGrain = DefaultGrain;
 
         public bool pointFilter;
 
@@ -114,11 +116,11 @@ namespace LizarbInterface
             Scribe_Values.Look(ref textOutline, "textOutline", defaultValue: true);
             Scribe_Values.Look(ref outlineThickness, "outlineThickness", 2f);
             Scribe_Values.Look(ref outlineOpacity, "outlineOpacity", 0.7f);
-            Scribe_Values.Look(ref outlineTinyText, "outlineTinyText", defaultValue: false);
+            Scribe_Values.Look(ref outlineTinyText, "outlineTinyText", defaultValue: true);
             Scribe_Values.Look(ref showAllFonts, "showAllFonts", defaultValue: false);
             Scribe_Values.Look(ref texturedBackground, "texturedBackground", defaultValue: true);
             Scribe_Values.Look(ref backgroundPattern, "backgroundPattern", DefaultPattern);
-            Scribe_Values.Look(ref backgroundGrain, "backgroundGrain", 0.05f);
+            Scribe_Values.Look(ref backgroundGrain, "backgroundGrain", DefaultGrain);
             Scribe_Values.Look(ref pointFilter, "pointFilter", defaultValue: false);
             Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
             Scribe_Values.Look(ref plateIconButtons, "plateIconButtons", defaultValue: true);

@@ -96,6 +96,7 @@
   <LizarbInterface.Architect.PlateStyle.Frame.Tip>Colour around the rim, centre left clear.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
   <LizarbInterface.Architect.PlateStyle.Flat>Flat</LizarbInterface.Architect.PlateStyle.Flat>
   <LizarbInterface.Architect.PlateStyle.Flat.Tip>A plain rectangle, ignoring the theme shape.</LizarbInterface.Architect.PlateStyle.Flat.Tip>  <LizarbInterface.Theme.Grimoire>Grimoire</LizarbInterface.Theme.Grimoire>
+  <LizarbInterface.Theme.Orcish>Orcish</LizarbInterface.Theme.Orcish>
   <LizarbInterface.Theme.Foundry>Foundry</LizarbInterface.Theme.Foundry>
   <LizarbInterface.GrainOnButtons>Texture on buttons too</LizarbInterface.GrainOnButtons>
   <LizarbInterface.GrainOnButtons.Tip>Tiles the same pattern across button, tooltip and menu faces, not just window backgrounds. With the Grimoire skin this is what gives the buttons their parchment.</LizarbInterface.GrainOnButtons.Tip>

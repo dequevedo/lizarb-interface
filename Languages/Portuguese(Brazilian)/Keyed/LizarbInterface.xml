@@ -96,6 +96,7 @@
   <LizarbInterface.Architect.PlateStyle.Frame.Tip>Cor em volta da borda, com o centro limpo.</LizarbInterface.Architect.PlateStyle.Frame.Tip>
   <LizarbInterface.Architect.PlateStyle.Flat>Chapado</LizarbInterface.Architect.PlateStyle.Flat>
   <LizarbInterface.Architect.PlateStyle.Flat.Tip>Um retangulo simples, ignorando o formato do tema.</LizarbInterface.Architect.PlateStyle.Flat.Tip>  <LizarbInterface.Theme.Grimoire>Grimório</LizarbInterface.Theme.Grimoire>
+  <LizarbInterface.Theme.Orcish>Orcish</LizarbInterface.Theme.Orcish>
   <LizarbInterface.Theme.Foundry>Fundição</LizarbInterface.Theme.Foundry>
   <LizarbInterface.GrainOnButtons>Textura nos botões também</LizarbInterface.GrainOnButtons>
   <LizarbInterface.GrainOnButtons.Tip>Ladrilha o mesmo padrão na face dos botões, dos tooltips e dos menus, não só no fundo das janelas. Com a pele Grimório é o que dá o pergaminho aos botões.</LizarbInterface.GrainOnButtons.Tip>
