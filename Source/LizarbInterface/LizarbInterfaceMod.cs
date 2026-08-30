@@ -248,14 +248,14 @@ namespace LizarbInterface
             new ThemeInfo("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared"),
 
             new ThemeInfo("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded") { Background = false },
-            new ThemeInfo("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded"),
+            new ThemeInfo("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded") { Background = false },
             new ThemeInfo("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded"),
             new ThemeInfo("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded"),
             new ThemeInfo("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded"),
             new ThemeInfo("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded"),
-            new ThemeInfo("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded"),
+            new ThemeInfo("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded") { Background = false },
             new ThemeInfo("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded"),
-            new ThemeInfo("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded"),
+            new ThemeInfo("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded") { Background = false },
             new ThemeInfo("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded"),
 
             new ThemeInfo("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
