@@ -440,6 +440,14 @@ namespace LizarbInterface
             TabDrawer.DrawTabs(body, tabs);
 
             Rect inner = body.ContractedBy(14f);
+
+            if (tab == Tab.Theme)
+            {
+                DoThemeLayout(inner);
+                FlushFont();
+                return;
+            }
+
             int index = (int)tab;
 
             var view = new Rect(0f, 0f, inner.width - 24f, contentHeight[index]);
@@ -450,9 +458,6 @@ namespace LizarbInterface
 
             switch (tab)
             {
-                case Tab.Theme:
-                    Section(listing, "theme", DoThemeTab);
-                    break;
                 case Tab.Text:
                     Section(listing, "text", DoTextTab);
                     break;
@@ -475,13 +480,61 @@ namespace LizarbInterface
             listing.End();
             Widgets.EndScrollView();
 
-            if (fontDirty)
-            {
-                fontDirty = false;
-                FontEngine.Apply();
+            FlushFont();
+        }
 
-                ArchitectWidth.Invalidate();
+        private static void FlushFont()
+        {
+            if (!fontDirty)
+            {
+                return;
             }
+
+            fontDirty = false;
+            FontEngine.Apply();
+            ArchitectWidth.Invalidate();
+        }
+
+        private Vector2 themeScroll;
+
+        private Vector2 optionScroll;
+
+        private float themeHeight = 600f;
+
+        private float optionHeight = 400f;
+
+        private void DoThemeLayout(Rect area)
+        {
+            float left = Mathf.Round(area.width * 0.52f);
+            var listRect = new Rect(area.x, area.y, left, area.height);
+            var sideRect = new Rect(area.x + left + 18f, area.y, area.width - left - 18f, area.height);
+
+            Color previous = GUI.color;
+            GUI.color = RuleColor;
+            Widgets.DrawLineVertical(area.x + left + 8f, area.y, area.height);
+            GUI.color = previous;
+
+            var view = new Rect(0f, 0f, listRect.width - 20f, themeHeight);
+            Widgets.BeginScrollView(listRect, ref themeScroll, view);
+
+            var themes = new Listing_Standard { maxOneColumn = true };
+            themes.Begin(view);
+            Section(themes, "theme", DoThemeGrids);
+            themeHeight = Mathf.Max(themes.CurHeight + 12f, listRect.height);
+            themes.End();
+
+            Widgets.EndScrollView();
+
+            var sideView = new Rect(0f, 0f, sideRect.width - 20f, optionHeight);
+            Widgets.BeginScrollView(sideRect, ref optionScroll, sideView);
+
+            var options = new Listing_Standard { maxOneColumn = true };
+            options.Begin(sideView);
+            Section(options, "theme options", DoThemeOptions);
+            optionHeight = Mathf.Max(options.CurHeight + 12f, sideRect.height);
+            options.End();
+
+            Widgets.EndScrollView();
         }
 
         private static TabRecord MakeTab(Tab which)
@@ -523,7 +576,7 @@ namespace LizarbInterface
             Rect row = listing.GetRect(RowHeight);
             listing.Gap(2f);
 
-            float wide = Mathf.Clamp(row.width * 0.42f, 160f, 300f);
+            float wide = Mathf.Clamp(row.width * 0.44f, 140f, 300f);
             control = new Rect(row.xMax - wide, row.y, wide, row.height);
             label = new Rect(row.x + 6f, row.y, row.width - wide - 14f, row.height);
             return row;
@@ -679,10 +732,8 @@ namespace LizarbInterface
             return i > 0 ? "+" + i : i.ToString();
         }
 
-        private void DoThemeTab(Listing_Standard listing)
+        private void DoThemeOptions(Listing_Standard listing)
         {
-            DoThemeGrids(listing);
-
             Head(listing, "LizarbInterface.BackgroundSection");
 
             Settings.texturedBackground = Toggle(listing,
@@ -757,22 +808,23 @@ namespace LizarbInterface
         private void DrawThemeGrid(Listing_Standard listing, string heading, List<string> ids)
         {
             const float SwatchHeight = 74f;
-            const int PerRow = 4;
+            const float MinSwatchWidth = 132f;
 
             if (heading != null)
             {
                 Head(listing, heading);
             }
 
-            int rows = Mathf.CeilToInt(ids.Count / (float)PerRow);
+            int perRow = Mathf.Clamp(Mathf.FloorToInt(listing.ColumnWidth / MinSwatchWidth), 1, 4);
+            int rows = Mathf.CeilToInt(ids.Count / (float)perRow);
             Rect block = listing.GetRect(rows * (SwatchHeight + 6f));
-            float cell = block.width / PerRow;
+            float cell = block.width / perRow;
 
             for (int i = 0; i < ids.Count; i++)
             {
                 DrawThemeSwatch(new Rect(
-                    block.x + (i % PerRow) * cell,
-                    block.y + (i / PerRow) * (SwatchHeight + 6f),
+                    block.x + (i % perRow) * cell,
+                    block.y + (i / perRow) * (SwatchHeight + 6f),
                     cell - 8f,
                     SwatchHeight), ids[i]);
             }
