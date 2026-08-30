@@ -61,7 +61,6 @@
   <LizarbInterface.Theme.DebugSparse>One file, everything else derived</LizarbInterface.Theme.DebugSparse>
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
-  <LizarbInterface.Tab.Text>Text</LizarbInterface.Tab.Text>
   <LizarbInterface.Tab.Windows>Windows</LizarbInterface.Tab.Windows>
   <LizarbInterface.AnimationDuration>Animation length</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Which surfaces this mod is allowed to reskin. Turn one off to hand it back to the game, or to another mod, without giving up the rest.</LizarbInterface.ComponentsSection>
@@ -77,7 +76,7 @@
   <LizarbInterface.SkinScrollbars.Tip>Drawn by Unity from shared styles rather than from a texture, so this one is applied by changing those styles. Turning it off puts them back immediately.</LizarbInterface.SkinScrollbars.Tip>
   <LizarbInterface.ResetAll>Reset everything</LizarbInterface.ResetAll>
   <LizarbInterface.Tab.Architect>Architect</LizarbInterface.Tab.Architect>
-  <LizarbInterface.Architect.Section>Colours each category button in the Architect menu by what the category is for. Categories from other mods get a stable colour of their own.</LizarbInterface.Architect.Section>
+  <LizarbInterface.Architect.Section>Layout only. How the Architect menu looks lives in the preset, because a theme and its colours belong together.</LizarbInterface.Architect.Section>
   <LizarbInterface.Architect.Enabled>Colour the architect category buttons</LizarbInterface.Architect.Enabled>
   <LizarbInterface.Architect.PlateAlpha>Colour strength</LizarbInterface.Architect.PlateAlpha>
   <LizarbInterface.Architect.ColorLabels>Colour the button text too</LizarbInterface.Architect.ColorLabels>
@@ -150,4 +149,13 @@
   <LizarbInterface.IconCreditSection>Credits</LizarbInterface.IconCreditSection>
   <LizarbInterface.IconCredit>The icons are from the Game Icon Pack by Nieobie, released under CC0. Six of them were drawn for this mod, for things the pack has no answer for.</LizarbInterface.IconCredit>
   <LizarbInterface.ResetSection>Start over</LizarbInterface.ResetSection>
+  <LizarbInterface.Tab.Presets>Presets</LizarbInterface.Tab.Presets>
+  <LizarbInterface.PresetSection>This preset</LizarbInterface.PresetSection>
+  <LizarbInterface.PresetSaveAs>Save as new</LizarbInterface.PresetSaveAs>
+  <LizarbInterface.PresetUpdate>Update</LizarbInterface.PresetUpdate>
+  <LizarbInterface.PresetDelete>Delete</LizarbInterface.PresetDelete>
+  <LizarbInterface.PresetMine>Yours</LizarbInterface.PresetMine>
+  <LizarbInterface.PresetNewName>My preset</LizarbInterface.PresetNewName>
+  <LizarbInterface.PresetNamePrompt>Name for this preset</LizarbInterface.PresetNamePrompt>
+  <LizarbInterface.Architect.InPreset>The category colours, the shape and its strength are part of the preset, on the Presets tab.</LizarbInterface.Architect.InPreset>
 </LanguageData>

@@ -94,6 +94,10 @@ namespace LizarbInterface
 
         public bool architectShapeOutline = true;
 
+        public string preset = DefaultTheme;
+
+        public List<Preset> presets = new List<Preset>();
+
         public bool architectSpacing = true;
 
         public float architectPadding = 4f;
@@ -149,6 +153,13 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
             Scribe_Values.Look(ref architectSpacing, "architectSpacing", defaultValue: true);
             Scribe_Values.Look(ref architectPadding, "architectPadding", 4f);
+            Scribe_Values.Look(ref preset, "preset", null);
+            Scribe_Collections.Look(ref presets, "presets", LookMode.Deep);
+
+            if (presets == null)
+            {
+                presets = new List<Preset>();
+            }
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
@@ -180,6 +191,11 @@ namespace LizarbInterface
                 if (!LizarbInterfaceMod.HasTheme(theme))
                 {
                     theme = DefaultTheme;
+                }
+
+                if (preset == null)
+                {
+                    preset = theme;
                 }
             }
             base.ExposeData();
@@ -493,8 +509,7 @@ namespace LizarbInterface
 
         private enum Tab
         {
-            Theme,
-            Text,
+            Presets,
             Icons,
             Architect,
             Windows,
@@ -503,10 +518,10 @@ namespace LizarbInterface
 
         private static readonly Tab[] TabOrder =
         {
-            Tab.Theme, Tab.Text, Tab.Icons, Tab.Architect, Tab.Windows, Tab.Compatibility,
+            Tab.Presets, Tab.Icons, Tab.Architect, Tab.Windows, Tab.Compatibility,
         };
 
-        private static Tab tab = Tab.Theme;
+        private static Tab tab = Tab.Presets;
 
         private readonly float[] contentHeight = { 600f, 600f, 600f, 600f, 600f, 600f };
 
@@ -532,7 +547,7 @@ namespace LizarbInterface
 
             Rect inner = body.ContractedBy(14f);
 
-            if (tab == Tab.Theme)
+            if (tab == Tab.Presets)
             {
                 DoThemeLayout(inner);
                 FlushFont();
@@ -549,9 +564,6 @@ namespace LizarbInterface
 
             switch (tab)
             {
-                case Tab.Text:
-                    Section(listing, "text", DoTextTab);
-                    break;
                 case Tab.Icons:
                     Section(listing, "icons", DoIconsTab);
                     break;
@@ -610,7 +622,7 @@ namespace LizarbInterface
 
             var themes = new Listing_Standard { maxOneColumn = true };
             themes.Begin(view);
-            Section(themes, "theme", DoThemeGrids);
+            Section(themes, "presets", DoPresetGrid);
             themeHeight = Mathf.Max(themes.CurHeight + 12f, listRect.height);
             themes.End();
 
@@ -621,7 +633,7 @@ namespace LizarbInterface
 
             var options = new Listing_Standard { maxOneColumn = true };
             options.Begin(sideView);
-            Section(options, "theme options", DoThemeOptions);
+            Section(options, "preset options", DoPresetOptions);
             optionHeight = Mathf.Max(options.CurHeight + 12f, sideRect.height);
             options.End();
 
@@ -823,8 +835,77 @@ namespace LizarbInterface
             return i > 0 ? "+" + i : i.ToString();
         }
 
-        private void DoThemeOptions(Listing_Standard listing)
+        private void DoPresetOptions(Listing_Standard listing)
         {
+            Preset current = Presets.Capture();
+            bool builtIn = Presets.IsBuiltIn(Settings.preset);
+
+            Head(listing, "LizarbInterface.PresetSection");
+
+            Rect row = listing.GetRect(RowHeight);
+            listing.Gap(2f);
+
+            float third = (row.width - 12f) / 3f;
+            if (Widgets.ButtonText(new Rect(row.x, row.y + 2f, third, row.height - 4f),
+                                   "LizarbInterface.PresetSaveAs".Translate()))
+            {
+                SavePreset(current);
+            }
+
+            bool canUpdate = !builtIn && FindUserPreset(Settings.preset) != null;
+            if (Widgets.ButtonText(new Rect(row.x + third + 6f, row.y + 2f, third, row.height - 4f),
+                                   "LizarbInterface.PresetUpdate".Translate(), active: canUpdate))
+            {
+                Preset saved = FindUserPreset(Settings.preset);
+                if (saved != null)
+                {
+                    string keep = saved.name;
+                    Settings.presets[Settings.presets.IndexOf(saved)] = current;
+                    current.name = keep;
+                    RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+                }
+            }
+
+            if (Widgets.ButtonText(new Rect(row.x + third * 2f + 12f, row.y + 2f, third, row.height - 4f),
+                                   "LizarbInterface.PresetDelete".Translate(), active: canUpdate))
+            {
+                Preset saved = FindUserPreset(Settings.preset);
+                if (saved != null)
+                {
+                    Settings.presets.Remove(saved);
+                    Settings.preset = "";
+                    RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+                }
+            }
+
+            Head(listing, "LizarbInterface.FontSection");
+
+            string face = Settings.fontName.NullOrEmpty()
+                ? "LizarbInterface.FontVanilla".Translate().ToString()
+                : Settings.fontName;
+
+            Pick(listing, "LizarbInterface.FontFace", face, OpenFontPicker);
+            Settings.showAllFonts = Toggle(listing, "LizarbInterface.ShowAllFonts", Settings.showAllFonts);
+
+            Settings.fontOffsetTiny = SizeSlide(listing, "LizarbInterface.FontSize.Tiny", Settings.fontOffsetTiny);
+            Settings.fontOffsetSmall = SizeSlide(listing, "LizarbInterface.FontSize.Small", Settings.fontOffsetSmall);
+            Settings.fontOffsetMedium = SizeSlide(listing, "LizarbInterface.FontSize.Medium", Settings.fontOffsetMedium);
+
+            Head(listing, "LizarbInterface.OutlineSection");
+
+            Settings.textOutline = Toggle(listing, "LizarbInterface.TextOutline", Settings.textOutline);
+
+            bool outline = Settings.textOutline;
+
+            Settings.outlineThickness = Slide(listing, "LizarbInterface.OutlineThickness",
+                                              Settings.outlineThickness, 1f, 2f, Pixels, 1f, outline);
+
+            Settings.outlineOpacity = Slide(listing, "LizarbInterface.OutlineOpacity",
+                                            Settings.outlineOpacity, 0f, 1f, Percent, -1f, outline);
+
+            Settings.outlineTinyText = Toggle(listing, "LizarbInterface.OutlineTiny",
+                                              Settings.outlineTinyText, outline);
+
             Head(listing, "LizarbInterface.BackgroundSection");
 
             Settings.texturedBackground = Toggle(listing,
@@ -846,6 +927,242 @@ namespace LizarbInterface
 
             Settings.inset = Slide(listing, "LizarbInterface.Inset", Settings.inset, 0f, 4f, Pixels, 1f);
             Settings.pointFilter = Toggle(listing, "LizarbInterface.PointFilter", Settings.pointFilter);
+            Head(listing, "LizarbInterface.Architect.ColourSection");
+
+            Settings.architectColors = Toggle(listing,
+                "LizarbInterface.Architect.Enabled", Settings.architectColors);
+
+            bool colours = Settings.architectColors;
+
+            Settings.architectPlateAlpha = Slide(listing, "LizarbInterface.Architect.PlateAlpha",
+                                                 Settings.architectPlateAlpha, 0f, 1f, Percent, -1f, colours);
+
+            Settings.architectShapeOutline = Toggle(listing,
+                "LizarbInterface.Architect.ShapeOutline", Settings.architectShapeOutline, colours);
+
+            Settings.architectColorLabels = Toggle(listing,
+                "LizarbInterface.Architect.ColorLabels", Settings.architectColorLabels, colours);
+
+            Settings.architectAutoColor = Toggle(listing,
+                "LizarbInterface.Architect.AutoColor", Settings.architectAutoColor, colours);
+
+            Head(listing, "LizarbInterface.Architect.PlateStyle");
+            DoPlateStyleGrid(listing, colours);
+        }
+
+        private Preset FindUserPreset(string name)
+        {
+            if (Settings.presets == null || name.NullOrEmpty())
+            {
+                return null;
+            }
+
+            foreach (Preset p in Settings.presets)
+            {
+                if (p.name == name)
+                {
+                    return p;
+                }
+            }
+
+            return null;
+        }
+
+        private void SavePreset(Preset captured)
+        {
+            string seed = Settings.preset.NullOrEmpty()
+                ? "LizarbInterface.PresetNewName".Translate().ToString()
+                : Settings.preset;
+
+            Find.WindowStack.Add(new Dialog_PresetName(Presets.UniqueName(seed), chosen =>
+            {
+                captured.name = Presets.UniqueName(chosen);
+                Settings.presets.Add(captured);
+                Settings.preset = captured.name;
+            }));
+        }
+
+        private void DoPresetGrid(Listing_Standard listing)
+        {
+            var builtIn = new Dictionary<string, List<Preset>>();
+            var mine = new List<Preset>();
+
+            foreach (Preset p in Presets.All())
+            {
+                ThemeInfo theme = Info(p.name);
+                if (theme == null)
+                {
+                    mine.Add(p);
+                    continue;
+                }
+
+                if (!builtIn.TryGetValue(theme.Group, out List<Preset> bucket))
+                {
+                    bucket = new List<Preset>();
+                    builtIn[theme.Group] = bucket;
+                }
+
+                bucket.Add(p);
+            }
+
+            DrawPresetRow(listing, null, new List<Preset> { null });
+
+            if (mine.Count > 0)
+            {
+                DrawPresetRow(listing, "LizarbInterface.PresetMine", mine);
+            }
+
+            DrawGroup(listing, builtIn, "Handpainted", "LizarbInterface.ThemeHandpainted");
+            DrawGroup(listing, builtIn, "Squared", "LizarbInterface.ThemeSquared");
+            DrawGroup(listing, builtIn, "Rounded", "LizarbInterface.ThemeRounded");
+
+            if (Prefs.DevMode)
+            {
+                DrawGroup(listing, builtIn, "Development", "LizarbInterface.ThemeDevelopment");
+            }
+        }
+
+        private void DrawGroup(Listing_Standard listing, Dictionary<string, List<Preset>> groups,
+                               string key, string heading)
+        {
+            if (groups.TryGetValue(key, out List<Preset> bucket) && bucket.Count > 0)
+            {
+                DrawPresetRow(listing, heading, bucket);
+            }
+        }
+
+        private const float SwatchHeight = 96f;
+
+        private void DrawPresetRow(Listing_Standard listing, string heading, List<Preset> presets)
+        {
+            const float MinSwatchWidth = 148f;
+
+            if (heading != null)
+            {
+                Head(listing, heading);
+            }
+
+            int perRow = Mathf.Clamp(Mathf.FloorToInt(listing.ColumnWidth / MinSwatchWidth), 1, 4);
+            int rows = Mathf.CeilToInt(presets.Count / (float)perRow);
+            Rect block = listing.GetRect(rows * (SwatchHeight + 6f));
+            float cell = block.width / perRow;
+
+            for (int i = 0; i < presets.Count; i++)
+            {
+                DrawPresetSwatch(new Rect(
+                    block.x + (i % perRow) * cell,
+                    block.y + (i / perRow) * (SwatchHeight + 6f),
+                    cell - 8f,
+                    SwatchHeight), presets[i]);
+            }
+        }
+
+        private static string Label(string id)
+        {
+            string key = "LizarbInterface.Theme." + id;
+            return key.CanTranslate() ? key.Translate().ToString() : id;
+        }
+
+        private void DrawPresetSwatch(Rect area, Preset preset)
+        {
+            bool vanilla = preset == null;
+            bool selected = vanilla
+                ? !Settings.enabled
+                : Settings.enabled && Settings.preset == preset.name;
+
+            if (vanilla)
+            {
+                DrawVanillaPreview(area);
+            }
+            else
+            {
+                DrawPresetPreview(area, preset);
+            }
+
+            if (selected)
+            {
+                Widgets.DrawBox(area, 2);
+            }
+            else if (Mouse.IsOver(area))
+            {
+                Widgets.DrawHighlight(area);
+            }
+
+            if (Widgets.ButtonInvisible(area))
+            {
+                if (vanilla)
+                {
+                    Settings.enabled = false;
+                    Settings.preset = "";
+                    QueueFontApply();
+                }
+                else
+                {
+                    Presets.Apply(preset);
+                }
+
+                RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+            }
+        }
+
+        private void DrawPresetPreview(Rect area, Preset preset)
+        {
+            ThemeInfo skin = Info(preset.theme);
+
+            Texture2D frame = AtlasSwap.Preview(preset.theme, "WindowAtlas");
+            if (frame != null)
+            {
+                AtlasSwap.DrawScaled(area, frame, true, skin, tiled: true);
+            }
+
+            if (preset.texturedBackground && preset.backgroundGrain > 0.001f)
+            {
+                Texture2D grain = AtlasSwap.Preview(preset.theme, "Pattern_" + preset.backgroundPattern, tiling: true);
+                if (grain != null)
+                {
+                    Rect face = area.ContractedBy(10f);
+                    float unit = grain.width / AtlasSwap.DefaultScale;
+                    Color previous = GUI.color;
+                    GUI.color = new Color(1f, 1f, 1f, preset.backgroundGrain);
+                    GUI.DrawTextureWithTexCoords(face, grain,
+                        new Rect(0f, 0f, face.width / unit, face.height / unit));
+                    GUI.color = previous;
+                }
+            }
+
+            Texture2D button = AtlasSwap.Preview(preset.theme, "ButtonBG");
+            if (button != null)
+            {
+                AtlasSwap.DrawScaled(new Rect(area.x + 10f, area.yMax - 30f, area.width - 20f, 22f),
+                                     button, true, skin, tiled: true);
+            }
+
+            WriteInFont(new Rect(area.x + 4f, area.y + 10f, area.width - 8f, 28f),
+                        Label(preset.name), preset);
+        }
+
+        private static void WriteInFont(Rect rect, string text, Preset preset)
+        {
+            Font font = FontEngine.Preview(preset.fontName, 12 + preset.fontOffsetSmall);
+            GUIStyle style = Text.CurFontStyle;
+            Font previousFont = style.font;
+            int previousSize = style.fontSize;
+
+            if (font != null)
+            {
+                style.font = font;
+                style.fontSize = Mathf.Clamp(12 + preset.fontOffsetSmall, 6, 22);
+            }
+
+            try
+            {
+                Write(rect, text, TextAnchor.UpperCenter);
+            }
+            finally
+            {
+                style.font = previousFont;
+                style.fontSize = previousSize;
+            }
         }
 
         private void OpenPatternMenu()
@@ -860,155 +1177,6 @@ namespace LizarbInterface
             }
 
             Find.WindowStack.Add(new FloatMenu(options));
-        }
-
-        private void DoThemeGrids(Listing_Standard listing)
-        {
-            var squared = new List<string>();
-            var rounded = new List<string>();
-            var handpainted = new List<string>();
-            var development = new List<string>();
-
-            foreach (var entry in AllThemes)
-            {
-                switch (entry.Group)
-                {
-                    case "Rounded": rounded.Add(entry.Id); break;
-                    case "Development": development.Add(entry.Id); break;
-                    case "Handpainted": handpainted.Add(entry.Id); break;
-                    default: squared.Add(entry.Id); break;
-                }
-            }
-
-            DrawThemeGrid(listing, null, new List<string> { null });
-
-            if (handpainted.Count > 0)
-            {
-                DrawThemeGrid(listing, "LizarbInterface.ThemeHandpainted", handpainted);
-            }
-
-            DrawThemeGrid(listing, "LizarbInterface.ThemeSquared", squared);
-            DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
-
-            if (Prefs.DevMode && development.Count > 0)
-            {
-                DrawThemeGrid(listing, "LizarbInterface.ThemeDevelopment", development);
-            }
-        }
-
-        private void DrawThemeGrid(Listing_Standard listing, string heading, List<string> ids)
-        {
-            const float SwatchHeight = 74f;
-            const float MinSwatchWidth = 132f;
-
-            if (heading != null)
-            {
-                Head(listing, heading);
-            }
-
-            int perRow = Mathf.Clamp(Mathf.FloorToInt(listing.ColumnWidth / MinSwatchWidth), 1, 4);
-            int rows = Mathf.CeilToInt(ids.Count / (float)perRow);
-            Rect block = listing.GetRect(rows * (SwatchHeight + 6f));
-            float cell = block.width / perRow;
-
-            for (int i = 0; i < ids.Count; i++)
-            {
-                DrawThemeSwatch(new Rect(
-                    block.x + (i % perRow) * cell,
-                    block.y + (i / perRow) * (SwatchHeight + 6f),
-                    cell - 8f,
-                    SwatchHeight), ids[i]);
-            }
-        }
-
-        private static string Label(string id)
-        {
-            string key = "LizarbInterface.Theme." + id;
-            return key.CanTranslate() ? key.Translate().ToString() : id;
-        }
-
-        private void DrawThemeSwatch(Rect area, string theme)
-        {
-            bool vanilla = theme == null;
-            bool selected = vanilla ? !Settings.enabled : Settings.enabled && Settings.theme == theme;
-
-            if (vanilla)
-            {
-                DrawVanillaPreview(area);
-            }
-            else
-            {
-                Texture2D frame = AtlasSwap.Preview(theme, "WindowAtlas");
-                Texture2D button = AtlasSwap.Preview(theme, "ButtonBG");
-                ThemeInfo skin = Info(theme);
-
-                if (frame != null)
-                {
-                    AtlasSwap.DrawScaled(area, frame, true, skin, tiled: true);
-                }
-
-                if (button != null)
-                {
-                    AtlasSwap.DrawScaled(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f),
-                                         button, true, skin, tiled: true);
-                }
-            }
-
-            Write(new Rect(area.x, area.y + 8f, area.width, 24f),
-                  Label(vanilla ? "Default" : theme), TextAnchor.UpperCenter);
-
-            if (selected)
-            {
-                GUI.color = Color.white;
-                Widgets.DrawBox(area, 2);
-                GUI.color = Color.white;
-            }
-            else if (Mouse.IsOver(area))
-            {
-                Widgets.DrawHighlight(area);
-            }
-
-            if (Widgets.ButtonInvisible(area))
-            {
-                if (vanilla)
-                {
-                    Settings.enabled = false;
-                }
-                else
-                {
-                    Settings.enabled = true;
-                    Settings.theme = theme;
-
-                    foreach (var entry in AllThemes)
-                    {
-                        if (entry.Id == theme)
-                        {
-                            Settings.backgroundPattern = entry.Pattern;
-
-                            if (entry.Grain > 0f)
-                            {
-                                Settings.texturedBackground = true;
-                                Settings.backgroundGrain = entry.Grain;
-                            }
-
-                            if (entry.Background.HasValue)
-                            {
-                                Settings.texturedBackground = entry.Background.Value;
-                            }
-
-                            if (entry.PointFilter.HasValue)
-                            {
-                                Settings.pointFilter = entry.PointFilter.Value;
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
-                FontEngine.Apply();
-                RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
-            }
         }
 
         private static Color vanillaBorder = new ColorInt(97, 108, 122).ToColor;
@@ -1038,6 +1206,7 @@ namespace LizarbInterface
                 AtlasSwap.Bypass = false;
             }
         }
+
 
         private void DoTextTab(Listing_Standard listing)
         {
@@ -1193,27 +1362,7 @@ namespace LizarbInterface
                                              Settings.architectPadding, 0f, 12f, Pixels, 1f,
                                              Settings.architectSpacing);
 
-            Head(listing, "LizarbInterface.Architect.ColourSection");
-
-            Settings.architectColors = Toggle(listing,
-                "LizarbInterface.Architect.Enabled", Settings.architectColors);
-
-            bool colours = Settings.architectColors;
-
-            Settings.architectPlateAlpha = Slide(listing, "LizarbInterface.Architect.PlateAlpha",
-                                                 Settings.architectPlateAlpha, 0f, 1f, Percent, -1f, colours);
-
-            Settings.architectShapeOutline = Toggle(listing,
-                "LizarbInterface.Architect.ShapeOutline", Settings.architectShapeOutline, colours);
-
-            Settings.architectColorLabels = Toggle(listing,
-                "LizarbInterface.Architect.ColorLabels", Settings.architectColorLabels, colours);
-
-            Settings.architectAutoColor = Toggle(listing,
-                "LizarbInterface.Architect.AutoColor", Settings.architectAutoColor, colours);
-
-            Head(listing, "LizarbInterface.Architect.PlateStyle");
-            DoPlateStyleGrid(listing, colours);
+            Note(listing, "LizarbInterface.Architect.InPreset".Translate(), DimText);
         }
 
         private void DoWindowsTab(Listing_Standard listing)

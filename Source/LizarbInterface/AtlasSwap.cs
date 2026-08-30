@@ -233,7 +233,7 @@ namespace LizarbInterface
             return null;
         }
 
-        internal static Texture2D Preview(string theme, string fileName)
+        internal static Texture2D Preview(string theme, string fileName, bool tiling = false)
         {
             if (root == null)
             {
@@ -252,7 +252,7 @@ namespace LizarbInterface
                 return null;
             }
 
-            var slot = new Slot { Name = fileName, Png = File.ReadAllBytes(path), Shade = shade };
+            var slot = new Slot { Name = fileName, Png = File.ReadAllBytes(path), Shade = shade, Tiling = tiling };
             tex = Build(slot);
             previews[key] = tex;
             return tex;

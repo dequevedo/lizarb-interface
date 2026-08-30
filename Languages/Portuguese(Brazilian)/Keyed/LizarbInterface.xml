@@ -61,7 +61,6 @@
   <LizarbInterface.Theme.DebugSparse>Um arquivo so, o resto derivado</LizarbInterface.Theme.DebugSparse>
   <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
-  <LizarbInterface.Tab.Text>Texto</LizarbInterface.Tab.Text>
   <LizarbInterface.Tab.Windows>Janelas</LizarbInterface.Tab.Windows>
   <LizarbInterface.AnimationDuration>Duração da animação</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Quais superfícies este mod pode retexturizar. Desligue uma para devolvê-la ao jogo, ou a outro mod, sem abrir mão do resto.</LizarbInterface.ComponentsSection>
@@ -77,7 +76,7 @@
   <LizarbInterface.SkinScrollbars.Tip>São desenhadas pela Unity a partir de estilos compartilhados, não de uma textura, então esta é aplicada alterando esses estilos. Desligar devolve o original na hora.</LizarbInterface.SkinScrollbars.Tip>
   <LizarbInterface.ResetAll>Restaurar tudo</LizarbInterface.ResetAll>
   <LizarbInterface.Tab.Architect>Arquiteto</LizarbInterface.Tab.Architect>
-  <LizarbInterface.Architect.Section>Dá uma cor a cada botão de categoria do menu Arquiteto, de acordo com a função da categoria. Categorias de outros mods ganham uma cor própria e estável.</LizarbInterface.Architect.Section>
+  <LizarbInterface.Architect.Section>Só layout. A aparência do menu do Arquiteto vive no preset, porque um tema e as cores dele andam juntos.</LizarbInterface.Architect.Section>
   <LizarbInterface.Architect.Enabled>Colorir os botões de categoria do Arquiteto</LizarbInterface.Architect.Enabled>
   <LizarbInterface.Architect.PlateAlpha>Força da cor</LizarbInterface.Architect.PlateAlpha>
   <LizarbInterface.Architect.ColorLabels>Colorir o texto do botão também</LizarbInterface.Architect.ColorLabels>
@@ -150,4 +149,13 @@
   <LizarbInterface.IconCreditSection>Créditos</LizarbInterface.IconCreditSection>
   <LizarbInterface.IconCredit>Os ícones vêm do Game Icon Pack, de Nieobie, sob licença CC0. Seis foram desenhados para este mod, para coisas que o pacote não cobre.</LizarbInterface.IconCredit>
   <LizarbInterface.ResetSection>Recomeçar</LizarbInterface.ResetSection>
+  <LizarbInterface.Tab.Presets>Presets</LizarbInterface.Tab.Presets>
+  <LizarbInterface.PresetSection>Este preset</LizarbInterface.PresetSection>
+  <LizarbInterface.PresetSaveAs>Salvar como novo</LizarbInterface.PresetSaveAs>
+  <LizarbInterface.PresetUpdate>Atualizar</LizarbInterface.PresetUpdate>
+  <LizarbInterface.PresetDelete>Apagar</LizarbInterface.PresetDelete>
+  <LizarbInterface.PresetMine>Seus</LizarbInterface.PresetMine>
+  <LizarbInterface.PresetNewName>Meu preset</LizarbInterface.PresetNewName>
+  <LizarbInterface.PresetNamePrompt>Nome deste preset</LizarbInterface.PresetNamePrompt>
+  <LizarbInterface.Architect.InPreset>As cores das categorias, a forma e a força dela fazem parte do preset, na aba Presets.</LizarbInterface.Architect.InPreset>
 </LanguageData>
