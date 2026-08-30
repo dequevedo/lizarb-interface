@@ -189,6 +189,7 @@ namespace LizarbInterface
 
         internal float Grain;
         internal float Scale;
+        internal bool Tile;
         internal bool? Background;
         internal bool? PointFilter;
 
@@ -318,6 +319,7 @@ namespace LizarbInterface
             {
                 Grain = Mathf.Clamp01(Number(read, "grain", 0f)),
                 Scale = Number(read, "scale", 0f),
+                Tile = Flag(read, "tile") == true,
                 Background = Flag(read, "background"),
                 PointFilter = Flag(read, "pointfilter"),
             };
@@ -386,20 +388,22 @@ namespace LizarbInterface
             return true;
         }
 
-        internal static float ScaleOf(string id)
+        internal static ThemeInfo Info(string id)
         {
-            if (!id.NullOrEmpty())
+            if (id.NullOrEmpty())
             {
-                foreach (var entry in AllThemes)
+                return null;
+            }
+
+            foreach (var entry in AllThemes)
+            {
+                if (entry.Id == id)
                 {
-                    if (entry.Id == id)
-                    {
-                        return entry.Scale > 0f ? entry.Scale : AtlasSwap.DefaultScale;
-                    }
+                    return entry;
                 }
             }
 
-            return AtlasSwap.DefaultScale;
+            return null;
         }
 
         internal static void Rediscover()
@@ -930,17 +934,17 @@ namespace LizarbInterface
             {
                 Texture2D frame = AtlasSwap.Preview(theme, "WindowAtlas");
                 Texture2D button = AtlasSwap.Preview(theme, "ButtonBG");
-                float density = ScaleOf(theme);
+                ThemeInfo skin = Info(theme);
 
                 if (frame != null)
                 {
-                    AtlasSwap.DrawScaled(area, frame, true, density);
+                    AtlasSwap.DrawScaled(area, frame, true, skin);
                 }
 
                 if (button != null)
                 {
                     AtlasSwap.DrawScaled(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f),
-                                         button, true, density);
+                                         button, true, skin);
                 }
             }
 

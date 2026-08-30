@@ -217,6 +217,7 @@ namespace LizarbInterface
             }
 
             previews.Clear();
+            activeKnown = false;
         }
 
         private static byte[] ReadSkinFile(string fileName, string theme, out float shade)
@@ -369,26 +370,33 @@ namespace LizarbInterface
 
         internal static float DefaultScale { get; private set; } = 1f;
 
-        private static string scaleTheme;
+        private static string activeId;
 
-        private static bool scaleKnown;
+        private static bool activeKnown;
 
-        private static float scaleValue = 1f;
+        private static ThemeInfo active;
 
-        internal static float Scale
+        internal static ThemeInfo Active
         {
             get
             {
-                string active = LizarbInterfaceMod.Settings == null ? null : LizarbInterfaceMod.Settings.theme;
-                if (!scaleKnown || active != scaleTheme)
+                string id = LizarbInterfaceMod.Settings == null ? null : LizarbInterfaceMod.Settings.theme;
+                if (!activeKnown || id != activeId)
                 {
-                    scaleTheme = active;
-                    scaleKnown = true;
-                    scaleValue = LizarbInterfaceMod.ScaleOf(active);
+                    activeId = id;
+                    activeKnown = true;
+                    active = LizarbInterfaceMod.Info(id);
                 }
 
-                return scaleValue;
+                return active;
             }
+        }
+
+        internal static float Scale => DensityOf(Active);
+
+        private static float DensityOf(ThemeInfo skin)
+        {
+            return skin != null && skin.Scale > 0f ? skin.Scale : DefaultScale;
         }
 
         internal static bool Bypass;
@@ -396,7 +404,7 @@ namespace LizarbInterface
         private static void ReadScale()
         {
             DefaultScale = 1f;
-            scaleKnown = false;
+            activeKnown = false;
             if (root == null)
             {
                 return;
@@ -420,12 +428,14 @@ namespace LizarbInterface
             Log.Warning("[LizarbInterface] unreadable atlas scale in " + path + "; assuming 1.");
         }
 
-        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop, float density = 0f)
+        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop, ThemeInfo skin = null)
         {
             if (atlas == null || Event.current.type != EventType.Repaint)
             {
                 return;
             }
+
+            ThemeInfo use = skin ?? Active;
 
             rect.x = Mathf.Round(rect.x);
             rect.y = Mathf.Round(rect.y);
@@ -433,8 +443,10 @@ namespace LizarbInterface
             rect.height = Mathf.Round(rect.height);
             rect = UIScaling.AdjustRectToUIScaling(rect);
 
-            float a = atlas.width * 0.25f / (density > 0f ? density : Scale);
+            float a = atlas.width * 0.25f / DensityOf(use);
             a = UIScaling.AdjustCoordToUIScalingFloor(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
+
+            float band = use != null && use.Tile ? a * 2f : 0f;
 
             if (drawTop)
             {
@@ -456,10 +468,10 @@ namespace LizarbInterface
 
             if (drawTop)
             {
-                Part(new Rect(rect.x + a, rect.y, rect.width - a * 2f, a), UvTop, atlas);
+                Run(new Rect(rect.x + a, rect.y, rect.width - a * 2f, a), UvTop, atlas, band, 0f);
             }
 
-            Part(new Rect(rect.x + a, rect.y + rect.height - a, rect.width - a * 2f, a), UvBottom, atlas);
+            Run(new Rect(rect.x + a, rect.y + rect.height - a, rect.width - a * 2f, a), UvBottom, atlas, band, 0f);
 
             Rect left = new Rect(rect.x, rect.y + a, a, rect.height - a * 2f);
             Rect right = new Rect(rect.x + rect.width - a, rect.y + a, a, rect.height - a * 2f);
@@ -469,8 +481,46 @@ namespace LizarbInterface
                 right.height += a; right.y -= a;
             }
 
-            Part(left, UvLeft, atlas);
-            Part(right, UvRight, atlas);
+            Run(left, UvLeft, atlas, 0f, band);
+            Run(right, UvRight, atlas, 0f, band);
+        }
+
+        private const int MaxTiles = 96;
+
+        private static void Run(Rect dest, Rect uv, Texture2D atlas, float unitW, float unitH)
+        {
+            if (dest.width <= 0f || dest.height <= 0f)
+            {
+                return;
+            }
+
+            float w = unitW > 0f ? unitW : dest.width;
+            float h = unitH > 0f ? unitH : dest.height;
+
+            int columns = Mathf.Max(1, Mathf.CeilToInt(dest.width / w));
+            int rows = Mathf.Max(1, Mathf.CeilToInt(dest.height / h));
+
+            if (columns * rows > MaxTiles)
+            {
+                Part(dest, uv, atlas);
+                return;
+            }
+
+            for (int r = 0; r < rows; r++)
+            {
+                float y = dest.y + r * h;
+                float ph = Mathf.Min(h, dest.yMax - y);
+
+                for (int c = 0; c < columns; c++)
+                {
+                    float x = dest.x + c * w;
+                    float pw = Mathf.Min(w, dest.xMax - x);
+
+                    Part(new Rect(x, y, pw, ph),
+                         new Rect(uv.x, uv.y, uv.width * (pw / w), uv.height * (ph / h)),
+                         atlas);
+                }
+            }
         }
 
         internal static void DrawFaceGrain(Rect rect, float corner)
