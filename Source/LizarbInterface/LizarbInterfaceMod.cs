@@ -1026,15 +1026,13 @@ namespace LizarbInterface
 
             DrawIconStrip(listing, Settings.ownIcons);
 
-            if (Settings.ownIcons && ArchitectIconsModPresent)
-            {
-                Note(listing, "LizarbInterface.OwnIcons.Clash".Translate(), Color.yellow);
-            }
-
             Head(listing, "LizarbInterface.IconButtonSection");
 
             Settings.plateIconButtons = Toggle(listing,
                 "LizarbInterface.PlateIconButtons", Settings.plateIconButtons);
+
+            Head(listing, "LizarbInterface.IconCreditSection");
+            Note(listing, "LizarbInterface.IconCredit".Translate(), DimText);
         }
 
         private void DrawIconStrip(Listing_Standard listing, bool enabled)
@@ -1325,9 +1323,6 @@ namespace LizarbInterface
                   "Production", TextAnchor.MiddleLeft);
             GUI.color = previous;
         }
-
-        private static bool ArchitectIconsModPresent =>
-            ModLister.GetActiveModWithIdentifier("com.bymarcin.architecticons", ignorePostfix: true) != null;
     }
 
     [HarmonyPatch(typeof(MemoryUtility), nameof(MemoryUtility.UnloadUnusedUnityAssets))]

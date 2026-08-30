@@ -143,6 +143,7 @@
   <LizarbInterface.IconButtonSection>Icon buttons</LizarbInterface.IconButtonSection>
   <LizarbInterface.OwnIcons>Use this mod's own icons</LizarbInterface.OwnIcons>
   <LizarbInterface.OwnIcons.Tip>Covers the Architect category buttons, the play settings row, the search and codex buttons and the game speed controls. All of them are white glyphs with a black outline, drawn at one weight so they read as a set. Architect categories from other mods are matched on their name, so Storage gets a crate and Genetics gets a chromosome.</LizarbInterface.OwnIcons.Tip>
-  <LizarbInterface.OwnIcons.Clash>Architect Icons is active and draws its own icon in the same place. Turn one of the two off.</LizarbInterface.OwnIcons.Clash>
+  <LizarbInterface.IconCreditSection>Credits</LizarbInterface.IconCreditSection>
+  <LizarbInterface.IconCredit>The icons are from the Game Icon Pack by Nieobie, released under CC0. Six of them were drawn for this mod, for things the pack has no answer for.</LizarbInterface.IconCredit>
   <LizarbInterface.ResetSection>Start over</LizarbInterface.ResetSection>
 </LanguageData>

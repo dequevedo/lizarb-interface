@@ -143,6 +143,7 @@
   <LizarbInterface.IconButtonSection>Botões de ícone</LizarbInterface.IconButtonSection>
   <LizarbInterface.OwnIcons>Usar os ícones próprios deste mod</LizarbInterface.OwnIcons>
   <LizarbInterface.OwnIcons.Tip>Cobre os botões de categoria do Arquiteto, a linha de opções de jogo, os botões de busca e códex e os controles de velocidade. Todos são símbolos brancos com contorno preto, desenhados com o mesmo peso para lerem como um conjunto. Categorias de outros mods são reconhecidas pelo nome, então Storage ganha um engradado e Genetics ganha um cromossomo.</LizarbInterface.OwnIcons.Tip>
-  <LizarbInterface.OwnIcons.Clash>O Architect Icons está ativo e desenha o ícone dele no mesmo lugar. Desligue um dos dois.</LizarbInterface.OwnIcons.Clash>
+  <LizarbInterface.IconCreditSection>Créditos</LizarbInterface.IconCreditSection>
+  <LizarbInterface.IconCredit>Os ícones vêm do Game Icon Pack, de Nieobie, sob licença CC0. Seis foram desenhados para este mod, para coisas que o pacote não cobre.</LizarbInterface.IconCredit>
   <LizarbInterface.ResetSection>Recomeçar</LizarbInterface.ResetSection>
 </LanguageData>
