@@ -131,11 +131,6 @@ function Get-SkinScale {
     [double](Get-SkinKey $Skin 'scale' "$scale")
 }
 
-function Get-SkinTile {
-    param([string]$Skin)
-    @('true', 'on', 'yes', '1') -contains (Get-SkinKey $Skin 'tile' 'false').ToLower()
-}
-
 function Skin-File {
     param([string]$Skin, [string]$Name, [string]$Fallback)
 
@@ -149,10 +144,9 @@ function Draw-Card {
           $NameFont, $SmallFont, [switch]$WithTab)
 
     $density = Get-SkinScale $Theme
-    $tile = Get-SkinTile $Theme
 
     $win = [System.Drawing.Image]::FromFile((Skin-File $Theme 'WindowAtlas' 'ButtonBG'))
-    Draw9Scaled $g $win $X $Y $W $H $density $tile
+    Draw9Scaled $g $win $X $Y $W $H $density
     $win.Dispose()
 
     $pad = [int]($W * 0.09)
@@ -161,13 +155,13 @@ function Draw-Card {
     $by = $Y + [int]($H * 0.16)
 
     $btn = [System.Drawing.Image]::FromFile((Join-Path $Skins "$Theme\ButtonBG.png"))
-    Draw9Scaled $g $btn ($X + $pad) $by $bw $bh $density $tile
-    Draw9Scaled $g $btn ($X + $pad * 2 + $bw) $by $bw $bh $density $tile
+    Draw9Scaled $g $btn ($X + $pad) $by $bw $bh $density
+    Draw9Scaled $g $btn ($X + $pad * 2 + $bw) $by $bw $bh $density
     $btn.Dispose()
 
     if ($WithTab) {
         $tab = [System.Drawing.Image]::FromFile((Skin-File $Theme 'TabAtlas' 'ButtonBG'))
-        Draw9Scaled $g $tab ($X + $pad) ($Y + $H - $bh - [int]($H * 0.12)) ([int]($bw * 1.15)) $bh $density $tile
+        Draw9Scaled $g $tab ($X + $pad) ($Y + $H - $bh - [int]($H * 0.12)) ([int]($bw * 1.15)) $bh $density
         $tab.Dispose()
     }
 
@@ -571,38 +565,18 @@ function Write-Overlay {
 
 function Strip {
     param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H,
-          [int]$SX, [int]$SY, [int]$SW, [int]$SH, [int]$UnitW, [int]$UnitH)
+          [int]$SX, [int]$SY, [int]$SW, [int]$SH)
 
     if ($W -le 0 -or $H -le 0) { return }
 
-    $uw = $UnitW; if ($uw -le 0 -or $uw -gt $W) { $uw = $W }
-    $uh = $UnitH; if ($uh -le 0 -or $uh -gt $H) { $uh = $H }
-
-    $cols = [int][Math]::Ceiling($W / [double]$uw); if ($cols -gt 256) { $cols = 256 }
-    $rows = [int][Math]::Ceiling($H / [double]$uh); if ($rows -gt 256) { $rows = 256 }
-
-    for ($r = 0; $r -lt $rows; $r++) {
-        $y = $Y + $r * $uh
-        $h = [Math]::Min($uh, $Y + $H - $y)
-        if ($h -le 0) { break }
-        $sh2 = [int]($SH * $h / $uh); if ($sh2 -lt 1) { $sh2 = 1 }
-
-        for ($c = 0; $c -lt $cols; $c++) {
-            $x = $X + $c * $uw
-            $w = [Math]::Min($uw, $X + $W - $x)
-            if ($w -le 0) { break }
-            $sw2 = [int]($SW * $w / $uw); if ($sw2 -lt 1) { $sw2 = 1 }
-
-            $g.DrawImage($img,
-                (New-Object System.Drawing.Rectangle($x, $y, $w, $h)),
-                (New-Object System.Drawing.Rectangle($SX, $SY, $sw2, $sh2)),
-                [System.Drawing.GraphicsUnit]::Pixel)
-        }
-    }
+    $g.DrawImage($img,
+        (New-Object System.Drawing.Rectangle($X, $Y, $W, $H)),
+        (New-Object System.Drawing.Rectangle($SX, $SY, $SW, $SH)),
+        [System.Drawing.GraphicsUnit]::Pixel)
 }
 
 function Draw9Scaled {
-    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density, [bool]$Tile = $false, [bool]$Flat = $false)
+    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density, [bool]$Flat = $false)
 
     $c = [int][Math]::Min($img.Width * 0.25 / $Density, [Math]::Min($H / 2, $W / 2))
     $sc = [int]($img.Width * 0.25)
@@ -612,17 +586,9 @@ function Draw9Scaled {
     $sy = @(0, $sy0, ($img.Height - $sy0)); $sh = @($sy0, ($img.Height - 2 * $sy0), $sy0)
     $dy = @($Y, ($Y + $c), ($Y + $H - $c)); $dh = @($c, ($H - 2 * $c), $c)
 
-    $band = 0
-    if ($Tile -and $c -gt 0) { $band = [int]($c * 2) }
-
     for ($i = 0; $i -lt 3; $i++) {
         for ($j = 0; $j -lt 3; $j++) {
             if ($dw[$i] -le 0 -or $dh[$j] -le 0) { continue }
-
-            $uw = 0
-            $uh = 0
-            if ($i -eq 1 -and $j -ne 1) { $uw = $band }
-            if ($j -eq 1 -and $i -ne 1) { $uh = $band }
 
             $ssx = $sx[$i]; $ssw = $sw[$i]
             $ssy = $sy[$j]; $ssh = $sh[$j]
@@ -634,7 +600,7 @@ function Draw9Scaled {
                 $ssy = $ssy + [int]($ssh / 2); $ssh = 1
             }
 
-            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $ssx $ssy $ssw $ssh $uw $uh
+            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $ssx $ssy $ssw $ssh
         }
     }
 }
@@ -673,7 +639,6 @@ function Write-Titles {
     if (-not (Test-Path $skinDir)) { throw "skin $Skin has no folder" }
 
     $density = Get-SkinScale $Skin
-    $tile = Get-SkinTile $Skin
     $wanted = $Face
 
     $pfc = New-Object System.Drawing.Text.PrivateFontCollection
@@ -701,7 +666,7 @@ function Write-Titles {
         $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
         $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::SingleBitPerPixelGridFit
 
-        Draw9Scaled $g $plate 0 0 $W $H $density $false $true
+        Draw9Scaled $g $plate 0 0 $W $H $density $true
 
         $sf = New-Object System.Drawing.StringFormat
         $sf.Alignment = [System.Drawing.StringAlignment]::Near
