@@ -226,6 +226,7 @@ namespace LizarbInterface
             }
 
             RecomputeLineMetrics();
+            GenUI.ClearLabelWidthCache();
         }
 
         private static void ApplyTo(GUIStyle[] styles, int index, Font font, int size)
