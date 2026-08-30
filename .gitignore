@@ -21,8 +21,9 @@ dev/unity-fonts/
 # Release staging built by tools/Make-Release.ps1
 dist/
 
-# Steam gallery masters. Only the upload ready copy under 2MB is versioned.
+# Raw screenshots. Only the converted copy under 2MB is versioned.
 docs/gallery/*.png
+docs/gallery/LizarbThemes/
 
 # Source art for the Workshop thumbnail. Only the exported PNG ships.
 *.aseprite

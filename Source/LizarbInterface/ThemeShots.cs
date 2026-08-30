@@ -154,13 +154,24 @@ namespace LizarbInterface
 
         internal static string Folder()
         {
-            string dir = Path.Combine(GenFilePaths.ScreenshotFolderPath, FolderName);
+            string dir = Path.Combine(WorkingTree() ?? GenFilePaths.ScreenshotFolderPath, FolderName);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
             return dir;
+        }
+
+        private static string WorkingTree()
+        {
+            string root = LizarbInterfaceMod.RootDir;
+            if (root.NullOrEmpty() || !Directory.Exists(Path.Combine(root, "tools")))
+            {
+                return null;
+            }
+
+            return Path.Combine(root, "docs", "gallery");
         }
     }
 
