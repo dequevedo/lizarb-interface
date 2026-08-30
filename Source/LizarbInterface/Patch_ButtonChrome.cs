@@ -88,6 +88,11 @@ namespace LizarbInterface
                 return;
             }
 
+            if (ColourOwner.Hijacked)
+            {
+                return;
+            }
+
             if (Event.current.type != EventType.Repaint)
             {
                 return;
