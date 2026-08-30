@@ -8,18 +8,45 @@ namespace LizarbInterface
     [HarmonyPatch(typeof(TabRecord), nameof(TabRecord.Draw))]
     internal static class Patch_TabRecord_Draw
     {
-        private static bool Prefix(TabRecord __instance, Rect rect)
+        private static bool warnedDead;
+
+        private static bool VanillaAlive()
         {
-            LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || !settings.skinTabs)
+            try
+            {
+                return AccessTools.StaticFieldRefAccess<Texture2D>(typeof(TabRecord), "TabAtlas") != null;
+            }
+            catch
             {
                 return true;
             }
+        }
+
+        private static bool Prefix(TabRecord __instance, Rect rect)
+        {
+            LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
+            bool wanted = settings != null && settings.enabled && settings.skinTabs;
 
             Texture2D atlas = AtlasSwap.Own("TabAtlas");
             if (atlas == null)
             {
                 return true;
+            }
+
+            if (!wanted)
+            {
+                if (VanillaAlive())
+                {
+                    return true;
+                }
+
+                if (!warnedDead)
+                {
+                    warnedDead = true;
+                    Log.Warning("[LizarbInterface] the game's tab atlas has been destroyed, " +
+                                "most likely by a mod that ships Textures/UI/Widgets/TabAtlas.png; " +
+                                "drawing tabs with this mod's own so they keep working.");
+                }
             }
 
             Rect area = LizarbInterfaceMod.Inset(rect);
