@@ -21,6 +21,10 @@ namespace LizarbInterface
             public long Stamp;
             public float Shade;
             public float Checked;
+            public float Hue;
+            public float Sat = 1f;
+            public float Val = 1f;
+            public bool Paint;
         }
 
         private static Slot[] slots = new Slot[0];
@@ -79,6 +83,11 @@ namespace LizarbInterface
         private static void EnsureLoaded(Slot slot)
         {
             string theme = slot.Shared ? "Shared" : CurrentTheme;
+            if (Recoloured(slot))
+            {
+                slot.Ours = null;
+            }
+
             if (slot.Theme != theme || Edited(slot, theme))
             {
                 slot.Theme = theme;
@@ -188,6 +197,69 @@ namespace LizarbInterface
             {
                 return 0L;
             }
+        }
+
+        private static bool Recoloured(Slot slot)
+        {
+            if (slot.Shared)
+            {
+                return false;
+            }
+
+            LizarbInterfaceSettings s = LizarbInterfaceMod.Settings;
+            if (s == null)
+            {
+                return false;
+            }
+
+            return !Mathf.Approximately(slot.Hue, s.skinHue) ||
+                   !Mathf.Approximately(slot.Sat, s.skinSaturation) ||
+                   !Mathf.Approximately(slot.Val, s.skinValue) ||
+                   slot.Paint != s.skinColorize;
+        }
+
+        private static void Recolour(Texture2D tex, float hue, float sat, float val, bool paint)
+        {
+            if (!paint && Mathf.Approximately(hue, 0f) &&
+                Mathf.Approximately(sat, 1f) && Mathf.Approximately(val, 1f))
+            {
+                return;
+            }
+
+            float turn = hue / 360f;
+            Color32[] pixels = tex.GetPixels32();
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                Color32 p = pixels[i];
+                if (p.a == 0)
+                {
+                    continue;
+                }
+
+                Color.RGBToHSV(new Color(p.r / 255f, p.g / 255f, p.b / 255f), out float h, out float s, out float v);
+
+                if (paint)
+                {
+                    h = turn;
+                    s = Mathf.Clamp01(sat);
+                }
+                else
+                {
+                    h = Mathf.Repeat(h + turn, 1f);
+                    s = Mathf.Clamp01(s * sat);
+                }
+
+                v = Mathf.Clamp01(v * val);
+
+                Color made = Color.HSVToRGB(h, s, v);
+                p.r = (byte)Mathf.Clamp(made.r * 255f, 0f, 255f);
+                p.g = (byte)Mathf.Clamp(made.g * 255f, 0f, 255f);
+                p.b = (byte)Mathf.Clamp(made.b * 255f, 0f, 255f);
+                pixels[i] = p;
+            }
+
+            tex.SetPixels32(pixels);
         }
 
         private static bool Edited(Slot slot, string theme)
@@ -344,6 +416,16 @@ namespace LizarbInterface
             var tex = new Texture2D(2, 2, TextureFormat.RGBA32, mipChain: false);
             tex.LoadImage(slot.Png);
             Shift(tex, slot.Shade);
+
+            LizarbInterfaceSettings tone = LizarbInterfaceMod.Settings;
+            if (!slot.Shared && tone != null)
+            {
+                Recolour(tex, tone.skinHue, tone.skinSaturation, tone.skinValue, tone.skinColorize);
+                slot.Hue = tone.skinHue;
+                slot.Sat = tone.skinSaturation;
+                slot.Val = tone.skinValue;
+                slot.Paint = tone.skinColorize;
+            }
             tex.name = slot.Name;
             tex.filterMode = DesiredFilter;
             tex.anisoLevel = 0;

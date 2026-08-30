@@ -31,6 +31,11 @@ namespace LizarbInterface
         public float inset = 1f;
         public bool pointFilter;
 
+        public float skinHue;
+        public float skinSaturation = 1f;
+        public float skinValue = 1f;
+        public bool skinColorize;
+
         public bool architectColors = true;
         public bool architectAutoColor = true;
         public string architectPlateStyle = LizarbInterfaceSettings.DefaultPlateStyle;
@@ -57,6 +62,10 @@ namespace LizarbInterface
             Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
             Scribe_Values.Look(ref inset, "inset", 1f);
             Scribe_Values.Look(ref pointFilter, "pointFilter", defaultValue: false);
+            Scribe_Values.Look(ref skinHue, "skinHue", 0f);
+            Scribe_Values.Look(ref skinSaturation, "skinSaturation", 1f);
+            Scribe_Values.Look(ref skinValue, "skinValue", 1f);
+            Scribe_Values.Look(ref skinColorize, "skinColorize", defaultValue: false);
             Scribe_Values.Look(ref architectColors, "architectColors", defaultValue: true);
             Scribe_Values.Look(ref architectAutoColor, "architectAutoColor", defaultValue: true);
             Scribe_Values.Look(ref architectPlateStyle, "architectPlateStyle", LizarbInterfaceSettings.DefaultPlateStyle);
@@ -191,6 +200,11 @@ namespace LizarbInterface
             p.inset = Number(read, "inset", p.inset);
             p.pointFilter = Flag(read, "pointfilter", p.pointFilter);
 
+            p.skinHue = Number(read, "hue", p.skinHue);
+            p.skinSaturation = Number(read, "saturation", p.skinSaturation);
+            p.skinValue = Number(read, "value", p.skinValue);
+            p.skinColorize = Flag(read, "colorize", p.skinColorize);
+
             p.architectColors = Flag(read, "architectcolors", p.architectColors);
             p.architectAutoColor = Flag(read, "architectautocolor", p.architectAutoColor);
             p.architectPlateStyle = Text(read, "plateshape", p.architectPlateStyle);
@@ -285,6 +299,10 @@ namespace LizarbInterface
                 grainOnButtons = s.grainOnButtons,
                 inset = s.inset,
                 pointFilter = s.pointFilter,
+                skinHue = s.skinHue,
+                skinSaturation = s.skinSaturation,
+                skinValue = s.skinValue,
+                skinColorize = s.skinColorize,
                 architectColors = s.architectColors,
                 architectAutoColor = s.architectAutoColor,
                 architectPlateStyle = s.architectPlateStyle,
@@ -314,6 +332,10 @@ namespace LizarbInterface
             s.grainOnButtons = preset.grainOnButtons;
             s.inset = preset.inset;
             s.pointFilter = preset.pointFilter;
+            s.skinHue = preset.skinHue;
+            s.skinSaturation = preset.skinSaturation;
+            s.skinValue = preset.skinValue;
+            s.skinColorize = preset.skinColorize;
             s.architectColors = preset.architectColors;
             s.architectAutoColor = preset.architectAutoColor;
             s.architectPlateStyle = preset.architectPlateStyle;

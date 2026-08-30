@@ -52,6 +52,11 @@ namespace LizarbInterface
 
         public bool pointFilter;
 
+        public float skinHue;
+        public float skinSaturation = 1f;
+        public float skinValue = 1f;
+        public bool skinColorize;
+
         public bool grainOnButtons = true;
 
         public bool plateIconButtons = true;
@@ -130,6 +135,10 @@ namespace LizarbInterface
             Scribe_Values.Look(ref backgroundPattern, "backgroundPattern", DefaultPattern);
             Scribe_Values.Look(ref backgroundGrain, "backgroundGrain", DefaultGrain);
             Scribe_Values.Look(ref pointFilter, "pointFilter", defaultValue: false);
+            Scribe_Values.Look(ref skinHue, "skinHue", 0f);
+            Scribe_Values.Look(ref skinSaturation, "skinSaturation", 1f);
+            Scribe_Values.Look(ref skinValue, "skinValue", 1f);
+            Scribe_Values.Look(ref skinColorize, "skinColorize", defaultValue: false);
             Scribe_Values.Look(ref grainOnButtons, "grainOnButtons", defaultValue: true);
             Scribe_Values.Look(ref plateIconButtons, "plateIconButtons", defaultValue: true);
             Scribe_Values.Look(ref windowAnimation, "windowAnimation", defaultValue: true);
@@ -848,6 +857,8 @@ namespace LizarbInterface
 
         private static string Pixels(float v) => Mathf.RoundToInt(v) + " px";
 
+        private static string Degrees(float v) => Mathf.RoundToInt(v) + "°";
+
         private static string Millis(float v) => Mathf.RoundToInt(v * 1000f) + " ms";
 
         private static string Signed(float v)
@@ -903,6 +914,30 @@ namespace LizarbInterface
             Head(listing, "LizarbInterface.PresetTheme");
 
             Pick(listing, "LizarbInterface.PresetThemeRow", ThemeLabel(Settings.theme), OpenThemeMenu);
+
+            Head(listing, "LizarbInterface.SkinColour");
+
+            Settings.skinHue = Slide(listing, "LizarbInterface.SkinHue",
+                                     Settings.skinHue, 0f, 360f, Degrees, 1f);
+
+            Settings.skinSaturation = Slide(listing, "LizarbInterface.SkinSaturation",
+                                            Settings.skinSaturation, 0f, 2f, Percent);
+
+            Settings.skinValue = Slide(listing, "LizarbInterface.SkinValue",
+                                       Settings.skinValue, 0.25f, 2f, Percent);
+
+            Settings.skinColorize = Toggle(listing, "LizarbInterface.SkinColorize", Settings.skinColorize);
+
+            Rect reset = listing.GetRect(RowHeight);
+            listing.Gap(2f);
+            if (Widgets.ButtonText(new Rect(reset.x, reset.y + 2f, 200f, reset.height - 4f),
+                                   "LizarbInterface.SkinColourReset".Translate()))
+            {
+                Settings.skinHue = 0f;
+                Settings.skinSaturation = 1f;
+                Settings.skinValue = 1f;
+                Settings.skinColorize = false;
+            }
 
             Head(listing, "LizarbInterface.FontSection");
 

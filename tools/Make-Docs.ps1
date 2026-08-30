@@ -474,7 +474,8 @@ function Write-Shapes {
     $block = [regex]::Match((Get-Content $plate -Raw), 'string\[\] Styles\s*=\s*\{(.*?)\};',
              [System.Text.RegularExpressions.RegexOptions]::Singleline)
     $styles = @([regex]::Matches($block.Groups[1].Value, '"(\w+)"') |
-                ForEach-Object { $_.Groups[1].Value })
+                ForEach-Object { $_.Groups[1].Value } |
+                Where-Object { $_ -ne 'None' })
     if ($styles.Count -eq 0) { throw "no plate styles found in $plate" }
 
     $dir = Join-Path $Skins $Theme

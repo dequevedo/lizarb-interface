@@ -164,4 +164,14 @@
   <LizarbInterface.PresetThemeRow>Skin</LizarbInterface.PresetThemeRow>
   <LizarbInterface.PresetThemeRow.Tip>Which folder of art this preset draws with, from the Skins directory. A preset is not a skin: two presets can share one and pick different type, background or colours.</LizarbInterface.PresetThemeRow.Tip>
   <LizarbInterface.SkinPicker>Pick a skin</LizarbInterface.SkinPicker>
+  <LizarbInterface.SkinColour>Colour</LizarbInterface.SkinColour>
+  <LizarbInterface.SkinHue>Hue shift</LizarbInterface.SkinHue>
+  <LizarbInterface.SkinHue.Tip>Rotates every colour in the skin by the same amount, so a brown skin becomes blue or green while keeping its shading. Rotating rather than replacing is what lets a skin with two inks, brass over wood say, stay two inks.</LizarbInterface.SkinHue.Tip>
+  <LizarbInterface.SkinSaturation>Saturation</LizarbInterface.SkinSaturation>
+  <LizarbInterface.SkinSaturation.Tip>Zero leaves the skin grey. Above one pushes it past what was drawn.</LizarbInterface.SkinSaturation.Tip>
+  <LizarbInterface.SkinValue>Brightness</LizarbInterface.SkinValue>
+  <LizarbInterface.SkinValue.Tip>Scales how light the skin is. The outline and the bevel keep their shape, because only the level changes.</LizarbInterface.SkinValue.Tip>
+  <LizarbInterface.SkinColourReset>Original colour</LizarbInterface.SkinColourReset>
+  <LizarbInterface.SkinColorize>Paint over the original colour</LizarbInterface.SkinColorize>
+  <LizarbInterface.SkinColorize.Tip>Turn this on for a grey skin. Rotating the hue does nothing to grey, because grey has no hue to rotate: the shift and the saturation become the colour to paint with instead of an adjustment to what is there. The shading and the outline are kept either way.</LizarbInterface.SkinColorize.Tip>
 </LanguageData>

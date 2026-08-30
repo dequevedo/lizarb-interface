@@ -164,4 +164,14 @@
   <LizarbInterface.PresetThemeRow>Skin</LizarbInterface.PresetThemeRow>
   <LizarbInterface.PresetThemeRow.Tip>Com qual pasta de arte este preset desenha, dentro de Skins. Preset não é skin: dois presets podem usar a mesma e escolher fonte, fundo ou cores diferentes.</LizarbInterface.PresetThemeRow.Tip>
   <LizarbInterface.SkinPicker>Escolha uma skin</LizarbInterface.SkinPicker>
+  <LizarbInterface.SkinColour>Cor</LizarbInterface.SkinColour>
+  <LizarbInterface.SkinHue>Deslocar o matiz</LizarbInterface.SkinHue>
+  <LizarbInterface.SkinHue.Tip>Gira todas as cores da skin na mesma medida, então uma skin marrom vira azul ou verde mantendo o sombreado. Girar em vez de substituir é o que deixa uma skin de duas tintas, latão sobre madeira por exemplo, continuar com duas.</LizarbInterface.SkinHue.Tip>
+  <LizarbInterface.SkinSaturation>Saturação</LizarbInterface.SkinSaturation>
+  <LizarbInterface.SkinSaturation.Tip>Zero deixa a skin cinza. Acima de um empurra além do que foi desenhado.</LizarbInterface.SkinSaturation.Tip>
+  <LizarbInterface.SkinValue>Brilho</LizarbInterface.SkinValue>
+  <LizarbInterface.SkinValue.Tip>Escala o quanto a skin é clara. O contorno e o bisel mantêm a forma, porque só o nível muda.</LizarbInterface.SkinValue.Tip>
+  <LizarbInterface.SkinColourReset>Cor original</LizarbInterface.SkinColourReset>
+  <LizarbInterface.SkinColorize>Pintar por cima da cor original</LizarbInterface.SkinColorize>
+  <LizarbInterface.SkinColorize.Tip>Ligue isto para uma skin cinza. Girar o matiz não faz nada no cinza, porque cinza não tem matiz para girar: o deslocamento e a saturação passam a ser a cor com que pintar, em vez de um ajuste do que já existe. O sombreado e o contorno são mantidos dos dois jeitos.</LizarbInterface.SkinColorize.Tip>
 </LanguageData>

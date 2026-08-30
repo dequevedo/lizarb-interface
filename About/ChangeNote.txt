@@ -1,21 +1,26 @@
-Colonist names no longer wrap
+Recolour any skin
 
-With some fonts a name lost its last letter to a second line, so Mack read as
-Mac and a stray k underneath. The game measures those labels through a cache
-that remembers a width per name and not which font measured it, so after the
-font changed every name was being fitted into the old one's width. It is
-cleared when the font changes now.
+Someone asked whether the colour of a theme could be changed, and it can now.
+Three sliders in a preset, under Colour: shift the hue, push or drain the
+saturation, lighten or darken. The shading, the bevel and the black outline are
+kept, because only the level is scaled and never replaced.
+
+Rotating the hue keeps a skin that was drawn with two inks looking like two
+inks: brass over wood stays brass over wood, moved together. That is why it
+rotates rather than replacing.
+
+A grey skin has no hue to rotate, so nothing happens to IronPlate or Slate no
+matter how far you drag it. Paint over the original colour, the switch under
+the sliders, is for those: the hue and the saturation become the colour to
+paint with instead of an adjustment to what was already there.
+
+Every preset carries its own, so you can keep the same skin twice in two
+colours.
 
 Two new skins
 
-RetroOrange and EnhancedPixelStone, both hand painted. EnhancedPixelStone comes
-with Pixelify Sans and a diamond behind each Architect icon.
-
-A skin can now describe its whole look
-
-Until now a skin folder could name its background and its pixel density but not
-its typeface, so a skin drawn for a pixel font had no way to ask for one. It
-can now, which is how the two new ones arrive already dressed.
+Futuristic, a smooth teal drawn for Electrolize, and EnhancedPixelStone, which
+pairs the pixel art with Pixelify Sans and a diamond behind each Architect icon.
 
 The Architect colour shape can be None
 
@@ -23,12 +28,8 @@ The list had ten shapes and no way to have none of them. It is not the same as
 turning the colours off: with no shape the category colour still reaches the
 button text, if you have that on.
 
-New cover art
-
-The thumbnail shows the mod doing its job rather than a painting.
-
 Smaller things
 
-- The Update and Delete buttons on a preset now look disabled when they are.
-  They were correctly inactive on a preset that ships with the mod, and looked
+- The Update and Delete buttons on a preset look disabled when they are. They
+  were correctly inactive on a preset that ships with the mod, and looked
   pressable anyway.
