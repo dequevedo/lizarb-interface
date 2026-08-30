@@ -72,7 +72,9 @@ powershell -File tools/Make-Release.ps1 -Dev
 ```
 
 Points the junction back at the working tree. Until then, editing the repo
-changes nothing in the game.
+changes nothing in the game: a new theme folder, a rebuilt DLL and a redrawn
+texture all go unnoticed. If something added to the repo does not show up in
+game, check where the junction points before anything else.
 
 ## Manual, only Daniel can do
 
