@@ -180,6 +180,27 @@ namespace LizarbInterface
         }
     }
 
+    internal sealed class ThemeInfo
+    {
+        internal readonly string Id;
+        internal readonly string Pattern;
+        internal readonly Color Outline;
+        internal readonly string Group;
+
+        internal float Grain;
+        internal float Scale;
+        internal bool? Background;
+        internal bool? PointFilter;
+
+        internal ThemeInfo(string id, string pattern, Color outline, string group)
+        {
+            Id = id;
+            Pattern = pattern;
+            Outline = outline;
+            Group = group;
+        }
+    }
+
     public class LizarbInterfaceMod : Mod
     {
         public static LizarbInterfaceSettings Settings { get; private set; }
@@ -188,44 +209,44 @@ namespace LizarbInterface
 
         public static ModContentPack Pack { get; private set; }
 
-        internal static readonly (string Id, string Pattern, Color Outline, string Group, float Grain, float Scale)[] Themes =
+        internal static readonly ThemeInfo[] Themes =
         {
-            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared", 0f, 0f),
-            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared", 0f, 0f),
-            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared", 0f, 0f),
-            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared", 0f, 0f),
-            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared", 0f, 0f),
-            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared", 0f, 0f),
-            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared", 0f, 0f),
-            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared", 0f, 0f),
-            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared", 0f, 0f),
-            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared", 0f, 0f),
+            new ThemeInfo("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared"),
+            new ThemeInfo("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared"),
+            new ThemeInfo("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared"),
+            new ThemeInfo("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared"),
+            new ThemeInfo("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared"),
+            new ThemeInfo("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared"),
+            new ThemeInfo("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared"),
+            new ThemeInfo("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared"),
+            new ThemeInfo("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared"),
+            new ThemeInfo("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared"),
 
-            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded", 0f, 0f),
-            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded", 0f, 0f),
-            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded", 0f, 0f),
-            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded", 0f, 0f),
-            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded", 0f, 0f),
-            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded", 0f, 0f),
-            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded", 0f, 0f),
-            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded", 0f, 0f),
-            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded", 0f, 0f),
-            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded", 0f, 0f),
+            new ThemeInfo("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded"),
+            new ThemeInfo("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded"),
+            new ThemeInfo("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded"),
+            new ThemeInfo("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded"),
+            new ThemeInfo("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded"),
+            new ThemeInfo("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded"),
+            new ThemeInfo("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded"),
+            new ThemeInfo("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded"),
+            new ThemeInfo("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded"),
+            new ThemeInfo("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded"),
 
-            ("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f, 0f),
-            ("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f, 0f),
-            ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f, 0f),
+            new ThemeInfo("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
+            new ThemeInfo("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
+            new ThemeInfo("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
         };
 
-        private static List<(string Id, string Pattern, Color Outline, string Group, float Grain, float Scale)> all;
+        private static List<ThemeInfo> all;
 
-        internal static List<(string Id, string Pattern, Color Outline, string Group, float Grain, float Scale)> AllThemes
+        internal static List<ThemeInfo> AllThemes
         {
             get
             {
                 if (all == null)
                 {
-                    all = new List<(string, string, Color, string, float, float)>(Themes);
+                    all = new List<ThemeInfo>(Themes);
                     Discover();
                 }
 
@@ -264,12 +285,11 @@ namespace LizarbInterface
             }
         }
 
-        private static (string, string, Color, string, float, float) Describe(string id, string group, string dir)
+        private static ThemeInfo Describe(string id, string group, string dir)
         {
             string pattern = LizarbInterfaceSettings.DefaultPattern;
             Color outline = new Color(0.05f, 0.05f, 0.05f);
-            float grain = 0f;
-            float scale = 0f;
+            var read = new Dictionary<string, string>();
 
             string file = Path.Combine(dir, "theme.txt");
             if (File.Exists(file))
@@ -277,36 +297,70 @@ namespace LizarbInterface
                 foreach (string line in File.ReadAllLines(file))
                 {
                     string[] parts = line.Split('=');
-                    if (parts.Length != 2)
+                    if (parts.Length == 2)
                     {
-                        continue;
-                    }
-
-                    string key = parts[0].Trim().ToLowerInvariant();
-                    string value = parts[1].Trim();
-
-                    if (key == "pattern" && System.Array.IndexOf(Patterns, value) >= 0)
-                    {
-                        pattern = value;
-                    }
-                    else if (key == "grain" && float.TryParse(value, System.Globalization.NumberStyles.Float,
-                                                              System.Globalization.CultureInfo.InvariantCulture, out float g))
-                    {
-                        grain = Mathf.Clamp01(g);
-                    }
-                    else if (key == "scale" && float.TryParse(value, System.Globalization.NumberStyles.Float,
-                                                              System.Globalization.CultureInfo.InvariantCulture, out float s))
-                    {
-                        scale = Mathf.Clamp(s, 0.125f, 8f);
-                    }
-                    else if (key == "outline" && ParseColor(value, out Color c))
-                    {
-                        outline = c;
+                        read[parts[0].Trim().ToLowerInvariant()] = parts[1].Trim();
                     }
                 }
             }
 
-            return (id, pattern, outline, group, grain, scale);
+            if (read.TryGetValue("pattern", out string named) && System.Array.IndexOf(Patterns, named) >= 0)
+            {
+                pattern = named;
+            }
+
+            if (read.TryGetValue("outline", out string tint) && ParseColor(tint, out Color c))
+            {
+                outline = c;
+            }
+
+            var info = new ThemeInfo(id, pattern, outline, group)
+            {
+                Grain = Mathf.Clamp01(Number(read, "grain", 0f)),
+                Scale = Number(read, "scale", 0f),
+                Background = Flag(read, "background"),
+                PointFilter = Flag(read, "pointfilter"),
+            };
+
+            if (info.Scale > 0f)
+            {
+                info.Scale = Mathf.Clamp(info.Scale, 0.125f, 8f);
+            }
+
+            return info;
+        }
+
+        private static float Number(Dictionary<string, string> read, string key, float fallback)
+        {
+            if (read.TryGetValue(key, out string text) &&
+                float.TryParse(text, System.Globalization.NumberStyles.Float,
+                               System.Globalization.CultureInfo.InvariantCulture, out float value))
+            {
+                return value;
+            }
+
+            return fallback;
+        }
+
+        private static bool? Flag(Dictionary<string, string> read, string key)
+        {
+            if (!read.TryGetValue(key, out string text))
+            {
+                return null;
+            }
+
+            text = text.ToLowerInvariant();
+            if (text == "true" || text == "on" || text == "yes" || text == "1")
+            {
+                return true;
+            }
+
+            if (text == "false" || text == "off" || text == "no" || text == "0")
+            {
+                return false;
+            }
+
+            return null;
         }
 
         private static bool ParseColor(string text, out Color colour)
@@ -925,6 +979,16 @@ namespace LizarbInterface
                             {
                                 Settings.texturedBackground = true;
                                 Settings.backgroundGrain = entry.Grain;
+                            }
+
+                            if (entry.Background.HasValue)
+                            {
+                                Settings.texturedBackground = entry.Background.Value;
+                            }
+
+                            if (entry.PointFilter.HasValue)
+                            {
+                                Settings.pointFilter = entry.PointFilter.Value;
                             }
 
                             break;

@@ -1,3 +1,4 @@
 pattern=Hatch
-grain=0.15
 scale=0.5
+background=false
+pointfilter=true
