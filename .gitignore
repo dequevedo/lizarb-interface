@@ -20,3 +20,6 @@ dev/unity-fonts/
 
 # Release staging built by tools/Make-Release.ps1
 dist/
+
+# Steam gallery masters. Only the upload ready copy under 2MB is versioned.
+docs/gallery/*.png
