@@ -1,35 +1,19 @@
-Recolour any skin
+Compatibility
 
-Someone asked whether the colour of a theme could be changed, and it can now.
-Three sliders in a preset, under Colour: shift the hue, push or drain the
-saturation, lighten or darken. The shading, the bevel and the black outline are
-kept, because only the level is scaled and never replaced.
+Tested against sixty eight UI mods loaded at once.
 
-Rotating the hue keeps a skin that was drawn with two inks looking like two
-inks: brass over wood stays brass over wood, moved together. That is why it
-rotates rather than replacing.
+- Tabs keep working when another mod's texture is destroyed. Picking the
+  RimWorld default preset used to break them.
+- The settings page no longer goes blank when another mod throws while the
+  tabs are being drawn.
+- The plate behind icon buttons stays off portraits and pictures, and steps
+  aside when another mod is in charge of colour.
+- Better Architect Menu's category groups are drawn with the preset's
+  buttons instead of staying flat grey.
+- Text outlines are thinner on small text, where a thick ring closed up the
+  letters.
 
-A grey skin has no hue to rotate, so nothing happens to IronPlate or Slate no
-matter how far you drag it. Paint over the original colour, the switch under
-the sliders, is for those: the hue and the saturation become the colour to
-paint with instead of an adjustment to what was already there.
+Skins
 
-Every preset carries its own, so you can keep the same skin twice in two
-colours.
-
-Two new skins
-
-Futuristic, a smooth teal drawn for Electrolize, and EnhancedPixelStone, which
-pairs the pixel art with Pixelify Sans and a diamond behind each Architect icon.
-
-The Architect colour shape can be None
-
-The list had ten shapes and no way to have none of them. It is not the same as
-turning the colours off: with no shape the category colour still reaches the
-button text, if you have that on.
-
-Smaller things
-
-- The Update and Delete buttons on a preset look disabled when they are. They
-  were correctly inactive on a preset that ships with the mod, and looked
-  pressable anyway.
+The generated skins are now one group, Legacy. New work goes into the hand
+painted ones.
