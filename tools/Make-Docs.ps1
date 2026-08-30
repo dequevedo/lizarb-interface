@@ -5,11 +5,49 @@ param(
     [switch]$ArchitectOnly,
     [switch]$FontsOnly,
     [switch]$ShapesOnly,
-    [switch]$GuidesOnly
+    [switch]$GuidesOnly,
+    [switch]$Force
 )
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
+
+$Manifest = Join-Path $PSScriptRoot 'generated-docs.txt'
+$ManifestExisted = Test-Path $Manifest
+
+$Recorded = @{}
+if ($ManifestExisted) {
+    foreach ($line in (Get-Content $Manifest)) {
+        $parts = $line -split ' ', 2
+        if ($parts.Count -eq 2) { $Recorded[$parts[0]] = $parts[1] }
+    }
+}
+
+$Generated = @{}
+$KeptByHand = New-Object System.Collections.Generic.List[string]
+
+function Get-Sha {
+    param([string]$Path)
+    (Get-FileHash -Path $Path -Algorithm SHA256).Hash
+}
+
+function Save-Doc {
+    param([System.Drawing.Bitmap]$Bmp, [string]$Path, [string]$Key)
+
+    if (-not $Force -and $ManifestExisted -and (Test-Path $Path)) {
+        $onDisk = Get-Sha $Path
+        if (-not $Recorded.ContainsKey($Key) -or $Recorded[$Key] -ne $onDisk) {
+            $KeptByHand.Add($Key)
+            return
+        }
+    }
+
+    $dir = Split-Path $Path -Parent
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+
+    $Bmp.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png)
+    $Generated[$Key] = Get-Sha $Path
+}
 
 $Repo  = Split-Path $PSScriptRoot -Parent
 $Skins = Join-Path $Repo 'Skins'
@@ -141,7 +179,7 @@ function Write-Sheet {
     }
 
     $out = Join-Path $Repo 'docs\themes.png'
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out 'docs/themes.png'
     $g.Dispose(); $bmp.Dispose()
     Write-Host "docs\themes.png  ($($pairs.Count) themes, $($COLS * $CW + $GAP)x$H)" -ForegroundColor Green
 }
@@ -181,7 +219,7 @@ function Write-Preview {
     }
 
     $out = Join-Path $Repo 'About\Preview.png'
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out 'About/Preview.png'
     $g.Dispose(); $bmp.Dispose()
     Write-Host "About\Preview.png  ($($Featured.Count) of $count themes, ${W}x${H})" -ForegroundColor Green
 }
@@ -325,7 +363,7 @@ function Write-Architect {
     $subtle.Dispose(); $plate.Dispose()
 
     $out = Join-Path $Repo 'docs\architect.png'
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out 'docs/architect.png'
     $g.Dispose(); $bmp.Dispose()
     Write-Host "docs\architect.png  ($($Categories.Count) categories, $($families.Count) families, $Theme)" -ForegroundColor Green
 }
@@ -372,7 +410,7 @@ function Write-Fonts {
     }
 
     $out = Join-Path $Repo 'docs\fonts.png'
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out 'docs/fonts.png'
     $g.Dispose(); $bmp.Dispose()
     foreach ($p in $held) { $p.Dispose() }
     Write-Host "docs\fonts.png  ($($families.Count) faces, ${W}x${H})" -ForegroundColor Green
@@ -440,7 +478,7 @@ function Write-Shapes {
     $subtle.Dispose(); $icon.Dispose()
 
     $out = Join-Path $Repo 'docs\shapes.png'
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out 'docs/shapes.png'
     $g.Dispose(); $bmp.Dispose()
     Write-Host "docs\shapes.png  ($($styles.Count) shapes, $Theme)" -ForegroundColor Green
 }
@@ -474,7 +512,7 @@ function Write-Overlay {
     }
 
     $out = Join-Path $Dir "slices-${W}x${H}.png"
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out ("docs/guides/slices-${W}x${H}.png")
     $bmp.Dispose()
     Write-Host "  slices-${W}x${H}.png  (corner $cx x $cy texels)" -ForegroundColor DarkGray
 }
@@ -561,7 +599,7 @@ function Write-Guides {
                   $mono, $dim, 24, ($H - 34))
 
     $out = Join-Path $dir 'slices.png'
-    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    Save-Doc $bmp $out 'docs/guides/slices.png'
     $g.Dispose(); $bmp.Dispose()
     Write-Host "docs\guides\  ($($sizes.Count) overlays + slices.png)" -ForegroundColor Green
 }
@@ -574,3 +612,17 @@ if ($ArchitectOnly -or -not $only) { Write-Architect }
 if ($FontsOnly -or -not $only) { Write-Fonts }
 if ($ShapesOnly -or -not $only) { Write-Shapes }
 if ($GuidesOnly -or -not $only) { Write-Guides }
+
+foreach ($key in $Recorded.Keys) {
+    if (-not $Generated.ContainsKey($key)) { $Generated[$key] = $Recorded[$key] }
+}
+
+$lines = $Generated.Keys | Sort-Object | ForEach-Object { "$_ $($Generated[$_])" }
+Set-Content -Path $Manifest -Value $lines -Encoding ascii
+
+if ($KeptByHand.Count -gt 0) {
+    Write-Host ""
+    Write-Host "$($KeptByHand.Count) edited by hand, left alone:" -ForegroundColor Yellow
+    foreach ($k in ($KeptByHand | Sort-Object)) { Write-Host "  $k" -ForegroundColor Yellow }
+    Write-Host "run with -Force to overwrite them" -ForegroundColor DarkGray
+}
