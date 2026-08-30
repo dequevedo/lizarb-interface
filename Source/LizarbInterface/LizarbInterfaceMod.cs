@@ -1068,7 +1068,7 @@ namespace LizarbInterface
             }
         }
 
-        private static string Label(Preset preset)
+        internal static string Label(Preset preset)
         {
             if (!preset.label.NullOrEmpty())
             {
@@ -1121,7 +1121,7 @@ namespace LizarbInterface
             }
         }
 
-        private void DrawPresetPreview(Rect area, Preset preset)
+        internal static void DrawPresetPreview(Rect area, Preset preset)
         {
             ThemeInfo skin = Info(preset.theme);
 
@@ -1157,7 +1157,7 @@ namespace LizarbInterface
                         Label(preset), preset);
         }
 
-        private static void WriteInFont(Rect rect, string text, Preset preset)
+        internal static void WriteInFont(Rect rect, string text, Preset preset)
         {
             Font font = FontEngine.Preview(preset.fontName, 12 + preset.fontOffsetSmall);
             GUIStyle style = Text.CurFontStyle;
@@ -1181,7 +1181,7 @@ namespace LizarbInterface
             }
         }
 
-        private static string ThemeLabel(string id)
+        internal static string ThemeLabel(string id)
         {
             ThemeInfo info = Info(id);
             if (info != null && !info.Label.NullOrEmpty())
@@ -1195,23 +1195,11 @@ namespace LizarbInterface
 
         private void OpenThemeMenu()
         {
-            var options = new List<FloatMenuOption>();
-            foreach (ThemeInfo info in AllThemes)
+            Find.WindowStack.Add(new Dialog_SkinPicker(Settings.theme, id =>
             {
-                if (info.Group == "Development" && !Prefs.DevMode)
-                {
-                    continue;
-                }
-
-                string captured = info.Id;
-                options.Add(new FloatMenuOption(ThemeLabel(captured), () =>
-                {
-                    Settings.theme = captured;
-                    QueueFontApply();
-                }));
-            }
-
-            Find.WindowStack.Add(new FloatMenu(options));
+                Settings.theme = id;
+                QueueFontApply();
+            }));
         }
 
         private void OpenPatternMenu()
