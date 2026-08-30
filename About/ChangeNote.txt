@@ -1,40 +1,50 @@
-Twenty themes, split into Squared and Rounded (experimental)
+Orcish, the first hand painted theme, and it is the new default
 
-A comment said the rounded themes did not fit RimWorld, and that was fair.
-The Theme tab now has two groups, four new squared themes join the list, and
-every rounded one is less round than it was.
+Every theme so far was drawn by a generator from geometry. This one was
+painted by hand, and a fresh install now starts on it, with Rajdhani as the
+font.
 
-- New: Slate (nearly square grey stone), Rivet (chamfered steel with corner
-  brackets), Vellum (parchment with book corners), Bulwark (chamfered military
-  green).
-- Copper, Verdant, Bone and Flesh lose the studs in their corners, and Aero is
-  a clean bubble with no rim and half the radius.
+You can make one too. Drop a folder into Skins with a single ButtonBG.png in
+it and the mod picks it up on its own, with no code and no config: it appears
+under Hand painted in the Theme tab. Anything you do not draw is filled in
+from the theme's own files first, then from Foundry, so one file is a whole
+theme and thirty four is a complete one. A theme.txt beside it can name the
+background pattern and its strength.
 
-Icons and chrome
+Icons are real art now
 
-- Twenty two icons for the map toggle row: zones, beauty, room stats, roof,
-  heat, fertility, terrain, pollution, home area, auto rebuild, the codex,
-  search and the rest.
-- The four speed buttons and the window close X get their own glyphs, each on
-  a plate in the current theme.
-- Architect hotkeys get a keycap behind the letter.
-- Need bars are drawn as 9-slice, so their ends follow the theme's corner
-  radius instead of fading out.
+The fifty three icons were generated from distance fields, which had reached
+its ceiling: a curved side or a concave top came out wrong at the size these
+are drawn. Forty seven now come from the Game Icon Pack by Nieobie, released
+under CC0, and six were drawn for this mod for things the pack has no answer
+for. The game speed buttons finally read as a series: one arrow, two, three,
+four.
 
-Everything is drawn at one pixel density
+The settings screen was rebuilt
 
-Checkboxes, radio buttons, the slider knob, the bar strips and the background
-patterns were authored at half the resolution of everything around them, so
-they read softer. They are all at the same density now.
+Six tabs, each with one subject: Theme, Text, Icons, Architect, Windows and
+Compatibility. Surfaces held four unrelated things and Components was named
+after what it contained instead of what it is for.
 
-Buttons other mods add
+- Theme is two columns: the themes on the left, their settings on the right,
+  so nothing hides below the fold.
+- Every row has the same shape now, the whole row is clickable on a
+  checkbox, and a slider shows its value beside itself instead of on a line
+  above.
+- A setting whose parent is switched off is greyed rather than removed, so
+  the page stops jumping around as you work.
 
-The theme's button plate is drawn behind every icon button now, not just the
-ones this mod knows by name, so a fifth speed button or a minimap toolbar
-reads as part of the interface. It only ever goes behind: no mod's icon is
-replaced, and there is a switch for it under Surfaces.
+Use this mod's own icons covers every icon
 
-Architect
+It used to sit in the Architect tab and only govern the category buttons.
+It is in the Icons tab now and covers everything this mod replaces: the
+category buttons, the play settings row, search and codex, and the speed
+controls. Icons that belong to other mods are still never touched.
 
-The colour shape Cascade is replaced by Gradient: a solid square that fades
-out across the button. Saved profiles are migrated.
+Smaller things
+
+- The outline on the smallest text is on by default. It is the setting this
+  mod is named for and it was off.
+- Choosing a theme can now set the background strength, not just the pattern.
+- The warning about Architect Icons is gone. The two have composed properly
+  for a while and the warning was describing a bug that was already fixed.

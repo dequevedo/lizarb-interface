@@ -18,6 +18,8 @@ $Dirs = @('About', 'Assemblies', 'Patches', 'Languages', 'Skins')
 $Files = @('LICENSE', 'README.md')
 $SourceExclude = @('bin', 'obj')
 
+$StageExclude = @('*.aseprite', '*.psd', '*.xcf', 'Thumbs.db')
+
 function Set-ModLink {
     param([string]$Target)
 
@@ -83,6 +85,14 @@ foreach ($d in $Dirs) {
     $src = Join-Path $Repo $d
     if (-not (Test-Path $src)) { throw "missing $d" }
     Copy-Item $src (Join-Path $Dist $d) -Recurse -Force
+}
+
+foreach ($pattern in $StageExclude) {
+    Get-ChildItem $Dist -Recurse -File -Filter $pattern -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "  left out $($_.Name)" -ForegroundColor DarkGray
+            Remove-Item $_.FullName -Force
+        }
 }
 
 foreach ($f in $Files) {

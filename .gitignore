@@ -23,3 +23,6 @@ dist/
 
 # Steam gallery masters. Only the upload ready copy under 2MB is versioned.
 docs/gallery/*.png
+
+# Source art for the Workshop thumbnail. Only the exported PNG ships.
+*.aseprite
