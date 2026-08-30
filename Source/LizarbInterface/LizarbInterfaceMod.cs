@@ -828,6 +828,19 @@ namespace LizarbInterface
             }
         }
 
+        private static bool Dim(Rect rect, string key, bool enabled)
+        {
+            Color previous = GUI.color;
+            if (!enabled)
+            {
+                GUI.color = new Color(1f, 1f, 1f, 0.35f);
+            }
+
+            bool clicked = Widgets.ButtonText(rect, key.Translate(), active: enabled);
+            GUI.color = previous;
+            return clicked && enabled;
+        }
+
         private static string Percent(float v) => v.ToStringPercent();
 
         private static string Pixels(float v) => Mathf.RoundToInt(v) + " px";
@@ -858,8 +871,9 @@ namespace LizarbInterface
             }
 
             bool canUpdate = !builtIn && FindUserPreset(Settings.preset) != null;
-            if (Widgets.ButtonText(new Rect(row.x + third + 6f, row.y + 2f, third, row.height - 4f),
-                                   "LizarbInterface.PresetUpdate".Translate(), active: canUpdate))
+
+            if (Dim(new Rect(row.x + third + 6f, row.y + 2f, third, row.height - 4f),
+                    "LizarbInterface.PresetUpdate", canUpdate))
             {
                 Preset saved = FindUserPreset(Settings.preset);
                 if (saved != null)
@@ -871,8 +885,8 @@ namespace LizarbInterface
                 }
             }
 
-            if (Widgets.ButtonText(new Rect(row.x + third * 2f + 12f, row.y + 2f, third, row.height - 4f),
-                                   "LizarbInterface.PresetDelete".Translate(), active: canUpdate))
+            if (Dim(new Rect(row.x + third * 2f + 12f, row.y + 2f, third, row.height - 4f),
+                    "LizarbInterface.PresetDelete", canUpdate))
             {
                 Preset saved = FindUserPreset(Settings.preset);
                 if (saved != null)

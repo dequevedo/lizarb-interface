@@ -1,0 +1,7 @@
+name=RetroBlue
+pattern=Hatch
+grain=0.1
+background=true
+scale=1
+tile=true
+pointfilter=true
