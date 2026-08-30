@@ -100,7 +100,7 @@ namespace LizarbInterface
 
         public bool architectSpacing = true;
 
-        public float architectPadding = 4f;
+        public float architectPadding = 8f;
 
         public int FontSizeOffset(int gameFontIndex)
         {
@@ -152,7 +152,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
             Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
             Scribe_Values.Look(ref architectSpacing, "architectSpacing", defaultValue: true);
-            Scribe_Values.Look(ref architectPadding, "architectPadding", 4f);
+            Scribe_Values.Look(ref architectPadding, "architectPadding", 8f);
             Scribe_Values.Look(ref preset, "preset", null);
             Scribe_Collections.Look(ref presets, "presets", LookMode.Deep);
 
