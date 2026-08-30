@@ -59,12 +59,17 @@ namespace LizarbInterface
         private static void Postfix(ref Rect __result)
         {
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings == null || !settings.enabled || !settings.architectAutoWidth)
+            if (settings == null || !settings.enabled)
             {
                 return;
             }
 
-            __result.width = Mathf.Max(__result.width, ArchitectLayout.MenuWidth);
+            if (settings.architectAutoWidth)
+            {
+                __result.width = Mathf.Max(__result.width, ArchitectLayout.MenuWidth);
+            }
+
+            __result.y -= ArchitectPadding.Amount * 3f;
         }
     }
 }
