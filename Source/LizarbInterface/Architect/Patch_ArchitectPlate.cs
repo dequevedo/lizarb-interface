@@ -7,6 +7,7 @@ namespace LizarbInterface
     {
         internal static readonly string[] Styles =
         {
+            "None",
             "Plate", "Frame", "Flat",
             "Square", "Circle", "Diamond", "Tag", "Shield", "Hex", "Gradient",
         };
@@ -29,7 +30,8 @@ namespace LizarbInterface
 
         internal static void Draw(Rect plate, string style, Color tint)
         {
-            if (Event.current.type != EventType.Repaint || plate.width <= 0f || plate.height <= 0f)
+            if (style == "None" || Event.current.type != EventType.Repaint ||
+                plate.width <= 0f || plate.height <= 0f)
             {
                 return;
             }

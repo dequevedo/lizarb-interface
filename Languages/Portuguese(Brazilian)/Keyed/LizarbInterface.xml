@@ -84,6 +84,8 @@
   <LizarbInterface.Architect.AutoColor>Colorir automaticamente categorias desconhecidas</LizarbInterface.Architect.AutoColor>
   <LizarbInterface.Architect.AutoColor.Tip>Categorias adicionadas por outros mods ganham uma cor estável gerada a partir do defName, em vez de ficarem cinzas.</LizarbInterface.Architect.AutoColor.Tip>
   <LizarbInterface.Architect.PlateStyle>Formato da cor</LizarbInterface.Architect.PlateStyle>
+  <LizarbInterface.Architect.PlateStyle.None>Nenhuma</LizarbInterface.Architect.PlateStyle.None>
+  <LizarbInterface.Architect.PlateStyle.None.Tip>Nenhuma forma atrás do botão. A cor ainda chega ao rótulo, se você tiver essa opção ligada.</LizarbInterface.Architect.PlateStyle.None.Tip>
   <LizarbInterface.Architect.PlateStyle.Plate>Placa</LizarbInterface.Architect.PlateStyle.Plate>
   <LizarbInterface.Architect.PlateStyle.Plate.Tip>Preenche o botão seguindo o raio de canto do tema, escurecendo para baixo.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
   <LizarbInterface.Architect.PlateStyle.Frame>Moldura</LizarbInterface.Architect.PlateStyle.Frame>

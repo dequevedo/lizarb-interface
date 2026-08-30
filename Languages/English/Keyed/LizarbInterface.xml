@@ -84,6 +84,8 @@
   <LizarbInterface.Architect.AutoColor>Auto-colour unknown categories</LizarbInterface.Architect.AutoColor>
   <LizarbInterface.Architect.AutoColor.Tip>Categories added by other mods get a stable colour generated from their defName instead of staying grey.</LizarbInterface.Architect.AutoColor.Tip>
   <LizarbInterface.Architect.PlateStyle>Colour shape</LizarbInterface.Architect.PlateStyle>
+  <LizarbInterface.Architect.PlateStyle.None>None</LizarbInterface.Architect.PlateStyle.None>
+  <LizarbInterface.Architect.PlateStyle.None.Tip>No shape behind the button. The colour still reaches the label if you have that on.</LizarbInterface.Architect.PlateStyle.None.Tip>
   <LizarbInterface.Architect.PlateStyle.Plate>Plate</LizarbInterface.Architect.PlateStyle.Plate>
   <LizarbInterface.Architect.PlateStyle.Plate.Tip>Fills the button, following the theme corner radius, and deepens towards the bottom.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
   <LizarbInterface.Architect.PlateStyle.Frame>Border</LizarbInterface.Architect.PlateStyle.Frame>
