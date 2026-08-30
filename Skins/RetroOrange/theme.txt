@@ -1,4 +1,4 @@
-name=RetroBlue
+name=RetroOrange
 pattern=Hatch
 grain=0.1
 background=true
