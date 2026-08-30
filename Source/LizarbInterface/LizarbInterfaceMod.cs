@@ -257,7 +257,7 @@ namespace LizarbInterface
                     continue;
                 }
 
-                string group = id.StartsWith("Debug") ? "Development" : "Custom";
+                string group = id.StartsWith("Debug") ? "Development" : "Handpainted";
                 all.Add((id, LizarbInterfaceSettings.DefaultPattern, new Color(0.05f, 0.05f, 0.05f), group));
             }
         }
@@ -447,7 +447,7 @@ namespace LizarbInterface
         {
             var squared = new List<string> { null };
             var rounded = new List<string>();
-            var custom = new List<string>();
+            var handpainted = new List<string>();
             var development = new List<string>();
 
             foreach (var entry in AllThemes)
@@ -456,7 +456,7 @@ namespace LizarbInterface
                 {
                     case "Rounded": rounded.Add(entry.Id); break;
                     case "Development": development.Add(entry.Id); break;
-                    case "Custom": custom.Add(entry.Id); break;
+                    case "Handpainted": handpainted.Add(entry.Id); break;
                     default: squared.Add(entry.Id); break;
                 }
             }
@@ -465,10 +465,10 @@ namespace LizarbInterface
             listing.Gap(6f);
             DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
 
-            if (custom.Count > 0)
+            if (handpainted.Count > 0)
             {
                 listing.Gap(6f);
-                DrawThemeGrid(listing, "LizarbInterface.ThemeCustom", custom);
+                DrawThemeGrid(listing, "LizarbInterface.ThemeHandpainted", handpainted);
             }
 
             if (Prefs.DevMode && development.Count > 0)

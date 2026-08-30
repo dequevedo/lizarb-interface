@@ -109,8 +109,8 @@ function Write-Sheet {
     $CW = 248; $CH = 190; $COLS = 4; $GAP = 6; $HEAD = 30
 
     $groups = @(
-        , @('Squared', @($pairs | Where-Object { $_[2] -eq 'Squared' }))
-        , @('Rounded (experimental)', @($pairs | Where-Object { $_[2] -eq 'Rounded' }))
+        , @('Generated, squared', @($pairs | Where-Object { $_[2] -eq 'Squared' }))
+        , @('Generated, rounded (experimental)', @($pairs | Where-Object { $_[2] -eq 'Rounded' }))
     )
 
     $H = $GAP
