@@ -95,7 +95,7 @@ namespace LizarbInterface
 
             if (slot.Ours != null)
             {
-                FilterMode want = DesiredFilter;
+                FilterMode want = slot.Shared ? FilterMode.Bilinear : DesiredFilter;
                 if (slot.Ours.filterMode != want)
                 {
                     slot.Ours.filterMode = want;

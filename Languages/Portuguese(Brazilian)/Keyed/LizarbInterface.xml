@@ -2,7 +2,7 @@
 <LanguageData>
   <LizarbInterface.Inset>Folga entre elementos</LizarbInterface.Inset>
   <LizarbInterface.PointFilter>Texturas pixeladas (filtro point)</LizarbInterface.PointFilter>
-  <LizarbInterface.PointFilter.Tip>Amostra as texturas por vizinho mais próximo em vez de suavizar. Só fica bom em escala de UI 1x ou 2x: em 1.25x um texel cobre 1,25 pixel de tela, então o contorno sai grosso em partes e fino em outras.</LizarbInterface.PointFilter.Tip>
+  <LizarbInterface.PointFilter.Tip>Amostra as texturas por vizinho mais próximo em vez de suavizar. Ícones e as formas de cor do Arquiteto nunca são afetados: eles são desenhados pequenos e só sairiam serrilhados. Só fica bom em escala de UI 1x ou 2x: em 1.25x um texel cobre 1,25 pixel de tela, então o contorno sai grosso em partes e fino em outras.</LizarbInterface.PointFilter.Tip>
   <LizarbInterface.Inset.Tip>Pinta cada elemento um pouco para dentro da própria área, para que botões vizinhos deixem de se encostar. Nada no layout se move, então textos e ícones ficam exatamente onde o jogo os colocou.</LizarbInterface.Inset.Tip>
   <LizarbInterface.FontSection>Fonte</LizarbInterface.FontSection>
   <LizarbInterface.FontVanilla>Padrão do jogo</LizarbInterface.FontVanilla>
