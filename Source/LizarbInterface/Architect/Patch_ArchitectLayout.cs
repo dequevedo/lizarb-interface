@@ -69,7 +69,7 @@ namespace LizarbInterface
                 __result.width = Mathf.Max(__result.width, ArchitectLayout.MenuWidth);
             }
 
-            __result.y -= ArchitectPadding.Amount * 3f;
+            __result.y -= ArchitectPadding.InfoOffset;
         }
     }
 }

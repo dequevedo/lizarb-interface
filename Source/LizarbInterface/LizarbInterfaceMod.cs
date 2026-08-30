@@ -94,6 +94,8 @@ namespace LizarbInterface
 
         public bool architectShapeOutline = true;
 
+        public bool architectSpacing = true;
+
         public float architectPadding = 4f;
 
         public int FontSizeOffset(int gameFontIndex)
@@ -145,6 +147,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref ownIcons, "architectIcons", defaultValue: true);
             Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
             Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
+            Scribe_Values.Look(ref architectSpacing, "architectSpacing", defaultValue: true);
             Scribe_Values.Look(ref architectPadding, "architectPadding", 4f);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
@@ -1183,8 +1186,12 @@ namespace LizarbInterface
             Settings.architectAutoWidth = Toggle(listing,
                 "LizarbInterface.Architect.AutoWidth", Settings.architectAutoWidth);
 
+            Settings.architectSpacing = Toggle(listing,
+                "LizarbInterface.Architect.Spacing", Settings.architectSpacing);
+
             Settings.architectPadding = Slide(listing, "LizarbInterface.Architect.Padding",
-                                             Settings.architectPadding, 0f, 12f, Pixels, 1f);
+                                             Settings.architectPadding, 0f, 12f, Pixels, 1f,
+                                             Settings.architectSpacing);
 
             Head(listing, "LizarbInterface.Architect.ColourSection");
 

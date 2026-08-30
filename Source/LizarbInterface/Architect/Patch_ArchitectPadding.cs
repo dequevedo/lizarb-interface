@@ -11,12 +11,28 @@ namespace LizarbInterface
             get
             {
                 LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-                if (settings == null || !settings.enabled)
+                if (settings == null || !settings.enabled || !settings.architectSpacing)
                 {
                     return 0f;
                 }
 
                 return Mathf.Max(0f, settings.architectPadding);
+            }
+        }
+
+        internal static float InfoOffset => Amount * 3f;
+
+        internal static float ExtraOffset => InfoOffset + Amount;
+    }
+
+    [HarmonyPatch(typeof(Verse.DesignatorUtility), nameof(Verse.DesignatorUtility.GUIDoRotationControls))]
+    internal static class Patch_ArchitectRotationControls
+    {
+        private static void Prefix(ref float bottomY)
+        {
+            if (ArchitectLayout.DrawingTab)
+            {
+                bottomY -= ArchitectPadding.ExtraOffset;
             }
         }
     }

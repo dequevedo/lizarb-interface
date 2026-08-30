@@ -97,8 +97,10 @@
   <LizarbInterface.GrainOnButtons.Tip>Tiles the same pattern across button, tooltip and menu faces, not just window backgrounds. With the Grimoire skin this is what gives the buttons their parchment.</LizarbInterface.GrainOnButtons.Tip>
   <LizarbInterface.PlateIconButtons>Backing plate behind icon buttons</LizarbInterface.PlateIconButtons>
   <LizarbInterface.PlateIconButtons.Tip>Draws the theme's button behind every small icon button, including the ones other mods add, so they read as part of the interface. It only ever goes behind: no mod's icon is replaced.</LizarbInterface.PlateIconButtons.Tip>
+  <LizarbInterface.Architect.Spacing>Fix the menu spacing</LizarbInterface.Architect.Spacing>
+  <LizarbInterface.Architect.Spacing.Tip>Vanilla gives the Architect menu no margin, so the buttons touch the panel on every side, and it stacks the info panel and the rotation controls flush against it. This inserts a gap around and between all three, and widens the menu to match so nothing gets narrower.</LizarbInterface.Architect.Spacing.Tip>
   <LizarbInterface.Architect.Padding>Padding around the menu</LizarbInterface.Architect.Padding>
-  <LizarbInterface.Architect.Padding.Tip>Vanilla gives the Architect menu no margin at all, so the buttons touch the panel on every side. This inserts one and widens the menu to match, so nothing gets narrower.</LizarbInterface.Architect.Padding.Tip>
+  <LizarbInterface.Architect.Padding.Tip>How much gap. Zero is the vanilla layout.</LizarbInterface.Architect.Padding.Tip>
   <LizarbInterface.Architect.AutoWidth>Widen the menu to fit the labels</LizarbInterface.Architect.AutoWidth>
   <LizarbInterface.Architect.AutoWidth.Tip>Vanilla fixes the Architect menu at 200px, which fits the stock font and the English Core names and nothing else. This measures the longest category name in the font you actually chose and widens the menu until it fits. It never makes the menu narrower.</LizarbInterface.Architect.AutoWidth.Tip>
   <LizarbInterface.Architect.PlateStyle.Square>Square</LizarbInterface.Architect.PlateStyle.Square>
