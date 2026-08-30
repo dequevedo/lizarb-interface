@@ -247,27 +247,27 @@ namespace LizarbInterface
 
         internal static readonly ThemeInfo[] Themes =
         {
-            new ThemeInfo("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared"),
-            new ThemeInfo("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared"),
-            new ThemeInfo("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared"),
-            new ThemeInfo("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared"),
-            new ThemeInfo("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared"),
-            new ThemeInfo("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared"),
-            new ThemeInfo("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared"),
-            new ThemeInfo("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared"),
-            new ThemeInfo("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared"),
-            new ThemeInfo("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared"),
+            new ThemeInfo("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Legacy"),
+            new ThemeInfo("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Legacy"),
+            new ThemeInfo("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Legacy"),
+            new ThemeInfo("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Legacy"),
+            new ThemeInfo("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Legacy"),
+            new ThemeInfo("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Legacy"),
+            new ThemeInfo("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Legacy"),
+            new ThemeInfo("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Legacy"),
+            new ThemeInfo("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Legacy"),
+            new ThemeInfo("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Legacy"),
 
-            new ThemeInfo("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded") { Background = false },
-            new ThemeInfo("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded") { Background = false },
-            new ThemeInfo("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded"),
-            new ThemeInfo("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded"),
-            new ThemeInfo("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded"),
-            new ThemeInfo("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded"),
-            new ThemeInfo("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded") { Background = false },
-            new ThemeInfo("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded"),
-            new ThemeInfo("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded") { Background = false },
-            new ThemeInfo("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded"),
+            new ThemeInfo("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Legacy") { Background = false },
+            new ThemeInfo("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Legacy") { Background = false },
+            new ThemeInfo("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Legacy"),
+            new ThemeInfo("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Legacy"),
+            new ThemeInfo("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Legacy"),
+            new ThemeInfo("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Legacy"),
+            new ThemeInfo("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Legacy") { Background = false },
+            new ThemeInfo("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Legacy"),
+            new ThemeInfo("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Legacy") { Background = false },
+            new ThemeInfo("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Legacy"),
 
             new ThemeInfo("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
             new ThemeInfo("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development"),
@@ -1067,7 +1067,7 @@ namespace LizarbInterface
                 }
 
                 ThemeInfo theme = Info(p.theme);
-                string group = theme == null ? "Squared" : theme.Group;
+                string group = theme == null ? "Legacy" : theme.Group;
 
                 if (!builtIn.TryGetValue(group, out List<Preset> bucket))
                 {
@@ -1086,8 +1086,7 @@ namespace LizarbInterface
             }
 
             DrawGroup(listing, builtIn, "Handpainted", "LizarbInterface.ThemeHandpainted");
-            DrawGroup(listing, builtIn, "Squared", "LizarbInterface.ThemeSquared");
-            DrawGroup(listing, builtIn, "Rounded", "LizarbInterface.ThemeRounded");
+            DrawGroup(listing, builtIn, "Legacy", "LizarbInterface.ThemeLegacy");
 
             if (Prefs.DevMode)
             {

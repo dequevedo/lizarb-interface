@@ -24,8 +24,7 @@
   <LizarbInterface.OutlineOpacity>Outline opacity</LizarbInterface.OutlineOpacity>
   <LizarbInterface.Pattern.Hatch>Hatch</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
-  <LizarbInterface.ThemeSquared>Generated, squared</LizarbInterface.ThemeSquared>
-  <LizarbInterface.ThemeRounded>Generated, rounded (experimental)</LizarbInterface.ThemeRounded>
+  <LizarbInterface.ThemeLegacy>Legacy</LizarbInterface.ThemeLegacy>
   <LizarbInterface.ThemeHandpainted>Hand painted</LizarbInterface.ThemeHandpainted>
   <LizarbInterface.ThemeDevelopment>Development and debug</LizarbInterface.ThemeDevelopment>
   <LizarbInterface.Theme.Default>RimWorld default</LizarbInterface.Theme.Default>

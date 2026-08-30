@@ -32,7 +32,7 @@ Compatibility: this mod replaces the drawing of tabs, window backgrounds and men
 
 Fonts ship with the mod under the SIL Open Font License. Full credits and licence files are included. The icons come from the Game Icon Pack v1.4 by Nieobie, released under CC0.
 
-Built with AI: the code was written with Claude, Anthropic's assistant, with me directing and testing. The textures are not generated images, they are drawn by the generator scripts in the repository.
+Built with AI: the code was written with Claude, Anthropic's assistant, with me directing and testing. No image AI made the art. The Legacy skins were drawn by a script from shapes and maths, the hand painted ones by me.
 
 Source: https://github.com/dequevedo/lizarb-interface</description>
 </ModMetaData>

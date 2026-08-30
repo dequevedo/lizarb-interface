@@ -24,8 +24,7 @@
   <LizarbInterface.OutlineOpacity>Opacidade do contorno</LizarbInterface.OutlineOpacity>
   <LizarbInterface.Pattern.Hatch>Hachura</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
-  <LizarbInterface.ThemeSquared>Geradas, quadradas</LizarbInterface.ThemeSquared>
-  <LizarbInterface.ThemeRounded>Geradas, arredondadas (experimental)</LizarbInterface.ThemeRounded>
+  <LizarbInterface.ThemeLegacy>Legado</LizarbInterface.ThemeLegacy>
   <LizarbInterface.ThemeHandpainted>Pintadas a mao</LizarbInterface.ThemeHandpainted>
   <LizarbInterface.ThemeDevelopment>Desenvolvimento e debug</LizarbInterface.ThemeDevelopment>
   <LizarbInterface.Theme.Default>Padrão do RimWorld</LizarbInterface.Theme.Default>

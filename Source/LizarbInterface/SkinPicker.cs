@@ -11,13 +11,12 @@ namespace LizarbInterface
         private const float SwatchHeight = 96f;
         private const float MinSwatchWidth = 150f;
 
-        private static readonly string[] Order = { "Handpainted", "Squared", "Rounded", "Development" };
+        private static readonly string[] Order = { "Handpainted", "Legacy", "Development" };
 
         private static readonly string[] Heading =
         {
             "LizarbInterface.ThemeHandpainted",
-            "LizarbInterface.ThemeSquared",
-            "LizarbInterface.ThemeRounded",
+            "LizarbInterface.ThemeLegacy",
             "LizarbInterface.ThemeDevelopment",
         };
 

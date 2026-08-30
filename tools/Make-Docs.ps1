@@ -192,8 +192,7 @@ function Write-Sheet {
 
     $groups = @(
         , @('Hand painted', $hand)
-        , @('Generated, squared', @($pairs | Where-Object { $_[2] -eq 'Squared' }))
-        , @('Generated, rounded (experimental)', @($pairs | Where-Object { $_[2] -eq 'Rounded' }))
+        , @('Legacy', @($pairs | Where-Object { $_[2] -eq 'Legacy' }))
     )
 
     $H = $GAP

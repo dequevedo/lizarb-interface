@@ -10,7 +10,7 @@ Steps marked **Daniel** are his. Do the rest, then stop and tell him.
 ## 1. Check (Claude)
 
 - `git status` clean, nothing untracked that should ship
-- if art changed: `tools/Make-Icons.ps1`, `tools/Make-Atlases.ps1`, `tools/Make-Docs.ps1`
+- if art changed: `tools/Make-Icons.ps1`, `tools/Make-Docs.ps1`
 - build: `dotnet build -c Release Source/LizarbInterface/LizarbInterface.csproj`
 
 ## 2. What went stale (Claude tells Daniel)

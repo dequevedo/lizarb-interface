@@ -77,11 +77,10 @@ dotnet build -c Release Source/LizarbInterface/LizarbInterface.csproj
 References come from NuGet (`Krafs.Rimworld.Ref`, `Lib.Harmony`); no game DLL is copied
 into the repository. Output goes straight to `Assemblies/`.
 
-`tools/Make-Atlases.ps1` regenerates every texture in `Skins/` from the theme table at the
-bottom of that script. Adding a generated theme is one entry there plus one line in
-`LizarbInterfaceMod.Themes` and two language keys.
+Everything in `Skins/` is a plain PNG. The skins grouped as Legacy came out of a generator
+script that has since been removed; they are kept as files, exactly as it last drew them.
 
-A hand painted theme needs neither: any folder dropped into `Skins/` with a `ButtonBG.png`
+A hand painted theme needs no build step: any folder dropped into `Skins/` with a `ButtonBG.png`
 in it is found on its own and appears in the list. Anything it does not draw is filled in
 from its own files first and then from a complete theme, so one file is already a theme. A
 `theme.txt` beside it names the background pattern, its strength, the pixel density and
@@ -171,7 +170,6 @@ ships: only the built icons do.
 The code was written with Claude, Anthropic's assistant, with me directing, testing
 and deciding.
 
-The textures and icons are not generated images. `tools/Make-Atlases.ps1` draws every
-atlas, pattern, plate and icon from geometry: signed distance fields, analytic
-coverage for the anti-aliasing, and a palette per theme. Run it and you get the same
-files back, byte for byte.
+No image AI was involved in the art. The skins grouped as Legacy were drawn by a script
+from geometry: signed distance fields, analytic coverage for the anti-aliasing, and a
+palette per theme. The hand painted ones are drawn by me.
