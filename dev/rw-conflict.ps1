@@ -4,7 +4,9 @@ param(
     [switch]$NoDlcs,
     [switch]$Quick,
     [switch]$Visuals,
-    [switch]$Without
+    [switch]$Without,
+    [ValidateSet("all","architect","astryl","reskins","tabs","text","solo")]
+    [string]$Scenario
 )
 
 $ErrorActionPreference = 'Stop'
@@ -109,7 +111,7 @@ $SuspectsWide = @(
     'm00nl1ght.GeologicalLandforms'
 )
 
-if (-not $Quick -and -not $Visuals) { $Suspects = $Suspects + $SuspectsWide }
+if (-not $Quick -and -not $Visuals -and -not $Scenario) { $Suspects = $Suspects + $SuspectsWide }
 
 $Visual = [ordered]@{
     '1668983184' = 'RimThemes'
@@ -172,6 +174,53 @@ $Visual = [ordered]@{
     '3535481557' = 'Loading Progress'
     '2466336893' = 'Optional Name Display'
     '1516158345' = 'Interaction Bubbles'
+}
+
+$Scenarios = [ordered]@{
+    'all' = @()
+
+    'architect' = @(
+        '1195427067'
+        '3563882422'
+        '1446523594'
+        '2588873455'
+    )
+
+    'astryl' = @(
+        '3786107692', '3786131805', '3786129210', '3787806055', '3788278207'
+        '3786840944', '3786945713', '3788256848', '3789670069', '3789690957'
+        '3740575493', '3740688691', '3743615382', '3742906203', '3752932665'
+        '3762126187', '3744201621', '3776015553'
+    )
+
+    'reskins' = @(
+        '1668983184', '2916014613', '3338215884', '3551233435'
+        '3661802609', '2978831421', '3141849282', '3649094165'
+        '3775737458'
+    )
+
+    'tabs' = @(
+        '3775737458', '3740575493', '3740688691', '3743615382'
+        '3742689571', '3764537806', '3752835712'
+        '3328729902', '3520130671', '3609897594', '3773496046'
+        '3745434121'
+    )
+
+    'text' = @(
+        '3231727915', '3762441264', '2882372932', '2466336893', '1516158345'
+    )
+
+    'solo' = @()
+}
+
+$ScenarioNotes = @{
+    'all'       = 'every UI mod in the collection'
+    'architect' = 'only what draws the Architect menu'
+    'astryl'    = 'only Astryl, the Modern and Radius UI families'
+    'reskins'   = 'only the mods that reskin the same surfaces we do'
+    'tabs'      = 'only mods that replace a whole tab or window'
+    'text'      = 'only fonts, UI scale and label text'
+    'solo'      = 'nothing but this mod'
 }
 
 function Resolve-Workshop([hashtable]$Wanted) {
@@ -276,7 +325,28 @@ $mods = Read-Mods @(
 
 Write-Host "$($mods.Count) mods indexed." -ForegroundColor DarkGray
 
-if ($Visuals) {
+if ($Scenario) {
+    $pick = $Scenarios[$Scenario]
+
+    if ($Scenario -eq "solo") {
+        $Suspects = @()
+    }
+    elseif ($pick.Count -eq 0) {
+        $Suspects = @(Resolve-Workshop $Visual)
+    }
+    else {
+        $subset = [ordered]@{}
+        foreach ($id in $pick) {
+            $subset[$id] = if ($Visual.Contains($id)) { $Visual[$id] } else { $id }
+        }
+        $Suspects = @(Resolve-Workshop $subset)
+    }
+
+    Write-Host ""
+    Write-Host "SCENARIO $Scenario : $($ScenarioNotes[$Scenario])" -ForegroundColor Cyan
+    Write-Host "$($Suspects.Count) mod(s) picked, before dependencies." -ForegroundColor DarkGray
+}
+elseif ($Visuals) {
     $Suspects = @(Resolve-Workshop $Visual)
     Write-Host "$($Suspects.Count) of the visual collection are installed." -ForegroundColor DarkGray
 }

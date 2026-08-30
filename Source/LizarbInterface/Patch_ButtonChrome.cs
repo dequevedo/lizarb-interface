@@ -78,6 +78,7 @@ namespace LizarbInterface
     internal static class Patch_ButtonImagePlate
     {
         private const float Smallest = 10f;
+        private const float Largest = 48f;
 
         private static void Prefix(Rect butRect)
         {
@@ -87,7 +88,13 @@ namespace LizarbInterface
                 return;
             }
 
-            if (butRect.width < Smallest || butRect.height < Smallest)
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
+            if (butRect.width < Smallest || butRect.height < Smallest ||
+                butRect.width > Largest || butRect.height > Largest)
             {
                 return;
             }
