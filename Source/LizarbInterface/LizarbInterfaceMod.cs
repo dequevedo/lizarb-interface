@@ -245,7 +245,7 @@ namespace LizarbInterface
             new ThemeInfo("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared"),
             new ThemeInfo("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared"),
 
-            new ThemeInfo("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded"),
+            new ThemeInfo("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded") { Background = false },
             new ThemeInfo("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded"),
             new ThemeInfo("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded"),
             new ThemeInfo("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded"),
