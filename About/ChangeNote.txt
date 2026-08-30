@@ -1,6 +1,34 @@
+Colonist names no longer wrap
+
+With some fonts a name lost its last letter to a second line, so Mack read as
+Mac and a stray k underneath. The game measures those labels through a cache
+that remembers a width per name and not which font measured it, so after the
+font changed every name was being fitted into the old one's width. It is
+cleared when the font changes now.
+
+Two new skins
+
+RetroOrange and EnhancedPixelStone, both hand painted. EnhancedPixelStone comes
+with Pixelify Sans and a diamond behind each Architect icon.
+
+A skin can now describe its whole look
+
+Until now a skin folder could name its background and its pixel density but not
+its typeface, so a skin drawn for a pixel font had no way to ask for one. It
+can now, which is how the two new ones arrive already dressed.
+
+The Architect colour shape can be None
+
+The list had ten shapes and no way to have none of them. It is not the same as
+turning the colours off: with no shape the category colour still reaches the
+button text, if you have that on.
+
 New cover art
 
-The thumbnail now shows the mod doing its job: the preset grid, the settings
-and a coloured Architect menu, instead of a painting.
+The thumbnail shows the mod doing its job rather than a painting.
 
-Nothing else in this update.
+Smaller things
+
+- The Update and Delete buttons on a preset now look disabled when they are.
+  They were correctly inactive on a preset that ships with the mod, and looked
+  pressable anyway.
