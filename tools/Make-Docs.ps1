@@ -570,33 +570,33 @@ function Write-Overlay {
 
 function Strip {
     param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H,
-          [int]$SX, [int]$SY, [int]$SW, [int]$SH, [int]$UnitW)
+          [int]$SX, [int]$SY, [int]$SW, [int]$SH, [int]$UnitW, [int]$UnitH)
 
     if ($W -le 0 -or $H -le 0) { return }
 
-    if ($UnitW -le 0 -or $UnitW -ge $W) {
-        $g.DrawImage($img,
-            (New-Object System.Drawing.Rectangle($X, $Y, $W, $H)),
-            (New-Object System.Drawing.Rectangle($SX, $SY, $SW, $SH)),
-            [System.Drawing.GraphicsUnit]::Pixel)
-        return
-    }
+    $uw = $UnitW; if ($uw -le 0 -or $uw -gt $W) { $uw = $W }
+    $uh = $UnitH; if ($uh -le 0 -or $uh -gt $H) { $uh = $H }
 
-    $count = [int][Math]::Ceiling($W / [double]$UnitW)
-    if ($count -gt 512) { $count = 512 }
+    $cols = [int][Math]::Ceiling($W / [double]$uw); if ($cols -gt 256) { $cols = 256 }
+    $rows = [int][Math]::Ceiling($H / [double]$uh); if ($rows -gt 256) { $rows = 256 }
 
-    for ($k = 0; $k -lt $count; $k++) {
-        $x = $X + $k * $UnitW
-        $w = [Math]::Min($UnitW, $X + $W - $x)
-        if ($w -le 0) { break }
+    for ($r = 0; $r -lt $rows; $r++) {
+        $y = $Y + $r * $uh
+        $h = [Math]::Min($uh, $Y + $H - $y)
+        if ($h -le 0) { break }
+        $sh2 = [int]($SH * $h / $uh); if ($sh2 -lt 1) { $sh2 = 1 }
 
-        $sw2 = [int]($SW * $w / $UnitW)
-        if ($sw2 -lt 1) { $sw2 = 1 }
+        for ($c = 0; $c -lt $cols; $c++) {
+            $x = $X + $c * $uw
+            $w = [Math]::Min($uw, $X + $W - $x)
+            if ($w -le 0) { break }
+            $sw2 = [int]($SW * $w / $uw); if ($sw2 -lt 1) { $sw2 = 1 }
 
-        $g.DrawImage($img,
-            (New-Object System.Drawing.Rectangle($x, $Y, $w, $H)),
-            (New-Object System.Drawing.Rectangle($SX, $SY, $sw2, $SH)),
-            [System.Drawing.GraphicsUnit]::Pixel)
+            $g.DrawImage($img,
+                (New-Object System.Drawing.Rectangle($x, $y, $w, $h)),
+                (New-Object System.Drawing.Rectangle($SX, $SY, $sw2, $sh2)),
+                [System.Drawing.GraphicsUnit]::Pixel)
+        }
     }
 }
 
@@ -611,14 +611,19 @@ function Draw9Scaled {
     $sy = @(0, $sy0, ($img.Height - $sy0)); $sh = @($sy0, ($img.Height - 2 * $sy0), $sy0)
     $dy = @($Y, ($Y + $c), ($Y + $H - $c)); $dh = @($c, ($H - 2 * $c), $c)
 
-    $unit = 0
+    $band = 0
+    if ($Tile -and $c -gt 0) { $band = [int]($c * 2) }
 
     for ($i = 0; $i -lt 3; $i++) {
         for ($j = 0; $j -lt 3; $j++) {
             if ($dw[$i] -le 0 -or $dh[$j] -le 0) { continue }
-            $u = 0
-            if ($i -eq 1) { $u = $unit }
-            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $sx[$i] $sy[$j] $sw[$i] $sh[$j] $u
+
+            $uw = 0
+            $uh = 0
+            if ($i -eq 1 -and $j -ne 1) { $uw = $band }
+            if ($j -eq 1 -and $i -ne 1) { $uh = $band }
+
+            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $sx[$i] $sy[$j] $sw[$i] $sh[$j] $uw $uh
         }
     }
 }
@@ -627,7 +632,7 @@ function Write-Titles {
     $Skin = 'EnhancedPixelStone'
     $Face = 'Rajdhani'
     $W = 630
-    $H = 64
+    $H = 110
     $Size = 28
 
     $dir = Join-Path $Repo 'docs\titles'
@@ -685,7 +690,7 @@ function Write-Titles {
         $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
         $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::SingleBitPerPixelGridFit
 
-        Draw9Scaled $g $plate 0 0 $W $H $density $tile
+        Draw9Scaled $g $plate 0 0 $W $H $density $false
 
         $sf = New-Object System.Drawing.StringFormat
         $sf.Alignment = [System.Drawing.StringAlignment]::Near
