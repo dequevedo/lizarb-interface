@@ -127,6 +127,7 @@ $Visual = [ordered]@{
     '3231727915' = 'Custom Fonts - Forked'
     '3762441264' = 'Readable Numbers'
 
+    '3786107692' = 'Radius UI Framework'
     '3786131805' = 'Radius UI - Inspector'
     '3786129210' = 'Radius UI - Health Tab'
     '3787806055' = 'Radius UI - Needs Tab'
@@ -337,19 +338,40 @@ for ($i = 0; $i -lt $Ours.Count - 1; $i++) {
 
 $ready = [System.Collections.ArrayList]@($baseOrder | Where-Object { $indeg[$_] -eq 0 })
 $order = @()
-while ($ready.Count -gt 0) {
+$broken = @()
+
+while ($order.Count -lt $baseOrder.Count) {
+    if ($ready.Count -eq 0) {
+        $stuck = @($baseOrder | Where-Object { $order -notcontains $_ })
+        $pick = @($stuck | Sort-Object { $rank[$_] })[0]
+
+        foreach ($k in $stuck) {
+            if ($edges[$k].Contains($pick)) {
+                [void]$edges[$k].Remove($pick)
+                $indeg[$pick] = $indeg[$pick] - 1
+                $broken += "$($mods[$k].Name) -> $($mods[$pick].Name)"
+            }
+        }
+
+        [void]$ready.Add($pick)
+        continue
+    }
+
     $pick = @($ready | Sort-Object { $rank[$_] })[0]
     [void]$ready.Remove($pick)
     $order += $pick
+
     foreach ($n in $edges[$pick]) {
         $indeg[$n] = $indeg[$n] - 1
         if ($indeg[$n] -eq 0) { [void]$ready.Add($n) }
     }
 }
 
-if ($order.Count -ne $baseOrder.Count) {
-    Write-Host "cycle in loadAfter/loadBefore; falling back to the base order." -ForegroundColor Yellow
-    $order = $baseOrder
+if ($broken.Count -gt 0) {
+    Write-Host ""
+    Write-Host "$($broken.Count) contradictory load rule(s) ignored:" -ForegroundColor Yellow
+    foreach ($b in $broken) { Write-Host "  $b" -ForegroundColor DarkGray }
+    Write-Host ""
 }
 
 Write-Host ""
