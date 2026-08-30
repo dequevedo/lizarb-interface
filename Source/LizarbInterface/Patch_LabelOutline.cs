@@ -139,6 +139,11 @@ namespace LizarbInterface
             }
 
             int thickness = Mathf.Clamp(Mathf.RoundToInt(settings.outlineThickness), 1, 2);
+            if (Text.Font < GameFont.Medium)
+            {
+                thickness = 1;
+            }
+
             if (!Kernels.TryGetValue(thickness, out Vector2[] kernel))
             {
                 return;

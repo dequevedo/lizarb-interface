@@ -560,7 +560,17 @@ namespace LizarbInterface
                 tabs.Add(MakeTab(which));
             }
 
-            TabDrawer.DrawTabs(body, tabs);
+            try
+            {
+                TabDrawer.DrawTabs(body, tabs);
+            }
+            catch (Exception e)
+            {
+                if (reportedSections.Add("tabs"))
+                {
+                    Log.Error("[LizarbInterface] another mod threw while drawing the tab strip: " + e);
+                }
+            }
 
             Rect inner = body.ContractedBy(14f);
 
