@@ -32,10 +32,24 @@ out loud which of the two is about to ship.
 
 ## 3. Change note (Claude)
 
-- rewrite `About/ChangeNote.txt` from the commits since the last release
+Rewrite `About/ChangeNote.txt` from the commits since the last release.
+
+**Keep it short.** A line per change, straight to the point. Aim for under
+fifteen lines and never write a paragraph where a line does.
+
 - what the player gets, not how it works
+- no explaining the mechanism, the reasoning, or what it used to do
 - no em dash, no spaced hyphen
 - it ships inside the package and becomes the Steam change note by itself
+
+Good:
+
+    Recolour any skin. Hue, saturation and brightness per preset, plus a
+    paint-over switch for the grey ones.
+
+Bad, and this is what to stop writing: the same thing across three paragraphs
+explaining that hue rotation preserves two inks, why grey has no hue, and where
+the sliders live.
 
 ## 4. Commit and push (Claude)
 
