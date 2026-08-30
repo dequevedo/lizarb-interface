@@ -1,5 +1,5 @@
 pattern=Hatch
-scale=0.5
+scale=1
 tile=true
 background=false
 pointfilter=true
