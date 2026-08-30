@@ -6,6 +6,7 @@ param(
     [switch]$FontsOnly,
     [switch]$ShapesOnly,
     [switch]$GuidesOnly,
+    [switch]$TitlesOnly,
     [switch]$Force
 )
 
@@ -517,6 +518,149 @@ function Write-Overlay {
     Write-Host "  slices-${W}x${H}.png  (corner $cx x $cy texels)" -ForegroundColor DarkGray
 }
 
+function Get-SkinScale {
+    param([string]$Skin)
+
+    $file = Join-Path $Skins "$Skin\theme.txt"
+    if (-not (Test-Path $file)) { return $scale }
+
+    foreach ($line in (Get-Content $file)) {
+        $parts = $line -split '=', 2
+        if ($parts.Count -eq 2 -and $parts[0].Trim().ToLower() -eq 'scale') {
+            return [double]$parts[1].Trim()
+        }
+    }
+
+    return $scale
+}
+
+function Get-SkinFont {
+    param([string]$Skin)
+
+    $file = Join-Path $Skins "$Skin\theme.txt"
+    if (-not (Test-Path $file)) { return $null }
+
+    foreach ($line in (Get-Content $file)) {
+        $parts = $line -split '=', 2
+        if ($parts.Count -eq 2 -and $parts[0].Trim().ToLower() -eq 'font') {
+            return $parts[1].Trim()
+        }
+    }
+
+    return $null
+}
+
+function Draw9Scaled {
+    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density)
+
+    $c = [int][Math]::Min($img.Width * 0.25 / $Density, [Math]::Min($H / 2, $W / 2))
+    $sc = [int]($img.Width * 0.25)
+    $sy0 = [int]($img.Height * 0.25)
+    $sx = @(0, $sc, ($img.Width - $sc));  $sw = @($sc, ($img.Width - 2 * $sc), $sc)
+    $dx = @($X, ($X + $c), ($X + $W - $c)); $dw = @($c, ($W - 2 * $c), $c)
+    $sy = @(0, $sy0, ($img.Height - $sy0)); $sh = @($sy0, ($img.Height - 2 * $sy0), $sy0)
+    $dy = @($Y, ($Y + $c), ($Y + $H - $c)); $dh = @($c, ($H - 2 * $c), $c)
+
+    for ($i = 0; $i -lt 3; $i++) {
+        for ($j = 0; $j -lt 3; $j++) {
+            if ($dw[$i] -le 0 -or $dh[$j] -le 0) { continue }
+            $g.DrawImage($img,
+                (New-Object System.Drawing.Rectangle($dx[$i], $dy[$j], $dw[$i], $dh[$j])),
+                (New-Object System.Drawing.Rectangle($sx[$i], $sy[$j], $sw[$i], $sh[$j])),
+                [System.Drawing.GraphicsUnit]::Pixel)
+        }
+    }
+}
+
+function Write-Titles {
+    $Skin = 'EnhancedPixelStone'
+    $W = 630
+    $H = 56
+    $Size = 28
+
+    $dir = Join-Path $Repo 'docs\titles'
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+
+    $headings = @(
+        'Presets', 'Make your own', 'Fonts', 'Settings', 'The Architect menu',
+        'Compatibility', 'Built with AI', 'Source and licence', 'Requires'
+    )
+
+    $bbcode = Join-Path $Repo 'docs\steam-description.bbcode'
+    $text = Get-Content $bbcode -Raw
+
+    $linked = @([regex]::Matches($text, 'docs/titles/([A-Za-z0-9]+)\.png') |
+                ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
+    $made = @($headings | ForEach-Object { $_ -replace '[^A-Za-z0-9]', '' } | Sort-Object -Unique)
+
+    foreach ($s in $made) {
+        if ($linked -notcontains $s) { throw "banner $s is generated but the description never links it" }
+    }
+
+    foreach ($s in $linked) {
+        if ($made -notcontains $s) { throw "the description links banner $s, which no heading produces" }
+    }
+
+    $skinDir = Join-Path $Skins $Skin
+    if (-not (Test-Path $skinDir)) { throw "skin $Skin has no folder" }
+
+    $density = Get-SkinScale $Skin
+    $wanted = Get-SkinFont $Skin
+    if (-not $wanted) { throw "skin $Skin names no font in its theme.txt" }
+
+    $pfc = New-Object System.Drawing.Text.PrivateFontCollection
+    $found = $null
+    foreach ($f in (Get-ChildItem (Join-Path $Repo 'Fonts') -Filter *.ttf)) {
+        $probe = New-Object System.Drawing.Text.PrivateFontCollection
+        $probe.AddFontFile($f.FullName)
+        if ($probe.Families[0].Name -eq $wanted) {
+            $pfc.AddFontFile($f.FullName)
+            $found = $pfc.Families[0]
+            break
+        }
+    }
+    if (-not $found) { throw "font '$wanted' not found in Fonts" }
+
+    $font = New-Object System.Drawing.Font($found, $Size, [System.Drawing.FontStyle]::Regular,
+                                           [System.Drawing.GraphicsUnit]::Pixel)
+
+    $plate = [System.Drawing.Image]::FromFile((Join-Path $skinDir 'ButtonBG.png'))
+
+    foreach ($text in $headings) {
+        $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $g = [System.Drawing.Graphics]::FromImage($bmp)
+        $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
+        $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
+        $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::SingleBitPerPixelGridFit
+
+        Draw9Scaled $g $plate 0 0 $W $H $density
+
+        $sf = New-Object System.Drawing.StringFormat
+        $sf.Alignment = [System.Drawing.StringAlignment]::Near
+        $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
+        $box = New-Object System.Drawing.RectangleF(24, 0, ($W - 48), $H)
+
+        $ink = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(230, 0, 0, 0))
+        foreach ($dx in -1..1) {
+            foreach ($dy in -1..1) {
+                if ($dx -eq 0 -and $dy -eq 0) { continue }
+                $shifted = New-Object System.Drawing.RectangleF(($box.X + $dx), ($box.Y + $dy), $box.Width, $box.Height)
+                $g.DrawString($text, $font, $ink, $shifted, $sf)
+            }
+        }
+        $g.DrawString($text, $font, [System.Drawing.Brushes]::White, $box, $sf)
+
+        $g.Dispose()
+
+        $slug = ($text -replace '[^A-Za-z0-9]', '')
+        Save-Doc $bmp (Join-Path $dir "$slug.png") "docs/titles/$slug.png"
+        $bmp.Dispose()
+    }
+
+    $plate.Dispose()
+    Write-Host "docs\titles\  ($($headings.Count) banners, ${W}x${H}, $Skin, $wanted)" -ForegroundColor Green
+}
+
 function Write-Guides {
     $dir = Join-Path $Repo 'docs\guides'
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
@@ -604,7 +748,7 @@ function Write-Guides {
     Write-Host "docs\guides\  ($($sizes.Count) overlays + slices.png)" -ForegroundColor Green
 }
 
-$only = $SheetOnly -or $PreviewOnly -or $ArchitectOnly -or $FontsOnly -or $ShapesOnly -or $GuidesOnly
+$only = $SheetOnly -or $PreviewOnly -or $ArchitectOnly -or $FontsOnly -or $ShapesOnly -or $GuidesOnly -or $TitlesOnly
 
 if ($SheetOnly -or -not $only) { Write-Sheet }
 if ($PreviewOnly -or -not $only) { Write-Preview }
@@ -612,6 +756,7 @@ if ($ArchitectOnly -or -not $only) { Write-Architect }
 if ($FontsOnly -or -not $only) { Write-Fonts }
 if ($ShapesOnly -or -not $only) { Write-Shapes }
 if ($GuidesOnly -or -not $only) { Write-Guides }
+if ($TitlesOnly -or -not $only) { Write-Titles }
 
 foreach ($key in $Recorded.Keys) {
     if (-not $Generated.ContainsKey($key)) { $Generated[$key] = $Recorded[$key] }
