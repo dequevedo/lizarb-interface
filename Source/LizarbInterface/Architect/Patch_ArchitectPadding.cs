@@ -23,6 +23,26 @@ namespace LizarbInterface
         internal static float InfoOffset => Amount * 3f;
 
         internal static float ExtraOffset => InfoOffset + Amount;
+
+        internal static bool StacksOnInfo(float bottomY)
+        {
+            var window = RimWorld.MainButtonDefOf.Architect?.TabWindow as MainTabWindow_Architect;
+            if (window == null)
+            {
+                return false;
+            }
+
+            float vanilla = Verse.UI.screenHeight - 35f - window.WinHeight - 270f;
+            return Mathf.Abs(bottomY - vanilla) < 1f;
+        }
+
+        internal static void Lift(ref float bottomY)
+        {
+            if (StacksOnInfo(bottomY))
+            {
+                bottomY -= ExtraOffset;
+            }
+        }
     }
 
     [HarmonyPatch(typeof(Verse.DesignatorUtility), nameof(Verse.DesignatorUtility.GUIDoRotationControls))]
@@ -30,10 +50,16 @@ namespace LizarbInterface
     {
         private static void Prefix(ref float bottomY)
         {
-            if (ArchitectLayout.DrawingTab)
-            {
-                bottomY -= ArchitectPadding.ExtraOffset;
-            }
+            ArchitectPadding.Lift(ref bottomY);
+        }
+    }
+
+    [HarmonyPatch(typeof(Verse.Designator), nameof(Verse.Designator.DoExtraGuiControls))]
+    internal static class Patch_ArchitectDrawStyleControls
+    {
+        private static void Prefix(ref float bottomY)
+        {
+            ArchitectPadding.Lift(ref bottomY);
         }
     }
 
