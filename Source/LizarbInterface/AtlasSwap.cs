@@ -112,6 +112,11 @@ namespace LizarbInterface
             return Path.Combine(dir, fileName + ".png");
         }
 
+        internal static bool HasOwn(string fileName)
+        {
+            return root != null && File.Exists(SkinPath(fileName, CurrentTheme));
+        }
+
         private const string FallbackTheme = "Foundry";
 
         private static readonly System.Collections.Generic.Dictionary<string, string[]> Instead =

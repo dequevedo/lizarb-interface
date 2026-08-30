@@ -8,9 +8,6 @@ namespace LizarbInterface
     [HarmonyPatch(typeof(TabRecord), nameof(TabRecord.Draw))]
     internal static class Patch_TabRecord_Draw
     {
-        private const float EndWidth = 30f;
-        private const float MiddleGraphicWidth = 4f;
-
         private static bool Prefix(TabRecord __instance, Rect rect)
         {
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
@@ -27,22 +24,37 @@ namespace LizarbInterface
 
             Rect area = LizarbInterfaceMod.Inset(rect);
 
-            Rect leftRect = new Rect(area) { width = EndWidth };
-            Rect rightRect = new Rect(area) { width = EndWidth, x = area.x + area.width - EndWidth };
+            if (!AtlasSwap.HasOwn("TabAtlas"))
+            {
+                AtlasSwap.DrawScaled(area, atlas, true, null, tiled: true);
+            }
+            else
+            {
+                const float EndShare = 30f / 64f;
+                const float MiddleShare = 4f / 64f;
 
-            Rect middleRect = new Rect(area);
-            middleRect.x += EndWidth;
-            middleRect.width -= EndWidth * 2f;
-            middleRect.xMin = UIScaling.AdjustCoordToUIScalingFloor(middleRect.xMin);
-            middleRect.xMax = UIScaling.AdjustCoordToUIScalingCeil(middleRect.xMax);
+                float end = Mathf.Min(atlas.width * EndShare / AtlasSwap.Scale, area.width / 2f);
+                end = UIScaling.AdjustCoordToUIScalingFloor(end);
 
-            var leftUV = new Rect(0f, 0f, 30f / 64f, 1f);
-            var middleUV = new Rect(30f / 64f, 0f, 4f / 64f, 1f);
-            var rightUV = new Rect(34f / 64f, 0f, 30f / 64f, 1f);
+                float rows = Mathf.Min(1f, area.height * AtlasSwap.Scale / atlas.height);
 
-            Widgets.DrawTexturePart(leftRect, leftUV, atlas);
-            Widgets.DrawTexturePart(middleRect, middleUV, atlas);
-            Widgets.DrawTexturePart(rightRect, rightUV, atlas);
+                Rect leftRect = new Rect(area) { width = end };
+                Rect rightRect = new Rect(area) { width = end, x = area.x + area.width - end };
+
+                Rect middleRect = new Rect(area);
+                middleRect.x += end;
+                middleRect.width -= end * 2f;
+                middleRect.xMin = UIScaling.AdjustCoordToUIScalingFloor(middleRect.xMin);
+                middleRect.xMax = UIScaling.AdjustCoordToUIScalingCeil(middleRect.xMax);
+
+                var leftUV = new Rect(0f, 0f, EndShare, rows);
+                var middleUV = new Rect(EndShare, 0f, MiddleShare, rows);
+                var rightUV = new Rect(1f - EndShare, 0f, EndShare, rows);
+
+                Widgets.DrawTexturePart(leftRect, leftUV, atlas);
+                Widgets.DrawTexturePart(middleRect, middleUV, atlas);
+                Widgets.DrawTexturePart(rightRect, rightUV, atlas);
+            }
 
             GUI.color = __instance.labelColor ?? Color.white;
 
