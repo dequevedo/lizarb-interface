@@ -1,2 +1,3 @@
 pattern=Hatch
 grain=0.15
+scale=0.5

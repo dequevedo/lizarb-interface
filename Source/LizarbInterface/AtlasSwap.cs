@@ -367,13 +367,36 @@ namespace LizarbInterface
             tex.SetPixels32(pixels);
         }
 
-        internal static float Scale { get; private set; } = 1f;
+        internal static float DefaultScale { get; private set; } = 1f;
+
+        private static string scaleTheme;
+
+        private static bool scaleKnown;
+
+        private static float scaleValue = 1f;
+
+        internal static float Scale
+        {
+            get
+            {
+                string active = LizarbInterfaceMod.Settings == null ? null : LizarbInterfaceMod.Settings.theme;
+                if (!scaleKnown || active != scaleTheme)
+                {
+                    scaleTheme = active;
+                    scaleKnown = true;
+                    scaleValue = LizarbInterfaceMod.ScaleOf(active);
+                }
+
+                return scaleValue;
+            }
+        }
 
         internal static bool Bypass;
 
         private static void ReadScale()
         {
-            Scale = 1f;
+            DefaultScale = 1f;
+            scaleKnown = false;
             if (root == null)
             {
                 return;
@@ -390,14 +413,14 @@ namespace LizarbInterface
                                System.Globalization.CultureInfo.InvariantCulture,
                                out float parsed) && parsed >= 1f && parsed <= 8f)
             {
-                Scale = parsed;
+                DefaultScale = parsed;
                 return;
             }
 
             Log.Warning("[LizarbInterface] unreadable atlas scale in " + path + "; assuming 1.");
         }
 
-        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop)
+        internal static void DrawScaled(Rect rect, Texture2D atlas, bool drawTop, float density = 0f)
         {
             if (atlas == null || Event.current.type != EventType.Repaint)
             {
@@ -410,7 +433,7 @@ namespace LizarbInterface
             rect.height = Mathf.Round(rect.height);
             rect = UIScaling.AdjustRectToUIScaling(rect);
 
-            float a = atlas.width * 0.25f / Scale;
+            float a = atlas.width * 0.25f / (density > 0f ? density : Scale);
             a = UIScaling.AdjustCoordToUIScalingFloor(GenMath.Min(a, rect.height / 2f, rect.width / 2f));
 
             if (drawTop)

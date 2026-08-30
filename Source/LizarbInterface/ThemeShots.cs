@@ -182,6 +182,7 @@ namespace LizarbInterface
         private static void ReloadSkins()
         {
             AtlasSwap.Forget();
+            LizarbInterfaceMod.Rediscover();
             FontEngine.Apply();
             Log.Message("[LizarbInterface] skin textures reloaded from disk");
         }

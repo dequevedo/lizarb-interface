@@ -188,44 +188,44 @@ namespace LizarbInterface
 
         public static ModContentPack Pack { get; private set; }
 
-        internal static readonly (string Id, string Pattern, Color Outline, string Group, float Grain)[] Themes =
+        internal static readonly (string Id, string Pattern, Color Outline, string Group, float Grain, float Scale)[] Themes =
         {
-            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared", 0f),
-            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared", 0f),
-            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared", 0f),
-            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared", 0f),
-            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared", 0f),
-            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared", 0f),
-            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared", 0f),
-            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared", 0f),
-            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared", 0f),
-            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared", 0f),
+            ("Slate",    "Bricks",    new Color(0.04f, 0.05f, 0.05f), "Squared", 0f, 0f),
+            ("Wood",     "Woodgrain", new Color(0.09f, 0.06f, 0.03f), "Squared", 0f, 0f),
+            ("Rivet",    "Hatch",     new Color(0.06f, 0.05f, 0.04f), "Squared", 0f, 0f),
+            ("Vellum",   "Medieval",  new Color(0.08f, 0.06f, 0.04f), "Squared", 0f, 0f),
+            ("Grimoire", "Hatch",     new Color(0.06f, 0.03f, 0.03f), "Squared", 0f, 0f),
+            ("Bulwark",  "Chevron",   new Color(0.04f, 0.05f, 0.03f), "Squared", 0f, 0f),
+            ("Iron",     "Bricks",    new Color(0.05f, 0.06f, 0.07f), "Squared", 0f, 0f),
+            ("Gothic",   "Medieval",  new Color(0.03f, 0.03f, 0.03f), "Squared", 0f, 0f),
+            ("Foundry",  "Bricks",    new Color(0.05f, 0.04f, 0.04f), "Squared", 0f, 0f),
+            ("Obsidian", "Chevron",   new Color(0.03f, 0.03f, 0.04f), "Squared", 0f, 0f),
 
-            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded", 0f),
-            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded", 0f),
-            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded", 0f),
-            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded", 0f),
-            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded", 0f),
-            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded", 0f),
-            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded", 0f),
-            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded", 0f),
-            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded", 0f),
-            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded", 0f),
+            ("Aero",     "Dots",      new Color(0.03f, 0.06f, 0.09f), "Rounded", 0f, 0f),
+            ("Ash",      "Dots",      new Color(0.05f, 0.05f, 0.05f), "Rounded", 0f, 0f),
+            ("Crimson",  "Scales",    new Color(0.11f, 0.04f, 0.04f), "Rounded", 0f, 0f),
+            ("Verdant",  "Scales",    new Color(0.04f, 0.08f, 0.05f), "Rounded", 0f, 0f),
+            ("Copper",   "Scales",    new Color(0.04f, 0.06f, 0.06f), "Rounded", 0f, 0f),
+            ("Brass",    "Hatch",     new Color(0.10f, 0.07f, 0.04f), "Rounded", 0f, 0f),
+            ("Arcane",   "Dots",      new Color(0.04f, 0.03f, 0.10f), "Rounded", 0f, 0f),
+            ("Royal",    "Medieval",  new Color(0.06f, 0.05f, 0.11f), "Rounded", 0f, 0f),
+            ("Bone",     "Dots",      new Color(0.09f, 0.08f, 0.05f), "Rounded", 0f, 0f),
+            ("Flesh",    "Hatch",     new Color(0.10f, 0.04f, 0.04f), "Rounded", 0f, 0f),
 
-            ("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f),
-            ("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f),
-            ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f),
+            ("DebugSlices", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f, 0f),
+            ("DebugCoarse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f, 0f),
+            ("DebugSparse", "Hatch",  new Color(0.10f, 0.02f, 0.08f), "Development", 0f, 0f),
         };
 
-        private static List<(string Id, string Pattern, Color Outline, string Group, float Grain)> all;
+        private static List<(string Id, string Pattern, Color Outline, string Group, float Grain, float Scale)> all;
 
-        internal static List<(string Id, string Pattern, Color Outline, string Group, float Grain)> AllThemes
+        internal static List<(string Id, string Pattern, Color Outline, string Group, float Grain, float Scale)> AllThemes
         {
             get
             {
                 if (all == null)
                 {
-                    all = new List<(string, string, Color, string, float)>(Themes);
+                    all = new List<(string, string, Color, string, float, float)>(Themes);
                     Discover();
                 }
 
@@ -264,11 +264,12 @@ namespace LizarbInterface
             }
         }
 
-        private static (string, string, Color, string, float) Describe(string id, string group, string dir)
+        private static (string, string, Color, string, float, float) Describe(string id, string group, string dir)
         {
             string pattern = LizarbInterfaceSettings.DefaultPattern;
             Color outline = new Color(0.05f, 0.05f, 0.05f);
             float grain = 0f;
+            float scale = 0f;
 
             string file = Path.Combine(dir, "theme.txt");
             if (File.Exists(file))
@@ -293,6 +294,11 @@ namespace LizarbInterface
                     {
                         grain = Mathf.Clamp01(g);
                     }
+                    else if (key == "scale" && float.TryParse(value, System.Globalization.NumberStyles.Float,
+                                                              System.Globalization.CultureInfo.InvariantCulture, out float s))
+                    {
+                        scale = Mathf.Clamp(s, 0.125f, 8f);
+                    }
                     else if (key == "outline" && ParseColor(value, out Color c))
                     {
                         outline = c;
@@ -300,7 +306,7 @@ namespace LizarbInterface
                 }
             }
 
-            return (id, pattern, outline, group, grain);
+            return (id, pattern, outline, group, grain, scale);
         }
 
         private static bool ParseColor(string text, out Color colour)
@@ -324,6 +330,27 @@ namespace LizarbInterface
 
             colour = new Color(v[0], v[1], v[2]);
             return true;
+        }
+
+        internal static float ScaleOf(string id)
+        {
+            if (!id.NullOrEmpty())
+            {
+                foreach (var entry in AllThemes)
+                {
+                    if (entry.Id == id)
+                    {
+                        return entry.Scale > 0f ? entry.Scale : AtlasSwap.DefaultScale;
+                    }
+                }
+            }
+
+            return AtlasSwap.DefaultScale;
+        }
+
+        internal static void Rediscover()
+        {
+            all = null;
         }
 
         private static bool IsBuiltIn(string id)
@@ -849,15 +876,17 @@ namespace LizarbInterface
             {
                 Texture2D frame = AtlasSwap.Preview(theme, "WindowAtlas");
                 Texture2D button = AtlasSwap.Preview(theme, "ButtonBG");
+                float density = ScaleOf(theme);
 
                 if (frame != null)
                 {
-                    Widgets.DrawAtlas(area, frame);
+                    AtlasSwap.DrawScaled(area, frame, true, density);
                 }
 
                 if (button != null)
                 {
-                    Widgets.DrawAtlas(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f), button);
+                    AtlasSwap.DrawScaled(new Rect(area.x + 12f, area.yMax - 34f, area.width - 24f, 24f),
+                                         button, true, density);
                 }
             }
 
