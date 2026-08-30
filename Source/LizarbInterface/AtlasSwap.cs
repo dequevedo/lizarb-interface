@@ -369,10 +369,10 @@ namespace LizarbInterface
 
             slot.Theme = null;
 
-            bool found = File.Exists(Path.Combine(SkinDir, fileName + ".png"));
+            bool found = Resolve(fileName, null, out float ignored) != null;
             if (!found)
             {
-                Log.Warning("[LizarbInterface] no skin texture for " + fileName + "; using vanilla.");
+                Log.Warning("[LizarbInterface] no texture anywhere for " + fileName + "; using vanilla.");
             }
             else if (Prefs.DevMode)
             {
