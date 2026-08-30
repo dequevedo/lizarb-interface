@@ -135,9 +135,9 @@ Metamorphous by Sorkin Type Co. Quattrocento Sans by Pablo Impallari. Rajdhani b
 Indian Type Foundry. Russo One by Jovanny Lemonad.
 
 Alegreya, Amaranth, Black Ops One, Bungee, Chakra Petch, Cinzel, Cormorant Garamond,
-EB Garamond, Exo 2, Grenze Gotisch, Michroma, Orbitron, Philosopher, Saira Stencil One,
-Spectral, Teko, Vollkorn and Zen Dots are credited to their project authors, named in
-each licence file.
+EB Garamond, Exo 2, Grenze Gotisch, Jacquard 24, Jersey 10, Michroma, Orbitron,
+Philosopher, Pixelify Sans, Saira Stencil One, Spectral, Teko, Vollkorn and Zen Dots are
+credited to their project authors, named in each licence file.
 
 ### Icon credits
 
