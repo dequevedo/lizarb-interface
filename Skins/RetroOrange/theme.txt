@@ -1,7 +1,9 @@
 name=RetroOrange
-pattern=Hatch
-grain=0.1
+font=Chakra Petch
+pattern=Bricks
+grain=0.072
 background=true
+pointfilter=true
 scale=1
 tile=true
-pointfilter=true
+plateshape=None

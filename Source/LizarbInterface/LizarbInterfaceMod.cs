@@ -211,6 +211,8 @@ namespace LizarbInterface
 
         internal string Label;
 
+        internal System.Collections.Generic.Dictionary<string, string> Keys;
+
         internal float Grain;
         internal float Scale;
         internal bool Tile;
@@ -334,7 +336,7 @@ namespace LizarbInterface
                 pattern = named;
             }
 
-            if (read.TryGetValue("outline", out string tint) && ParseColor(tint, out Color c))
+            if (read.TryGetValue("outlinecolor", out string tint) && ParseColor(tint, out Color c))
             {
                 outline = c;
             }
@@ -344,6 +346,7 @@ namespace LizarbInterface
             var info = new ThemeInfo(id, pattern, outline, group)
             {
                 Label = named2.NullOrEmpty() ? null : named2,
+                Keys = read,
                 Grain = Mathf.Clamp01(Number(read, "grain", 0f)),
                 Scale = Number(read, "scale", 0f),
                 Tile = Flag(read, "tile") == true,

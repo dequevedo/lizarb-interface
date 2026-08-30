@@ -160,7 +160,18 @@ namespace LizarbInterface
 
             Preset p = FromTheme(theme);
             p.name = Path.GetFileNameWithoutExtension(file);
+            ApplyKeys(p, read);
             p.label = Text(read, "name", p.name);
+
+            return p;
+        }
+
+        internal static void ApplyKeys(Preset p, Dictionary<string, string> read)
+        {
+            if (read == null)
+            {
+                return;
+            }
 
             p.fontName = Text(read, "font", p.fontName);
             p.fontOffsetTiny = (int)Number(read, "sizetiny", p.fontOffsetTiny);
@@ -186,8 +197,6 @@ namespace LizarbInterface
             p.architectPlateAlpha = Number(read, "platealpha", p.architectPlateAlpha);
             p.architectShapeOutline = Flag(read, "plateoutline", p.architectShapeOutline);
             p.architectColorLabels = Flag(read, "platelabels", p.architectColorLabels);
-
-            return p;
         }
 
         private static string Text(Dictionary<string, string> read, string key, string fallback)
@@ -249,6 +258,8 @@ namespace LizarbInterface
             {
                 preset.pointFilter = theme.PointFilter.Value;
             }
+
+            ApplyKeys(preset, theme.Keys);
 
             return preset;
         }
