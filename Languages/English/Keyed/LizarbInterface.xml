@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <LizarbInterface.Inset>Gap between elements: {0} px</LizarbInterface.Inset>
+  <LizarbInterface.Inset>Gap between elements</LizarbInterface.Inset>
   <LizarbInterface.PointFilter>Pixelated textures (point filtering)</LizarbInterface.PointFilter>
   <LizarbInterface.PointFilter.Tip>Samples the skin textures nearest-neighbour instead of smoothing them. Only looks right at a UI scale of 1x or 2x: at 1.25x a texel covers 1.25 screen pixels, so the outline comes out thick in places and thin in others.</LizarbInterface.PointFilter.Tip>
   <LizarbInterface.Inset.Tip>Paints each element slightly inside its own area so neighbouring buttons no longer touch. Nothing in the layout moves, so labels and icons stay exactly where the game put them.</LizarbInterface.Inset.Tip>
@@ -8,20 +8,20 @@
   <LizarbInterface.FontVanilla>Game default</LizarbInterface.FontVanilla>
   <LizarbInterface.FontGroup.Shipped>Included with this mod</LizarbInterface.FontGroup.Shipped>
   <LizarbInterface.FontGroup.Local>Found on this PC</LizarbInterface.FontGroup.Local>
-  <LizarbInterface.FontSize.Tiny>Tiny text size: {0}</LizarbInterface.FontSize.Tiny>
-  <LizarbInterface.FontSize.Small>Normal text size: {0}</LizarbInterface.FontSize.Small>
-  <LizarbInterface.FontSize.Medium>Heading text size: {0}</LizarbInterface.FontSize.Medium>
+  <LizarbInterface.FontSize.Tiny>Tiny text size</LizarbInterface.FontSize.Tiny>
+  <LizarbInterface.FontSize.Small>Normal text size</LizarbInterface.FontSize.Small>
+  <LizarbInterface.FontSize.Medium>Heading text size</LizarbInterface.FontSize.Medium>
   <LizarbInterface.FontReset>Reset font</LizarbInterface.FontReset>
   <LizarbInterface.BackgroundSection>Background</LizarbInterface.BackgroundSection>
   <LizarbInterface.TexturedBackground>Textured background</LizarbInterface.TexturedBackground>
   <LizarbInterface.TexturedBackground.Tip>Lays a tiling two-tone grunge over window and panel interiors instead of a flat colour. It repeats at its own size rather than stretching, so it looks the same in a small panel and a full-screen window.</LizarbInterface.TexturedBackground.Tip>
-  <LizarbInterface.BackgroundGrain>Texture strength: {0}</LizarbInterface.BackgroundGrain>
+  <LizarbInterface.BackgroundGrain>Texture strength</LizarbInterface.BackgroundGrain>
   <LizarbInterface.ShowAllFonts>Show every installed font</LizarbInterface.ShowAllFonts>
   <LizarbInterface.ShowAllFonts.Tip>Off by default. The short list holds only serif faces that stay readable at the sizes RimWorld draws at. Blackletter is left out on purpose: it is the most medieval thing on the machine and the least legible in a colonist list.</LizarbInterface.ShowAllFonts.Tip>
   <LizarbInterface.TextOutline>Black outline on text</LizarbInterface.TextOutline>
   <LizarbInterface.TextOutline.Tip>Draws each label eight more times underneath the real one, offset by exactly one screen pixel in each direction, in a very dark shade of the current theme. Costs a little performance on text-heavy screens.</LizarbInterface.TextOutline.Tip>
-  <LizarbInterface.OutlineThickness>Outline thickness: {0} px</LizarbInterface.OutlineThickness>
-  <LizarbInterface.OutlineOpacity>Outline opacity: {0}</LizarbInterface.OutlineOpacity>
+  <LizarbInterface.OutlineThickness>Outline thickness</LizarbInterface.OutlineThickness>
+  <LizarbInterface.OutlineOpacity>Outline opacity</LizarbInterface.OutlineOpacity>
   <LizarbInterface.Pattern.Hatch>Hatch</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Medieval trellis</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSquared>Generated, squared</LizarbInterface.ThemeSquared>
@@ -62,10 +62,8 @@
   <LizarbInterface.Pattern.Woodgrain>Wood grain</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Theme</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Text</LizarbInterface.Tab.Text>
-  <LizarbInterface.Tab.Surfaces>Surfaces</LizarbInterface.Tab.Surfaces>
   <LizarbInterface.Tab.Windows>Windows</LizarbInterface.Tab.Windows>
-  <LizarbInterface.Tab.Components>Components</LizarbInterface.Tab.Components>
-  <LizarbInterface.AnimationDuration>Animation length: {0} ms</LizarbInterface.AnimationDuration>
+  <LizarbInterface.AnimationDuration>Animation length</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Which surfaces this mod is allowed to reskin. Turn one off to hand it back to the game, or to another mod, without giving up the rest.</LizarbInterface.ComponentsSection>
   <LizarbInterface.SkinButtons>Buttons, tooltips and menus</LizarbInterface.SkinButtons>
   <LizarbInterface.SkinButtons.Tip>Every button, the main bottom bar, tooltips, float menu rows and the slider rail. They all share one draw call, so they share one switch.</LizarbInterface.SkinButtons.Tip>
@@ -81,14 +79,11 @@
   <LizarbInterface.Tab.Architect>Architect</LizarbInterface.Tab.Architect>
   <LizarbInterface.Architect.Section>Colours each category button in the Architect menu by what the category is for. Categories from other mods get a stable colour of their own.</LizarbInterface.Architect.Section>
   <LizarbInterface.Architect.Enabled>Colour the architect category buttons</LizarbInterface.Architect.Enabled>
-  <LizarbInterface.Architect.PlateAlpha>Button colour strength: {0}</LizarbInterface.Architect.PlateAlpha>
+  <LizarbInterface.Architect.PlateAlpha>Colour strength</LizarbInterface.Architect.PlateAlpha>
   <LizarbInterface.Architect.ColorLabels>Colour the button text too</LizarbInterface.Architect.ColorLabels>
   <LizarbInterface.Architect.ColorLabels.Tip>Off by default: against a coloured button, text in the same hue loses contrast. Turn it on if you set the button colour strength to zero.</LizarbInterface.Architect.ColorLabels.Tip>
   <LizarbInterface.Architect.AutoColor>Auto-colour unknown categories</LizarbInterface.Architect.AutoColor>
   <LizarbInterface.Architect.AutoColor.Tip>Categories added by other mods get a stable colour generated from their defName instead of staying grey.</LizarbInterface.Architect.AutoColor.Tip>
-  <LizarbInterface.Architect.Icons>Use this mod own category icons</LizarbInterface.Architect.Icons>
-  <LizarbInterface.Architect.Icons.Tip>Draws a white glyph with a black outline on the left of every category button. Categories from other mods are matched on their name, so Storage gets a crate and Genetics gets a cross.</LizarbInterface.Architect.Icons.Tip>
-  <LizarbInterface.Architect.Icons.Clash>Architect Icons is active and draws its own icon in the same place. Turn one of the two off.</LizarbInterface.Architect.Icons.Clash>
   <LizarbInterface.Architect.PlateStyle>Colour shape</LizarbInterface.Architect.PlateStyle>
   <LizarbInterface.Architect.PlateStyle.Plate>Plate</LizarbInterface.Architect.PlateStyle.Plate>
   <LizarbInterface.Architect.PlateStyle.Plate.Tip>Fills the button, following the theme corner radius, and deepens towards the bottom.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
@@ -126,7 +121,7 @@
   <LizarbInterface.AnimateImmediate.Tip>The inspect pane and the other panels the game rebuilds every frame. They come and go with what is selected, so this fires often.</LizarbInterface.AnimateImmediate.Tip>
   <LizarbInterface.AnimateOther>Animate everything else</LizarbInterface.AnimateOther>
   <LizarbInterface.AnimateOther.Tip>Any window on a layer the three above do not cover.</LizarbInterface.AnimateOther.Tip>
-  <LizarbInterface.AnimationStyle>Animation style (click to replay)</LizarbInterface.AnimationStyle>
+  <LizarbInterface.AnimationStyle>Animation style</LizarbInterface.AnimationStyle>
   <LizarbInterface.Animation.Scale>Scale</LizarbInterface.Animation.Scale>
   <LizarbInterface.Animation.Zoom>Zoom out</LizarbInterface.Animation.Zoom>
   <LizarbInterface.Animation.Rise>Rise</LizarbInterface.Animation.Rise>
@@ -134,4 +129,20 @@
   <LizarbInterface.Animation.Unfold>Unfold</LizarbInterface.Animation.Unfold>
   <LizarbInterface.Animation.Flip>Flip</LizarbInterface.Animation.Flip>
   <LizarbInterface.Animation.Tilt>Tilt</LizarbInterface.Animation.Tilt>
+  <LizarbInterface.Tab.Icons>Icons</LizarbInterface.Tab.Icons>
+  <LizarbInterface.Tab.Compatibility>Compatibility</LizarbInterface.Tab.Compatibility>
+  <LizarbInterface.FontFace>Typeface</LizarbInterface.FontFace>
+  <LizarbInterface.FontFace.Tip>Applies to every piece of text in the game. The faces this mod ships with are the same for everyone; the rest are whatever is installed on this machine.</LizarbInterface.FontFace.Tip>
+  <LizarbInterface.OutlineSection>Text outline</LizarbInterface.OutlineSection>
+  <LizarbInterface.BackgroundPattern>Pattern</LizarbInterface.BackgroundPattern>
+  <LizarbInterface.BackgroundPattern.Tip>The tiling pattern drawn inside windows and panels. Picking a theme sets the pattern it was designed with, and you can change it afterwards.</LizarbInterface.BackgroundPattern.Tip>
+  <LizarbInterface.DrawingSection>Drawing</LizarbInterface.DrawingSection>
+  <LizarbInterface.AnimateSection>What animates</LizarbInterface.AnimateSection>
+  <LizarbInterface.Architect.ColourSection>Category colours</LizarbInterface.Architect.ColourSection>
+  <LizarbInterface.IconsSection>Which icons this mod draws itself instead of using the game's. Icons that belong to other mods are never replaced.</LizarbInterface.IconsSection>
+  <LizarbInterface.IconButtonSection>Icon buttons</LizarbInterface.IconButtonSection>
+  <LizarbInterface.OwnIcons>Use this mod's own icons</LizarbInterface.OwnIcons>
+  <LizarbInterface.OwnIcons.Tip>Covers the Architect category buttons, the play settings row, the search and codex buttons and the game speed controls. All of them are white glyphs with a black outline, drawn at one weight so they read as a set. Architect categories from other mods are matched on their name, so Storage gets a crate and Genetics gets a chromosome.</LizarbInterface.OwnIcons.Tip>
+  <LizarbInterface.OwnIcons.Clash>Architect Icons is active and draws its own icon in the same place. Turn one of the two off.</LizarbInterface.OwnIcons.Clash>
+  <LizarbInterface.ResetSection>Start over</LizarbInterface.ResetSection>
 </LanguageData>

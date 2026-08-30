@@ -88,7 +88,7 @@ namespace LizarbInterface
 
         public string architectPlateStyle = DefaultPlateStyle;
 
-        public bool architectIcons = true;
+        public bool ownIcons = true;
 
         public bool architectAutoWidth = true;
 
@@ -140,7 +140,7 @@ namespace LizarbInterface
             Scribe_Values.Look(ref architectColorLabels, "architectColorLabels", defaultValue: false);
             Scribe_Values.Look(ref architectAutoColor, "architectAutoColor", defaultValue: true);
             Scribe_Values.Look(ref architectPlateStyle, "architectPlateStyle", DefaultPlateStyle);
-            Scribe_Values.Look(ref architectIcons, "architectIcons", defaultValue: true);
+            Scribe_Values.Look(ref ownIcons, "architectIcons", defaultValue: true);
             Scribe_Values.Look(ref architectAutoWidth, "architectAutoWidth", defaultValue: true);
             Scribe_Values.Look(ref architectShapeOutline, "architectShapeOutline", defaultValue: true);
 
@@ -400,19 +400,24 @@ namespace LizarbInterface
 
         public override string SettingsCategory() => "Lizarb Interface";
 
-        private readonly float[] contentHeight = { 600f, 600f, 600f, 600f, 600f, 600f };
-
         private enum Tab
         {
             Theme,
             Text,
-            Surfaces,
-            Windows,
+            Icons,
             Architect,
-            Components,
+            Windows,
+            Compatibility,
         }
 
+        private static readonly Tab[] TabOrder =
+        {
+            Tab.Theme, Tab.Text, Tab.Icons, Tab.Architect, Tab.Windows, Tab.Compatibility,
+        };
+
         private static Tab tab = Tab.Theme;
+
+        private readonly float[] contentHeight = { 600f, 600f, 600f, 600f, 600f, 600f };
 
         private readonly Vector2[] scrolls = new Vector2[6];
 
@@ -426,11 +431,11 @@ namespace LizarbInterface
 
             Widgets.DrawMenuSection(body);
 
-            var tabs = new List<TabRecord>
+            var tabs = new List<TabRecord>();
+            foreach (Tab which in TabOrder)
             {
-                MakeTab(Tab.Theme), MakeTab(Tab.Text), MakeTab(Tab.Surfaces),
-                MakeTab(Tab.Windows), MakeTab(Tab.Architect), MakeTab(Tab.Components),
-            };
+                tabs.Add(MakeTab(which));
+            }
 
             TabDrawer.DrawTabs(body, tabs);
 
@@ -446,22 +451,22 @@ namespace LizarbInterface
             switch (tab)
             {
                 case Tab.Theme:
-                    Section(listing, "theme", DoThemeSection);
+                    Section(listing, "theme", DoThemeTab);
                     break;
                 case Tab.Text:
-                    Section(listing, "font", DoFontSection);
+                    Section(listing, "text", DoTextTab);
                     break;
-                case Tab.Surfaces:
-                    Section(listing, "surfaces", DoSurfacesSection);
-                    break;
-                case Tab.Windows:
-                    Section(listing, "window", DoWindowSection);
+                case Tab.Icons:
+                    Section(listing, "icons", DoIconsTab);
                     break;
                 case Tab.Architect:
-                    Section(listing, "architect", DoArchitectSection);
+                    Section(listing, "architect", DoArchitectTab);
                     break;
-                case Tab.Components:
-                    Section(listing, "components", DoComponentsSection);
+                case Tab.Windows:
+                    Section(listing, "windows", DoWindowsTab);
+                    break;
+                case Tab.Compatibility:
+                    Section(listing, "compatibility", DoCompatibilityTab);
                     break;
             }
 
@@ -507,7 +512,215 @@ namespace LizarbInterface
             }
         }
 
-        private void DoThemeSection(Listing_Standard listing)
+        private const float RowHeight = 30f;
+
+        private static readonly Color DimText = new Color(0.72f, 0.70f, 0.67f);
+
+        private static readonly Color RuleColor = new Color(1f, 1f, 1f, 0.22f);
+
+        private static Rect NextRow(Listing_Standard listing, out Rect label, out Rect control)
+        {
+            Rect row = listing.GetRect(RowHeight);
+            listing.Gap(2f);
+
+            float wide = Mathf.Clamp(row.width * 0.42f, 160f, 300f);
+            control = new Rect(row.xMax - wide, row.y, wide, row.height);
+            label = new Rect(row.x + 6f, row.y, row.width - wide - 14f, row.height);
+            return row;
+        }
+
+        private static void Write(Rect rect, string text, TextAnchor anchor)
+        {
+            TextAnchor previous = Text.Anchor;
+            Text.Anchor = anchor;
+            Widgets.Label(rect, text);
+            Text.Anchor = previous;
+        }
+
+        private static void Tip(Rect rect, string key)
+        {
+            string tip = key + ".Tip";
+            if (tip.CanTranslate())
+            {
+                TooltipHandler.TipRegion(rect, tip.Translate());
+            }
+        }
+
+        private static void Head(Listing_Standard listing, string key)
+        {
+            listing.Gap(12f);
+
+            Rect rect = listing.GetRect(24f);
+            Write(rect, key.Translate(), TextAnchor.MiddleLeft);
+
+            Color previous = GUI.color;
+            GUI.color = RuleColor;
+            Widgets.DrawLineHorizontal(rect.x, rect.yMax + 2f, rect.width);
+            GUI.color = previous;
+
+            listing.Gap(8f);
+        }
+
+        private static void Note(Listing_Standard listing, string text, Color colour)
+        {
+            Color previous = GUI.color;
+            GUI.color = colour;
+            Text.Font = GameFont.Tiny;
+            listing.Label(text);
+            Text.Font = GameFont.Small;
+            GUI.color = previous;
+            listing.Gap(6f);
+        }
+
+        private static bool Toggle(Listing_Standard listing, string key, bool value, bool enabled = true)
+        {
+            Rect row = NextRow(listing, out Rect label, out Rect control);
+
+            if (enabled && Mouse.IsOver(row))
+            {
+                Widgets.DrawHighlight(row);
+            }
+
+            Color previous = GUI.color;
+            if (!enabled)
+            {
+                GUI.color = new Color(1f, 1f, 1f, 0.35f);
+            }
+
+            Write(label, key.Translate(), TextAnchor.MiddleLeft);
+            Widgets.CheckboxDraw(control.xMax - 26f, control.y + 3f, value, !enabled);
+            GUI.color = previous;
+
+            Tip(row, key);
+
+            if (enabled && Widgets.ButtonInvisible(row))
+            {
+                value = !value;
+                (value ? RimWorld.SoundDefOf.Checkbox_TurnedOn : RimWorld.SoundDefOf.Checkbox_TurnedOff).PlayOneShotOnCamera();
+            }
+
+            return value;
+        }
+
+        private static float Slide(Listing_Standard listing, string key, float value,
+                                   float min, float max, Func<float, string> format,
+                                   float roundTo = -1f, bool enabled = true)
+        {
+            Rect row = NextRow(listing, out Rect label, out Rect control);
+
+            if (enabled && Mouse.IsOver(row))
+            {
+                Widgets.DrawHighlight(row);
+            }
+
+            Color previous = GUI.color;
+            if (!enabled)
+            {
+                GUI.color = new Color(1f, 1f, 1f, 0.35f);
+            }
+
+            Write(label, key.Translate(), TextAnchor.MiddleLeft);
+
+            const float ReadoutWidth = 58f;
+            var bar = new Rect(control.x, control.y + 9f, control.width - ReadoutWidth, 12f);
+
+            bool was = GUI.enabled;
+            GUI.enabled = enabled;
+            float next = Widgets.HorizontalSlider(bar, value, min, max, false, null, null, null, roundTo);
+            GUI.enabled = was;
+
+            if (!enabled)
+            {
+                next = value;
+            }
+
+            Write(new Rect(control.xMax - ReadoutWidth + 8f, control.y, ReadoutWidth - 8f, control.height),
+                  format(next), TextAnchor.MiddleRight);
+
+            GUI.color = previous;
+            Tip(row, key);
+            return next;
+        }
+
+        private static void Pick(Listing_Standard listing, string key, string current, Action onClick,
+                                 bool enabled = true)
+        {
+            Rect row = NextRow(listing, out Rect label, out Rect control);
+
+            Color previous = GUI.color;
+            if (!enabled)
+            {
+                GUI.color = new Color(1f, 1f, 1f, 0.35f);
+            }
+
+            Write(label, key.Translate(), TextAnchor.MiddleLeft);
+
+            var button = new Rect(control.x, control.y + 2f, control.width, control.height - 4f);
+            bool clicked = Widgets.ButtonText(button, current, active: enabled);
+
+            GUI.color = previous;
+            Tip(row, key);
+
+            if (clicked && enabled)
+            {
+                onClick();
+            }
+        }
+
+        private static string Percent(float v) => v.ToStringPercent();
+
+        private static string Pixels(float v) => Mathf.RoundToInt(v) + " px";
+
+        private static string Millis(float v) => Mathf.RoundToInt(v * 1000f) + " ms";
+
+        private static string Signed(float v)
+        {
+            int i = Mathf.RoundToInt(v);
+            return i > 0 ? "+" + i : i.ToString();
+        }
+
+        private void DoThemeTab(Listing_Standard listing)
+        {
+            DoThemeGrids(listing);
+
+            Head(listing, "LizarbInterface.BackgroundSection");
+
+            Settings.texturedBackground = Toggle(listing,
+                "LizarbInterface.TexturedBackground", Settings.texturedBackground);
+
+            bool grain = Settings.texturedBackground;
+
+            Pick(listing, "LizarbInterface.BackgroundPattern",
+                 ("LizarbInterface.Pattern." + Settings.backgroundPattern).Translate(),
+                 OpenPatternMenu, grain);
+
+            Settings.backgroundGrain = Slide(listing, "LizarbInterface.BackgroundGrain",
+                                             Settings.backgroundGrain, 0f, 1f, Percent, -1f, grain);
+
+            Settings.grainOnButtons = Toggle(listing,
+                "LizarbInterface.GrainOnButtons", Settings.grainOnButtons, grain);
+
+            Head(listing, "LizarbInterface.DrawingSection");
+
+            Settings.inset = Slide(listing, "LizarbInterface.Inset", Settings.inset, 0f, 4f, Pixels, 1f);
+            Settings.pointFilter = Toggle(listing, "LizarbInterface.PointFilter", Settings.pointFilter);
+        }
+
+        private void OpenPatternMenu()
+        {
+            var options = new List<FloatMenuOption>();
+            foreach (string p in Patterns)
+            {
+                string captured = p;
+                options.Add(new FloatMenuOption(
+                    ("LizarbInterface.Pattern." + captured).Translate(),
+                    () => Settings.backgroundPattern = captured));
+            }
+
+            Find.WindowStack.Add(new FloatMenu(options));
+        }
+
+        private void DoThemeGrids(Listing_Standard listing)
         {
             var squared = new List<string>();
             var rounded = new List<string>();
@@ -526,21 +739,17 @@ namespace LizarbInterface
             }
 
             DrawThemeGrid(listing, null, new List<string> { null });
-            listing.Gap(6f);
 
             if (handpainted.Count > 0)
             {
                 DrawThemeGrid(listing, "LizarbInterface.ThemeHandpainted", handpainted);
-                listing.Gap(6f);
             }
 
             DrawThemeGrid(listing, "LizarbInterface.ThemeSquared", squared);
-            listing.Gap(6f);
             DrawThemeGrid(listing, "LizarbInterface.ThemeRounded", rounded);
 
             if (Prefs.DevMode && development.Count > 0)
             {
-                listing.Gap(6f);
                 DrawThemeGrid(listing, "LizarbInterface.ThemeDevelopment", development);
             }
         }
@@ -552,7 +761,7 @@ namespace LizarbInterface
 
             if (heading != null)
             {
-                listing.Label(heading.Translate());
+                Head(listing, heading);
             }
 
             int rows = Mathf.CeilToInt(ids.Count / (float)PerRow);
@@ -600,9 +809,8 @@ namespace LizarbInterface
                 }
             }
 
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(area.x, area.y + 8f, area.width, 24f), Label(vanilla ? "Default" : theme));
-            Text.Anchor = TextAnchor.UpperLeft;
+            Write(new Rect(area.x, area.y + 8f, area.width, 24f),
+                  Label(vanilla ? "Default" : theme), TextAnchor.UpperCenter);
 
             if (selected)
             {
@@ -676,70 +884,61 @@ namespace LizarbInterface
             }
         }
 
-        private void DoFontSection(Listing_Standard listing)
+        private void DoTextTab(Listing_Standard listing)
         {
-            listing.Label("LizarbInterface.FontSection".Translate());
+            Head(listing, "LizarbInterface.FontSection");
 
             string current = Settings.fontName.NullOrEmpty()
                 ? "LizarbInterface.FontVanilla".Translate().ToString()
                 : Settings.fontName;
 
-            if (listing.ButtonText(current))
-            {
-                List<string> names = Settings.showAllFonts
-                    ? FontEngine.InstalledFonts()
-                    : FontEngine.CuratedFonts();
+            Pick(listing, "LizarbInterface.FontFace", current, OpenFontPicker);
 
-                Find.WindowStack.Add(new Dialog_FontPicker(names, Settings.fontName, SetFont));
-            }
+            Settings.showAllFonts = Toggle(listing, "LizarbInterface.ShowAllFonts", Settings.showAllFonts);
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.ShowAllFonts".Translate(),
-                ref Settings.showAllFonts,
-                "LizarbInterface.ShowAllFonts.Tip".Translate());
+            Settings.fontOffsetTiny = SizeSlide(listing, "LizarbInterface.FontSize.Tiny", Settings.fontOffsetTiny);
+            Settings.fontOffsetSmall = SizeSlide(listing, "LizarbInterface.FontSize.Small", Settings.fontOffsetSmall);
+            Settings.fontOffsetMedium = SizeSlide(listing, "LizarbInterface.FontSize.Medium", Settings.fontOffsetMedium);
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.TextOutline".Translate(),
-                ref Settings.textOutline,
-                "LizarbInterface.TextOutline.Tip".Translate());
-
-            if (Settings.textOutline)
-            {
-                listing.Label("LizarbInterface.OutlineThickness".Translate(Settings.outlineThickness.ToString("0")));
-                Settings.outlineThickness = Mathf.Round(listing.Slider(Settings.outlineThickness, 1f, 2f));
-
-                listing.Label("LizarbInterface.OutlineOpacity".Translate(Settings.outlineOpacity.ToStringPercent()));
-                Settings.outlineOpacity = listing.Slider(Settings.outlineOpacity, 0f, 1f);
-
-                listing.CheckboxLabeled(
-                    "LizarbInterface.OutlineTiny".Translate(),
-                    ref Settings.outlineTinyText,
-                    "LizarbInterface.OutlineTiny.Tip".Translate());
-            }
-
-            listing.Gap();
-
-            listing.Label("LizarbInterface.FontSize.Tiny".Translate(Signed(Settings.fontOffsetTiny)));
-            Settings.fontOffsetTiny = SizeSlider(listing, Settings.fontOffsetTiny);
-
-            listing.Label("LizarbInterface.FontSize.Small".Translate(Signed(Settings.fontOffsetSmall)));
-            Settings.fontOffsetSmall = SizeSlider(listing, Settings.fontOffsetSmall);
-
-            listing.Label("LizarbInterface.FontSize.Medium".Translate(Signed(Settings.fontOffsetMedium)));
-            Settings.fontOffsetMedium = SizeSlider(listing, Settings.fontOffsetMedium);
-
-            if (listing.ButtonText("LizarbInterface.FontReset".Translate(), null, 0.35f))
+            Rect reset = listing.GetRect(RowHeight);
+            listing.Gap(2f);
+            if (Widgets.ButtonText(new Rect(reset.x, reset.y + 2f, 200f, reset.height - 4f),
+                                   "LizarbInterface.FontReset".Translate()))
             {
                 Settings.fontOffsetTiny = 0;
                 Settings.fontOffsetSmall = 0;
                 Settings.fontOffsetMedium = 0;
                 SetFont(LizarbInterfaceSettings.DefaultFont);
             }
+
+            Head(listing, "LizarbInterface.OutlineSection");
+
+            Settings.textOutline = Toggle(listing, "LizarbInterface.TextOutline", Settings.textOutline);
+
+            bool outline = Settings.textOutline;
+
+            Settings.outlineThickness = Slide(listing, "LizarbInterface.OutlineThickness",
+                                              Settings.outlineThickness, 1f, 2f, Pixels, 1f, outline);
+
+            Settings.outlineOpacity = Slide(listing, "LizarbInterface.OutlineOpacity",
+                                            Settings.outlineOpacity, 0f, 1f, Percent, -1f, outline);
+
+            Settings.outlineTinyText = Toggle(listing, "LizarbInterface.OutlineTiny",
+                                              Settings.outlineTinyText, outline);
         }
 
-        private int SizeSlider(Listing_Standard listing, int value)
+        private void OpenFontPicker()
         {
-            int next = Mathf.RoundToInt(listing.Slider(value, -4f, 8f));
+            List<string> names = Settings.showAllFonts
+                ? FontEngine.InstalledFonts()
+                : FontEngine.CuratedFonts();
+
+            Find.WindowStack.Add(new Dialog_FontPicker(names, Settings.fontName, SetFont));
+        }
+
+        private int SizeSlide(Listing_Standard listing, string key, int value)
+        {
+            int next = Mathf.RoundToInt(Slide(listing, key, value, -4f, 8f, Signed, 1f));
             if (next != value)
             {
                 QueueFontApply();
@@ -755,130 +954,171 @@ namespace LizarbInterface
             fontDirty = true;
         }
 
-        private static string Signed(int v) => v > 0 ? "+" + v : v.ToString();
-
         private void SetFont(string name)
         {
             Settings.fontName = name;
             QueueFontApply();
         }
 
-        private void DoSurfacesSection(Listing_Standard listing)
+        private static readonly string[] IconSamples =
         {
-            listing.Label("LizarbInterface.Inset".Translate(Settings.inset.ToString("0")));
-            Settings.inset = Mathf.Round(listing.Slider(Settings.inset, 0f, 4f));
-            listing.Label("LizarbInterface.Inset.Tip".Translate());
+            "IconOrders", "IconProduction", "IconSecurity", "IconMedical", "IconStorage",
+            "IconShowZones", "IconShowBeauty", "IconSearchButton", "IconSpeedNormal", "IconSpeedFast",
+        };
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.PointFilter".Translate(),
-                ref Settings.pointFilter,
-                "LizarbInterface.PointFilter.Tip".Translate());
-
-            listing.GapLine();
-            DoBackgroundSection(listing);
-        }
-
-        private void DoWindowSection(Listing_Standard listing)
+        private void DoIconsTab(Listing_Standard listing)
         {
-            listing.CheckboxLabeled(
-                "LizarbInterface.WindowAnimation".Translate(),
-                ref Settings.windowAnimation,
-                "LizarbInterface.WindowAnimation.Tip".Translate());
+            Note(listing, "LizarbInterface.IconsSection".Translate(), DimText);
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.AnimateMainTabs".Translate(),
-                ref Settings.animateMainTabs,
-                "LizarbInterface.AnimateMainTabs.Tip".Translate());
+            Settings.ownIcons = Toggle(listing, "LizarbInterface.OwnIcons", Settings.ownIcons);
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.AnimateImmediate".Translate(),
-                ref Settings.animateImmediate,
-                "LizarbInterface.AnimateImmediate.Tip".Translate());
+            DrawIconStrip(listing, Settings.ownIcons);
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.AnimateOther".Translate(),
-                ref Settings.animateOtherLayers,
-                "LizarbInterface.AnimateOther.Tip".Translate());
-
-            bool anyAnimation = Settings.windowAnimation || Settings.animateMainTabs ||
-                                Settings.animateImmediate || Settings.animateOtherLayers;
-            if (anyAnimation)
+            if (Settings.ownIcons && ArchitectIconsModPresent)
             {
-                listing.Label("LizarbInterface.AnimationDuration".Translate(
-                    Mathf.RoundToInt(Settings.animationDuration * 1000f).ToString()));
-                Settings.animationDuration = listing.Slider(Settings.animationDuration, 0.05f, 0.6f);
-
-                listing.Gap(4f);
-                listing.Label("LizarbInterface.AnimationStyle".Translate());
-                DoAnimationStyleGrid(listing);
+                Note(listing, "LizarbInterface.OwnIcons.Clash".Translate(), Color.yellow);
             }
+
+            Head(listing, "LizarbInterface.IconButtonSection");
+
+            Settings.plateIconButtons = Toggle(listing,
+                "LizarbInterface.PlateIconButtons", Settings.plateIconButtons);
         }
 
-        private void DoArchitectSection(Listing_Standard listing)
+        private void DrawIconStrip(Listing_Standard listing, bool enabled)
         {
-            listing.Label("LizarbInterface.Architect.Section".Translate());
+            const float Cell = 40f;
+
             listing.Gap(4f);
+            Rect strip = listing.GetRect(Cell);
+            listing.Gap(8f);
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.Architect.Icons".Translate(),
-                ref Settings.architectIcons,
-                "LizarbInterface.Architect.Icons.Tip".Translate());
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.Architect.AutoWidth".Translate(),
-                ref Settings.architectAutoWidth,
-                "LizarbInterface.Architect.AutoWidth.Tip".Translate());
-
-            if (Settings.architectIcons && ArchitectIconsModPresent)
-            {
-                Text.Font = GameFont.Tiny;
-                GUI.color = Color.yellow;
-                listing.Label("LizarbInterface.Architect.Icons.Clash".Translate());
-                GUI.color = Color.white;
-                Text.Font = GameFont.Small;
-            }
-
-            listing.GapLine();
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.Architect.Enabled".Translate(),
-                ref Settings.architectColors);
-
-            if (!Settings.architectColors)
+            if (Event.current.type != EventType.Repaint)
             {
                 return;
             }
 
-            listing.Gap();
-            listing.Label("LizarbInterface.Architect.PlateStyle".Translate());
-            DoPlateStyleGrid(listing);
+            Texture2D plate = AtlasSwap.Own("ButtonBG");
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.Architect.ShapeOutline".Translate(),
-                ref Settings.architectShapeOutline,
-                "LizarbInterface.Architect.ShapeOutline.Tip".Translate());
+            for (int i = 0; i < IconSamples.Length; i++)
+            {
+                var cell = new Rect(strip.x + 6f + i * (Cell + 4f), strip.y, Cell, Cell);
+                if (cell.xMax > strip.xMax)
+                {
+                    break;
+                }
 
-            listing.Gap();
-            listing.Label("LizarbInterface.Architect.PlateAlpha".Translate(
-                Settings.architectPlateAlpha.ToStringPercent()));
-            Settings.architectPlateAlpha = listing.Slider(Settings.architectPlateAlpha, 0f, 1f);
+                if (plate != null)
+                {
+                    AtlasSwap.DrawScaled(cell, plate, true);
+                }
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.Architect.ColorLabels".Translate(),
-                ref Settings.architectColorLabels,
-                "LizarbInterface.Architect.ColorLabels.Tip".Translate());
+                Texture2D icon = AtlasSwap.Shared(IconSamples[i]);
+                if (icon == null)
+                {
+                    continue;
+                }
 
-            listing.CheckboxLabeled(
-                "LizarbInterface.Architect.AutoColor".Translate(),
-                ref Settings.architectAutoColor,
-                "LizarbInterface.Architect.AutoColor.Tip".Translate());
+                Color previous = GUI.color;
+                GUI.color = enabled ? Color.white : new Color(1f, 1f, 1f, 0.28f);
+                GUI.DrawTexture(cell.ContractedBy(8f), icon);
+                GUI.color = previous;
+            }
         }
 
-        private static string[] PlateStyles => ArchitectPlate.Styles;
-
-        private void DoAnimationStyleGrid(Listing_Standard listing)
+        private void DoArchitectTab(Listing_Standard listing)
         {
-            const float CellHeight = 28f;
+            Note(listing, "LizarbInterface.Architect.Section".Translate(), DimText);
+
+            Settings.architectAutoWidth = Toggle(listing,
+                "LizarbInterface.Architect.AutoWidth", Settings.architectAutoWidth);
+
+            Head(listing, "LizarbInterface.Architect.ColourSection");
+
+            Settings.architectColors = Toggle(listing,
+                "LizarbInterface.Architect.Enabled", Settings.architectColors);
+
+            bool colours = Settings.architectColors;
+
+            Settings.architectPlateAlpha = Slide(listing, "LizarbInterface.Architect.PlateAlpha",
+                                                 Settings.architectPlateAlpha, 0f, 1f, Percent, -1f, colours);
+
+            Settings.architectShapeOutline = Toggle(listing,
+                "LizarbInterface.Architect.ShapeOutline", Settings.architectShapeOutline, colours);
+
+            Settings.architectColorLabels = Toggle(listing,
+                "LizarbInterface.Architect.ColorLabels", Settings.architectColorLabels, colours);
+
+            Settings.architectAutoColor = Toggle(listing,
+                "LizarbInterface.Architect.AutoColor", Settings.architectAutoColor, colours);
+
+            Head(listing, "LizarbInterface.Architect.PlateStyle");
+            DoPlateStyleGrid(listing, colours);
+        }
+
+        private void DoWindowsTab(Listing_Standard listing)
+        {
+            Head(listing, "LizarbInterface.AnimateSection");
+
+            Settings.windowAnimation = Toggle(listing,
+                "LizarbInterface.WindowAnimation", Settings.windowAnimation);
+
+            Settings.animateMainTabs = Toggle(listing,
+                "LizarbInterface.AnimateMainTabs", Settings.animateMainTabs);
+
+            Settings.animateImmediate = Toggle(listing,
+                "LizarbInterface.AnimateImmediate", Settings.animateImmediate);
+
+            Settings.animateOtherLayers = Toggle(listing,
+                "LizarbInterface.AnimateOther", Settings.animateOtherLayers);
+
+            bool any = Settings.windowAnimation || Settings.animateMainTabs ||
+                       Settings.animateImmediate || Settings.animateOtherLayers;
+
+            Settings.animationDuration = Slide(listing, "LizarbInterface.AnimationDuration",
+                                               Settings.animationDuration, 0.05f, 0.6f, Millis, -1f, any);
+
+            Head(listing, "LizarbInterface.AnimationStyle");
+            DoAnimationStyleGrid(listing, any);
+        }
+
+        private void DoCompatibilityTab(Listing_Standard listing)
+        {
+            Note(listing, "LizarbInterface.ComponentsSection".Translate(), DimText);
+
+            Settings.skinButtons = Toggle(listing, "LizarbInterface.SkinButtons", Settings.skinButtons);
+            Settings.skinWindows = Toggle(listing, "LizarbInterface.SkinWindows", Settings.skinWindows);
+            Settings.skinTabs = Toggle(listing, "LizarbInterface.SkinTabs", Settings.skinTabs);
+            Settings.skinWidgets = Toggle(listing, "LizarbInterface.SkinWidgets", Settings.skinWidgets);
+            Settings.skinScrollbars = Toggle(listing, "LizarbInterface.SkinScrollbars", Settings.skinScrollbars);
+
+            Head(listing, "LizarbInterface.ResetSection");
+
+            Rect row = listing.GetRect(RowHeight);
+            listing.Gap(2f);
+            if (Widgets.ButtonText(new Rect(row.x, row.y + 2f, 220f, row.height - 4f),
+                                   "LizarbInterface.ResetAll".Translate()))
+            {
+                ResetAll();
+            }
+        }
+
+        private void ResetAll()
+        {
+            var fresh = new LizarbInterfaceSettings();
+            foreach (FieldInfo field in typeof(LizarbInterfaceSettings)
+                     .GetFields(BindingFlags.Instance | BindingFlags.Public))
+            {
+                field.SetValue(Settings, field.GetValue(fresh));
+            }
+
+            QueueFontApply();
+            RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
+        }
+
+        private void DoAnimationStyleGrid(Listing_Standard listing, bool enabled)
+        {
+            const float CellHeight = 30f;
             const float MinCellWidth = 150f;
 
             string[] styles = WindowAnimation.Styles;
@@ -889,6 +1129,12 @@ namespace LizarbInterface
             Rect area = listing.GetRect(rows * CellHeight);
             float cellWidth = width / columns;
 
+            Color previous = GUI.color;
+            if (!enabled)
+            {
+                GUI.color = new Color(1f, 1f, 1f, 0.35f);
+            }
+
             for (int i = 0; i < styles.Length; i++)
             {
                 var cell = new Rect(
@@ -897,27 +1143,26 @@ namespace LizarbInterface
                     cellWidth,
                     CellHeight).ContractedBy(2f);
 
-                bool selected = Settings.windowAnimationStyle == styles[i];
-                if (selected)
+                if (Settings.windowAnimationStyle == styles[i])
                 {
                     Widgets.DrawHighlightSelected(cell);
                 }
-                else if (Mouse.IsOver(cell))
+                else if (enabled && Mouse.IsOver(cell))
                 {
                     Widgets.DrawHighlight(cell);
                 }
 
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(cell, ("LizarbInterface.Animation." + styles[i]).Translate());
-                Text.Anchor = TextAnchor.UpperLeft;
+                Write(cell, ("LizarbInterface.Animation." + styles[i]).Translate(), TextAnchor.MiddleCenter);
 
-                if (Widgets.ButtonInvisible(cell))
+                if (enabled && Widgets.ButtonInvisible(cell))
                 {
                     Settings.windowAnimationStyle = styles[i];
                     ReplayAnimation();
                     RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
                 }
             }
+
+            GUI.color = previous;
         }
 
         private static void ReplayAnimation()
@@ -929,9 +1174,11 @@ namespace LizarbInterface
             }
         }
 
-        private void DoPlateStyleGrid(Listing_Standard listing)
+        private static string[] PlateStyles => ArchitectPlate.Styles;
+
+        private void DoPlateStyleGrid(Listing_Standard listing, bool enabled)
         {
-            const float CellHeight = 40f;
+            const float CellHeight = 42f;
             const float MinCellWidth = 290f;
 
             string[] styles = PlateStyles;
@@ -942,6 +1189,12 @@ namespace LizarbInterface
             Rect area = listing.GetRect(rows * CellHeight);
             float cellWidth = width / columns;
 
+            Color previous = GUI.color;
+            if (!enabled)
+            {
+                GUI.color = new Color(1f, 1f, 1f, 0.35f);
+            }
+
             for (int i = 0; i < styles.Length; i++)
             {
                 var cell = new Rect(
@@ -950,20 +1203,21 @@ namespace LizarbInterface
                     cellWidth,
                     CellHeight);
 
-                DoPlateStyleCell(cell, styles[i]);
+                DoPlateStyleCell(cell, styles[i], enabled);
             }
+
+            GUI.color = previous;
         }
 
-        private void DoPlateStyleCell(Rect cell, string style)
+        private void DoPlateStyleCell(Rect cell, string style, bool enabled)
         {
-            bool selected = Settings.architectPlateStyle == style;
             Rect inner = cell.ContractedBy(2f);
 
-            if (selected)
+            if (Settings.architectPlateStyle == style)
             {
                 Widgets.DrawHighlightSelected(inner);
             }
-            else if (Mouse.IsOver(inner))
+            else if (enabled && Mouse.IsOver(inner))
             {
                 Widgets.DrawHighlight(inner);
             }
@@ -974,19 +1228,18 @@ namespace LizarbInterface
 
             Rect label = inner;
             label.xMin = sample.xMax + 10f;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(label, ("LizarbInterface.Architect.PlateStyle." + style).Translate());
-            Text.Anchor = TextAnchor.UpperLeft;
+            Write(label, ("LizarbInterface.Architect.PlateStyle." + style).Translate(), TextAnchor.MiddleLeft);
 
             TooltipHandler.TipRegion(inner,
                 ("LizarbInterface.Architect.PlateStyle." + style + ".Tip").Translate());
 
-            if (Widgets.ButtonInvisible(inner))
+            if (enabled && Widgets.ButtonInvisible(inner))
             {
                 Settings.architectPlateStyle = style;
                 RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
             }
         }
+
         private void DrawPlateSample(Rect rect, string style)
         {
             if (Event.current.type != EventType.Repaint)
@@ -1015,104 +1268,14 @@ namespace LizarbInterface
 
             Color previous = GUI.color;
             GUI.color = label;
-            Text.Anchor = TextAnchor.MiddleLeft;
             float textLeft = ArchitectIcons.MarginFor(rect);
-            Widgets.Label(new Rect(rect.x + textLeft, rect.y, rect.width - textLeft - 4f, rect.height), "Production");
-            Text.Anchor = TextAnchor.UpperLeft;
+            Write(new Rect(rect.x + textLeft, rect.y, rect.width - textLeft - 4f, rect.height),
+                  "Production", TextAnchor.MiddleLeft);
             GUI.color = previous;
         }
+
         private static bool ArchitectIconsModPresent =>
             ModLister.GetActiveModWithIdentifier("com.bymarcin.architecticons", ignorePostfix: true) != null;
-
-        private void DoComponentsSection(Listing_Standard listing)
-        {
-            listing.Label("LizarbInterface.ComponentsSection".Translate());
-            listing.Gap(4f);
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.SkinButtons".Translate(),
-                ref Settings.skinButtons,
-                "LizarbInterface.SkinButtons.Tip".Translate());
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.SkinWindows".Translate(),
-                ref Settings.skinWindows,
-                "LizarbInterface.SkinWindows.Tip".Translate());
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.SkinTabs".Translate(),
-                ref Settings.skinTabs,
-                "LizarbInterface.SkinTabs.Tip".Translate());
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.SkinWidgets".Translate(),
-                ref Settings.skinWidgets,
-                "LizarbInterface.SkinWidgets.Tip".Translate());
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.SkinScrollbars".Translate(),
-                ref Settings.skinScrollbars,
-                "LizarbInterface.SkinScrollbars.Tip".Translate());
-
-            listing.GapLine();
-
-            if (listing.ButtonText("LizarbInterface.ResetAll".Translate(), null, 0.4f))
-            {
-                ResetAll();
-            }
-        }
-
-        private void ResetAll()
-        {
-            var fresh = new LizarbInterfaceSettings();
-            foreach (FieldInfo field in typeof(LizarbInterfaceSettings)
-                     .GetFields(BindingFlags.Instance | BindingFlags.Public))
-            {
-                field.SetValue(Settings, field.GetValue(fresh));
-            }
-
-            QueueFontApply();
-            RimWorld.SoundDefOf.Click.PlayOneShotOnCamera();
-        }
-
-        private void DoBackgroundSection(Listing_Standard listing)
-        {
-            listing.Label("LizarbInterface.BackgroundSection".Translate());
-            listing.CheckboxLabeled(
-                "LizarbInterface.TexturedBackground".Translate(),
-                ref Settings.texturedBackground,
-                "LizarbInterface.TexturedBackground.Tip".Translate());
-
-            if (Settings.texturedBackground)
-            {
-                if (listing.ButtonText(("LizarbInterface.Pattern." + Settings.backgroundPattern).Translate()))
-                {
-                    var options = new List<FloatMenuOption>();
-                    foreach (string p in Patterns)
-                    {
-                        string captured = p;
-                        options.Add(new FloatMenuOption(
-                            ("LizarbInterface.Pattern." + captured).Translate(),
-                            () => Settings.backgroundPattern = captured));
-                    }
-
-                    Find.WindowStack.Add(new FloatMenu(options));
-                }
-
-                listing.Label("LizarbInterface.BackgroundGrain".Translate(Settings.backgroundGrain.ToStringPercent()));
-                Settings.backgroundGrain = listing.Slider(Settings.backgroundGrain, 0f, 1f);
-
-                listing.CheckboxLabeled(
-                    "LizarbInterface.GrainOnButtons".Translate(),
-                    ref Settings.grainOnButtons,
-                    "LizarbInterface.GrainOnButtons.Tip".Translate());
-            }
-
-            listing.CheckboxLabeled(
-                "LizarbInterface.PlateIconButtons".Translate(),
-                ref Settings.plateIconButtons,
-                "LizarbInterface.PlateIconButtons.Tip".Translate());
-        }
     }
 
     [HarmonyPatch(typeof(MemoryUtility), nameof(MemoryUtility.UnloadUnusedUnityAssets))]

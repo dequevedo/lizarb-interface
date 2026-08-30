@@ -134,10 +134,17 @@ namespace LizarbInterface
 
             for (int i = 0; i < entries.Length; i++)
             {
-                if (ReferenceEquals(entries[i].Vanilla, original))
+                if (!ReferenceEquals(entries[i].Vanilla, original))
                 {
-                    return entries[i].Shared ? AtlasSwap.Shared(entries[i].File) : AtlasSwap.Own(entries[i].File);
+                    continue;
                 }
+
+                if (entries[i].Shared)
+                {
+                    return settings.ownIcons ? AtlasSwap.Shared(entries[i].File) : null;
+                }
+
+                return AtlasSwap.Own(entries[i].File);
             }
 
             return null;

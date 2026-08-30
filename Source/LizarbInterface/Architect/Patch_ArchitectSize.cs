@@ -35,7 +35,7 @@ namespace LizarbInterface
         internal static float Required()
         {
             LizarbInterfaceSettings s = LizarbInterfaceMod.Settings;
-            string now = s.fontName + "|" + s.fontOffsetSmall + "|" + s.architectIcons + "|" +
+            string now = s.fontName + "|" + s.fontOffsetSmall + "|" + s.ownIcons + "|" +
                          DefDatabase<DesignationCategoryDef>.DefCount + "|" +
                          LanguageDatabase.activeLanguage?.folderName;
 
@@ -80,7 +80,7 @@ namespace LizarbInterface
             Text.Font = previous;
 
             float byShare = (widest + RightPad) / LabelShare;
-            float byIcon = (settings.architectIcons ? IconReserve : 0f) + widest + RightPad;
+            float byIcon = (settings.ownIcons ? IconReserve : 0f) + widest + RightPad;
 
             return Mathf.Min(MaxWidth, Mathf.Max(byShare, byIcon) * MainTabWindow_Architect.ColumnCount);
         }

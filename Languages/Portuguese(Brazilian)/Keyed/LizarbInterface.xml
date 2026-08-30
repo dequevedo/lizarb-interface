@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <LizarbInterface.Inset>Folga entre elementos: {0} px</LizarbInterface.Inset>
+  <LizarbInterface.Inset>Folga entre elementos</LizarbInterface.Inset>
   <LizarbInterface.PointFilter>Texturas pixeladas (filtro point)</LizarbInterface.PointFilter>
   <LizarbInterface.PointFilter.Tip>Amostra as texturas por vizinho mais próximo em vez de suavizar. Só fica bom em escala de UI 1x ou 2x: em 1.25x um texel cobre 1,25 pixel de tela, então o contorno sai grosso em partes e fino em outras.</LizarbInterface.PointFilter.Tip>
   <LizarbInterface.Inset.Tip>Pinta cada elemento um pouco para dentro da própria área, para que botões vizinhos deixem de se encostar. Nada no layout se move, então textos e ícones ficam exatamente onde o jogo os colocou.</LizarbInterface.Inset.Tip>
@@ -8,20 +8,20 @@
   <LizarbInterface.FontVanilla>Padrão do jogo</LizarbInterface.FontVanilla>
   <LizarbInterface.FontGroup.Shipped>Inclusas no mod</LizarbInterface.FontGroup.Shipped>
   <LizarbInterface.FontGroup.Local>Encontradas neste PC</LizarbInterface.FontGroup.Local>
-  <LizarbInterface.FontSize.Tiny>Tamanho do texto miúdo: {0}</LizarbInterface.FontSize.Tiny>
-  <LizarbInterface.FontSize.Small>Tamanho do texto normal: {0}</LizarbInterface.FontSize.Small>
-  <LizarbInterface.FontSize.Medium>Tamanho dos títulos: {0}</LizarbInterface.FontSize.Medium>
+  <LizarbInterface.FontSize.Tiny>Tamanho do texto miúdo</LizarbInterface.FontSize.Tiny>
+  <LizarbInterface.FontSize.Small>Tamanho do texto normal</LizarbInterface.FontSize.Small>
+  <LizarbInterface.FontSize.Medium>Tamanho dos títulos</LizarbInterface.FontSize.Medium>
   <LizarbInterface.FontReset>Restaurar fonte</LizarbInterface.FontReset>
   <LizarbInterface.BackgroundSection>Fundo</LizarbInterface.BackgroundSection>
   <LizarbInterface.TexturedBackground>Fundo com textura</LizarbInterface.TexturedBackground>
   <LizarbInterface.TexturedBackground.Tip>Aplica um grunge ladrilhado de dois tons no interior de janelas e painéis, no lugar da cor chapada. Ele repete no tamanho próprio em vez de esticar, então fica igual num painel pequeno e numa janela de tela cheia.</LizarbInterface.TexturedBackground.Tip>
-  <LizarbInterface.BackgroundGrain>Força da textura: {0}</LizarbInterface.BackgroundGrain>
+  <LizarbInterface.BackgroundGrain>Força da textura</LizarbInterface.BackgroundGrain>
   <LizarbInterface.ShowAllFonts>Mostrar todas as fontes instaladas</LizarbInterface.ShowAllFonts>
   <LizarbInterface.ShowAllFonts.Tip>Desligado por padrão. A lista curta traz só fontes serifadas que continuam legíveis nos tamanhos que o RimWorld desenha. Góticas ficaram de fora de propósito: são o mais medieval que existe na máquina e o menos legível numa lista de colonos.</LizarbInterface.ShowAllFonts.Tip>
   <LizarbInterface.TextOutline>Contorno preto no texto</LizarbInterface.TextOutline>
   <LizarbInterface.TextOutline.Tip>Desenha cada texto mais oito vezes por baixo do original, deslocado exatamente um pixel de tela em cada direção, num tom bem escuro do tema atual. Custa um pouco de desempenho em telas cheias de texto.</LizarbInterface.TextOutline.Tip>
-  <LizarbInterface.OutlineThickness>Espessura do contorno: {0} px</LizarbInterface.OutlineThickness>
-  <LizarbInterface.OutlineOpacity>Opacidade do contorno: {0}</LizarbInterface.OutlineOpacity>
+  <LizarbInterface.OutlineThickness>Espessura do contorno</LizarbInterface.OutlineThickness>
+  <LizarbInterface.OutlineOpacity>Opacidade do contorno</LizarbInterface.OutlineOpacity>
   <LizarbInterface.Pattern.Hatch>Hachura</LizarbInterface.Pattern.Hatch>
   <LizarbInterface.Pattern.Medieval>Treliça medieval</LizarbInterface.Pattern.Medieval>
   <LizarbInterface.ThemeSquared>Geradas, quadradas</LizarbInterface.ThemeSquared>
@@ -62,10 +62,8 @@
   <LizarbInterface.Pattern.Woodgrain>Veio de madeira</LizarbInterface.Pattern.Woodgrain>
   <LizarbInterface.Tab.Theme>Tema</LizarbInterface.Tab.Theme>
   <LizarbInterface.Tab.Text>Texto</LizarbInterface.Tab.Text>
-  <LizarbInterface.Tab.Surfaces>Superfícies</LizarbInterface.Tab.Surfaces>
   <LizarbInterface.Tab.Windows>Janelas</LizarbInterface.Tab.Windows>
-  <LizarbInterface.Tab.Components>Componentes</LizarbInterface.Tab.Components>
-  <LizarbInterface.AnimationDuration>Duração da animação: {0} ms</LizarbInterface.AnimationDuration>
+  <LizarbInterface.AnimationDuration>Duração da animação</LizarbInterface.AnimationDuration>
   <LizarbInterface.ComponentsSection>Quais superfícies este mod pode retexturizar. Desligue uma para devolvê-la ao jogo, ou a outro mod, sem abrir mão do resto.</LizarbInterface.ComponentsSection>
   <LizarbInterface.SkinButtons>Botões, dicas e menus</LizarbInterface.SkinButtons>
   <LizarbInterface.SkinButtons.Tip>Todo botão, a barra inferior, as dicas de contexto, as linhas de menu flutuante e o trilho do slider. Todos passam pela mesma chamada de desenho, então dividem o mesmo interruptor.</LizarbInterface.SkinButtons.Tip>
@@ -81,14 +79,11 @@
   <LizarbInterface.Tab.Architect>Arquiteto</LizarbInterface.Tab.Architect>
   <LizarbInterface.Architect.Section>Dá uma cor a cada botão de categoria do menu Arquiteto, de acordo com a função da categoria. Categorias de outros mods ganham uma cor própria e estável.</LizarbInterface.Architect.Section>
   <LizarbInterface.Architect.Enabled>Colorir os botões de categoria do Arquiteto</LizarbInterface.Architect.Enabled>
-  <LizarbInterface.Architect.PlateAlpha>Força da cor no botão: {0}</LizarbInterface.Architect.PlateAlpha>
+  <LizarbInterface.Architect.PlateAlpha>Força da cor</LizarbInterface.Architect.PlateAlpha>
   <LizarbInterface.Architect.ColorLabels>Colorir o texto do botão também</LizarbInterface.Architect.ColorLabels>
   <LizarbInterface.Architect.ColorLabels.Tip>Desligado por padrão: sobre um botão colorido, texto do mesmo tom perde contraste. Ligue se você zerar a força da cor no botão.</LizarbInterface.Architect.ColorLabels.Tip>
   <LizarbInterface.Architect.AutoColor>Colorir automaticamente categorias desconhecidas</LizarbInterface.Architect.AutoColor>
   <LizarbInterface.Architect.AutoColor.Tip>Categorias adicionadas por outros mods ganham uma cor estável gerada a partir do defName, em vez de ficarem cinzas.</LizarbInterface.Architect.AutoColor.Tip>
-  <LizarbInterface.Architect.Icons>Usar os icones proprios deste mod</LizarbInterface.Architect.Icons>
-  <LizarbInterface.Architect.Icons.Tip>Desenha um símbolo branco com contorno preto à esquerda de cada botão de categoria. Categorias de outros mods são reconhecidas pelo nome, então Storage ganha um engradado e Genetics ganha uma cruz.</LizarbInterface.Architect.Icons.Tip>
-  <LizarbInterface.Architect.Icons.Clash>O Architect Icons esta ativo e desenha o icone dele no mesmo lugar. Desligue um dos dois.</LizarbInterface.Architect.Icons.Clash>
   <LizarbInterface.Architect.PlateStyle>Formato da cor</LizarbInterface.Architect.PlateStyle>
   <LizarbInterface.Architect.PlateStyle.Plate>Placa</LizarbInterface.Architect.PlateStyle.Plate>
   <LizarbInterface.Architect.PlateStyle.Plate.Tip>Preenche o botão seguindo o raio de canto do tema, escurecendo para baixo.</LizarbInterface.Architect.PlateStyle.Plate.Tip>
@@ -126,7 +121,7 @@
   <LizarbInterface.AnimateImmediate.Tip>O painel de inspeção e os outros que o jogo reconstrói a cada quadro. Eles aparecem e somem conforme a seleção, então isto dispara com frequência.</LizarbInterface.AnimateImmediate.Tip>
   <LizarbInterface.AnimateOther>Animar todo o resto</LizarbInterface.AnimateOther>
   <LizarbInterface.AnimateOther.Tip>Qualquer janela numa camada que os três acima não cobrem.</LizarbInterface.AnimateOther.Tip>
-  <LizarbInterface.AnimationStyle>Estilo da animação (clique para rever)</LizarbInterface.AnimationStyle>
+  <LizarbInterface.AnimationStyle>Estilo da animação</LizarbInterface.AnimationStyle>
   <LizarbInterface.Animation.Scale>Escala</LizarbInterface.Animation.Scale>
   <LizarbInterface.Animation.Zoom>Recuo</LizarbInterface.Animation.Zoom>
   <LizarbInterface.Animation.Rise>Subida</LizarbInterface.Animation.Rise>
@@ -134,4 +129,20 @@
   <LizarbInterface.Animation.Unfold>Desdobra</LizarbInterface.Animation.Unfold>
   <LizarbInterface.Animation.Flip>Virada</LizarbInterface.Animation.Flip>
   <LizarbInterface.Animation.Tilt>Inclinada</LizarbInterface.Animation.Tilt>
+  <LizarbInterface.Tab.Icons>Ícones</LizarbInterface.Tab.Icons>
+  <LizarbInterface.Tab.Compatibility>Compatibilidade</LizarbInterface.Tab.Compatibility>
+  <LizarbInterface.FontFace>Tipo de letra</LizarbInterface.FontFace>
+  <LizarbInterface.FontFace.Tip>Vale para todo texto do jogo. As fontes que acompanham este mod são as mesmas para todo mundo; as outras são as que estiverem instaladas nesta máquina.</LizarbInterface.FontFace.Tip>
+  <LizarbInterface.OutlineSection>Contorno do texto</LizarbInterface.OutlineSection>
+  <LizarbInterface.BackgroundPattern>Padrão</LizarbInterface.BackgroundPattern>
+  <LizarbInterface.BackgroundPattern.Tip>O padrão ladrilhado desenhado dentro de janelas e painéis. Escolher um tema aplica o padrão com que ele foi desenhado, e depois dá para trocar.</LizarbInterface.BackgroundPattern.Tip>
+  <LizarbInterface.DrawingSection>Desenho</LizarbInterface.DrawingSection>
+  <LizarbInterface.AnimateSection>O que anima</LizarbInterface.AnimateSection>
+  <LizarbInterface.Architect.ColourSection>Cores das categorias</LizarbInterface.Architect.ColourSection>
+  <LizarbInterface.IconsSection>Quais ícones este mod desenha por conta própria em vez de usar os do jogo. Ícone que pertence a outro mod nunca é substituído.</LizarbInterface.IconsSection>
+  <LizarbInterface.IconButtonSection>Botões de ícone</LizarbInterface.IconButtonSection>
+  <LizarbInterface.OwnIcons>Usar os ícones próprios deste mod</LizarbInterface.OwnIcons>
+  <LizarbInterface.OwnIcons.Tip>Cobre os botões de categoria do Arquiteto, a linha de opções de jogo, os botões de busca e códex e os controles de velocidade. Todos são símbolos brancos com contorno preto, desenhados com o mesmo peso para lerem como um conjunto. Categorias de outros mods são reconhecidas pelo nome, então Storage ganha um engradado e Genetics ganha um cromossomo.</LizarbInterface.OwnIcons.Tip>
+  <LizarbInterface.OwnIcons.Clash>O Architect Icons está ativo e desenha o ícone dele no mesmo lugar. Desligue um dos dois.</LizarbInterface.OwnIcons.Clash>
+  <LizarbInterface.ResetSection>Recomeçar</LizarbInterface.ResetSection>
 </LanguageData>

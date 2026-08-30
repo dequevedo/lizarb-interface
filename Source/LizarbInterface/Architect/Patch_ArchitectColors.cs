@@ -43,7 +43,7 @@ namespace LizarbInterface
             }
 
             LizarbInterfaceSettings settings = LizarbInterfaceMod.Settings;
-            if (settings != null && settings.enabled && settings.architectIcons)
+            if (settings != null && settings.enabled && settings.ownIcons)
             {
                 ArchitectColorContext.Icon = CategoryPalette.IconFor(panel.def);
             }
