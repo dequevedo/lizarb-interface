@@ -158,7 +158,7 @@ credited to their project authors, named in each licence file.
 ### Icon credits
 
 The interface icons come from the Game Icon Pack v1.4 by Nieobie, released under
-CC0 1.0 Universal. That licence asks for nothing, so this credit is voluntary.
+CC0 1.0 Universal.
 
 Every icon has one 512px master and only one. `art/icons/pack/` holds the forty
 four that came from the pack, `art/icons/custom/` the nine drawn for this mod,
