@@ -1,0 +1,2 @@
+pattern=Hatch
+grain=0.15
