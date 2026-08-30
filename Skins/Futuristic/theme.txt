@@ -1,0 +1,9 @@
+name=Futuristic
+font=Pixelify Sans
+pattern=Hatch
+grain=0.04
+background=true
+plateshape=Diamond
+scale=1
+tile=true
+pointfilter=true

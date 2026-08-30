@@ -110,14 +110,49 @@ function New-Canvas {
     , @($bmp, $g)
 }
 
+function Get-SkinKey {
+    param([string]$Skin, [string]$Key, [string]$Fallback)
+
+    $file = Join-Path $Skins "$Skin\theme.txt"
+    if (-not (Test-Path $file)) { return $Fallback }
+
+    foreach ($line in (Get-Content $file)) {
+        $parts = $line -split '=', 2
+        if ($parts.Count -eq 2 -and $parts[0].Trim().ToLower() -eq $Key) {
+            return $parts[1].Trim()
+        }
+    }
+
+    return $Fallback
+}
+
+function Get-SkinScale {
+    param([string]$Skin)
+    [double](Get-SkinKey $Skin 'scale' "$scale")
+}
+
+function Get-SkinTile {
+    param([string]$Skin)
+    @('true', 'on', 'yes', '1') -contains (Get-SkinKey $Skin 'tile' 'false').ToLower()
+}
+
+function Skin-File {
+    param([string]$Skin, [string]$Name, [string]$Fallback)
+
+    $path = Join-Path $Skins "$Skin\$Name.png"
+    if (Test-Path $path) { return $path }
+    return (Join-Path $Skins "$Skin\$Fallback.png")
+}
+
 function Draw-Card {
     param($g, [string]$Theme, [string]$Pattern, [int]$X, [int]$Y, [int]$W, [int]$H,
           $NameFont, $SmallFont, [switch]$WithTab)
 
-    $dir = Join-Path $Skins $Theme
+    $density = Get-SkinScale $Theme
+    $tile = Get-SkinTile $Theme
 
-    $win = [System.Drawing.Image]::FromFile("$dir\WindowAtlas.png")
-    Draw9 $g $win $X $Y $W $H
+    $win = [System.Drawing.Image]::FromFile((Skin-File $Theme 'WindowAtlas' 'ButtonBG'))
+    Draw9Scaled $g $win $X $Y $W $H $density $tile
     $win.Dispose()
 
     $pad = [int]($W * 0.09)
@@ -125,29 +160,44 @@ function Draw-Card {
     $bh = [int]($H * 0.20)
     $by = $Y + [int]($H * 0.16)
 
-    $btn = [System.Drawing.Image]::FromFile("$dir\ButtonBG.png")
-    Draw9 $g $btn ($X + $pad) $by $bw $bh
-    Draw9 $g $btn ($X + $pad * 2 + $bw) $by $bw $bh
+    $btn = [System.Drawing.Image]::FromFile((Join-Path $Skins "$Theme\ButtonBG.png"))
+    Draw9Scaled $g $btn ($X + $pad) $by $bw $bh $density $tile
+    Draw9Scaled $g $btn ($X + $pad * 2 + $bw) $by $bw $bh $density $tile
     $btn.Dispose()
 
     if ($WithTab) {
-        $tab = [System.Drawing.Image]::FromFile("$dir\TabAtlas.png")
-        Draw9 $g $tab ($X + $pad) ($Y + $H - $bh - [int]($H * 0.12)) ([int]($bw * 1.15)) $bh
+        $tab = [System.Drawing.Image]::FromFile((Skin-File $Theme 'TabAtlas' 'ButtonBG'))
+        Draw9Scaled $g $tab ($X + $pad) ($Y + $H - $bh - [int]($H * 0.12)) ([int]($bw * 1.15)) $bh $density $tile
         $tab.Dispose()
     }
 
     $ty = $by + $bh + [int]($H * 0.10)
     $g.DrawString($Theme, $NameFont, [System.Drawing.Brushes]::White, ($X + $pad), $ty)
+
     if ($SmallFont) {
-        $g.DrawString($Pattern, $SmallFont, [System.Drawing.Brushes]::Gainsboro,
-                      ($X + $pad * 2 + $bw), ($ty + 3))
+        $nameWidth = $g.MeasureString($Theme, $NameFont).Width
+        $patternX = $X + $pad * 2 + $bw
+        if (($X + $pad + $nameWidth) -lt $patternX) {
+            $g.DrawString($Pattern, $SmallFont, [System.Drawing.Brushes]::Gainsboro,
+                          $patternX, ($ty + 3))
+        }
     }
 }
 
 function Write-Sheet {
     $CW = 248; $CH = 190; $COLS = 4; $GAP = 6; $HEAD = 30
 
+    $builtIn = @($pairs | ForEach-Object { $_[0] })
+    $hand = @()
+    foreach ($d in (Get-ChildItem $Skins -Directory | Sort-Object Name)) {
+        if ($d.Name -eq 'Shared' -or $d.Name -like 'Debug*') { continue }
+        if ($builtIn -contains $d.Name) { continue }
+        if (-not (Test-Path (Join-Path $d.FullName 'ButtonBG.png'))) { continue }
+        $hand += , @($d.Name, (Get-SkinKey $d.Name 'pattern' 'Hatch'), 'Handpainted')
+    }
+
     $groups = @(
+        , @('Hand painted', $hand)
         , @('Generated, squared', @($pairs | Where-Object { $_[2] -eq 'Squared' }))
         , @('Generated, rounded (experimental)', @($pairs | Where-Object { $_[2] -eq 'Rounded' }))
     )
@@ -182,7 +232,7 @@ function Write-Sheet {
     $out = Join-Path $Repo 'docs\themes.png'
     Save-Doc $bmp $out 'docs/themes.png'
     $g.Dispose(); $bmp.Dispose()
-    Write-Host "docs\themes.png  ($($pairs.Count) themes, $($COLS * $CW + $GAP)x$H)" -ForegroundColor Green
+    Write-Host "docs\themes.png  ($($pairs.Count + $hand.Count) skins, $($COLS * $CW + $GAP)x$H)" -ForegroundColor Green
 }
 
 function Write-Preview {
@@ -518,40 +568,40 @@ function Write-Overlay {
     Write-Host "  slices-${W}x${H}.png  (corner $cx x $cy texels)" -ForegroundColor DarkGray
 }
 
-function Get-SkinScale {
-    param([string]$Skin)
+function Strip {
+    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H,
+          [int]$SX, [int]$SY, [int]$SW, [int]$SH, [int]$UnitW)
 
-    $file = Join-Path $Skins "$Skin\theme.txt"
-    if (-not (Test-Path $file)) { return $scale }
+    if ($W -le 0 -or $H -le 0) { return }
 
-    foreach ($line in (Get-Content $file)) {
-        $parts = $line -split '=', 2
-        if ($parts.Count -eq 2 -and $parts[0].Trim().ToLower() -eq 'scale') {
-            return [double]$parts[1].Trim()
-        }
+    if ($UnitW -le 0 -or $UnitW -ge $W) {
+        $g.DrawImage($img,
+            (New-Object System.Drawing.Rectangle($X, $Y, $W, $H)),
+            (New-Object System.Drawing.Rectangle($SX, $SY, $SW, $SH)),
+            [System.Drawing.GraphicsUnit]::Pixel)
+        return
     }
 
-    return $scale
-}
+    $count = [int][Math]::Ceiling($W / [double]$UnitW)
+    if ($count -gt 512) { $count = 512 }
 
-function Get-SkinFont {
-    param([string]$Skin)
+    for ($k = 0; $k -lt $count; $k++) {
+        $x = $X + $k * $UnitW
+        $w = [Math]::Min($UnitW, $X + $W - $x)
+        if ($w -le 0) { break }
 
-    $file = Join-Path $Skins "$Skin\theme.txt"
-    if (-not (Test-Path $file)) { return $null }
+        $sw2 = [int]($SW * $w / $UnitW)
+        if ($sw2 -lt 1) { $sw2 = 1 }
 
-    foreach ($line in (Get-Content $file)) {
-        $parts = $line -split '=', 2
-        if ($parts.Count -eq 2 -and $parts[0].Trim().ToLower() -eq 'font') {
-            return $parts[1].Trim()
-        }
+        $g.DrawImage($img,
+            (New-Object System.Drawing.Rectangle($x, $Y, $w, $H)),
+            (New-Object System.Drawing.Rectangle($SX, $SY, $sw2, $SH)),
+            [System.Drawing.GraphicsUnit]::Pixel)
     }
-
-    return $null
 }
 
 function Draw9Scaled {
-    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density)
+    param($g, $img, [int]$X, [int]$Y, [int]$W, [int]$H, [double]$Density, [bool]$Tile = $false)
 
     $c = [int][Math]::Min($img.Width * 0.25 / $Density, [Math]::Min($H / 2, $W / 2))
     $sc = [int]($img.Width * 0.25)
@@ -561,29 +611,31 @@ function Draw9Scaled {
     $sy = @(0, $sy0, ($img.Height - $sy0)); $sh = @($sy0, ($img.Height - 2 * $sy0), $sy0)
     $dy = @($Y, ($Y + $c), ($Y + $H - $c)); $dh = @($c, ($H - 2 * $c), $c)
 
+    $unit = 0
+
     for ($i = 0; $i -lt 3; $i++) {
         for ($j = 0; $j -lt 3; $j++) {
             if ($dw[$i] -le 0 -or $dh[$j] -le 0) { continue }
-            $g.DrawImage($img,
-                (New-Object System.Drawing.Rectangle($dx[$i], $dy[$j], $dw[$i], $dh[$j])),
-                (New-Object System.Drawing.Rectangle($sx[$i], $sy[$j], $sw[$i], $sh[$j])),
-                [System.Drawing.GraphicsUnit]::Pixel)
+            $u = 0
+            if ($i -eq 1) { $u = $unit }
+            Strip $g $img $dx[$i] $dy[$j] $dw[$i] $dh[$j] $sx[$i] $sy[$j] $sw[$i] $sh[$j] $u
         }
     }
 }
 
 function Write-Titles {
     $Skin = 'EnhancedPixelStone'
+    $Face = 'Rajdhani'
     $W = 630
-    $H = 56
+    $H = 64
     $Size = 28
 
     $dir = Join-Path $Repo 'docs\titles'
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
 
     $headings = @(
-        'Presets', 'Make your own', 'Fonts', 'Settings', 'The Architect menu',
-        'Compatibility', 'Built with AI', 'Source and licence', 'Requires'
+        'Presets', 'Fonts', 'Settings', 'The Architect menu',
+        'Compatibility', 'Built with AI', 'Source and licence', 'Dependencies'
     )
 
     $bbcode = Join-Path $Repo 'docs\steam-description.bbcode'
@@ -605,8 +657,8 @@ function Write-Titles {
     if (-not (Test-Path $skinDir)) { throw "skin $Skin has no folder" }
 
     $density = Get-SkinScale $Skin
-    $wanted = Get-SkinFont $Skin
-    if (-not $wanted) { throw "skin $Skin names no font in its theme.txt" }
+    $tile = Get-SkinTile $Skin
+    $wanted = $Face
 
     $pfc = New-Object System.Drawing.Text.PrivateFontCollection
     $found = $null
@@ -624,7 +676,7 @@ function Write-Titles {
     $font = New-Object System.Drawing.Font($found, $Size, [System.Drawing.FontStyle]::Regular,
                                            [System.Drawing.GraphicsUnit]::Pixel)
 
-    $plate = [System.Drawing.Image]::FromFile((Join-Path $skinDir 'ButtonBG.png'))
+    $plate = [System.Drawing.Image]::FromFile((Join-Path $skinDir 'WindowAtlas.png'))
 
     foreach ($text in $headings) {
         $bmp = New-Object System.Drawing.Bitmap($W, $H, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -633,7 +685,7 @@ function Write-Titles {
         $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
         $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::SingleBitPerPixelGridFit
 
-        Draw9Scaled $g $plate 0 0 $W $H $density
+        Draw9Scaled $g $plate 0 0 $W $H $density $tile
 
         $sf = New-Object System.Drawing.StringFormat
         $sf.Alignment = [System.Drawing.StringAlignment]::Near
