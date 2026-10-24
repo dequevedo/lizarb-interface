@@ -12,7 +12,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $GameDir    = if ($env:RIMWORLD_DIR) { $env:RIMWORLD_DIR } else { 'D:\Steam\steamapps\common\RimWorld' }
-$GameExe    = Join-Path $GameDir 'RimWorldWin64.exe'
+$GameExe    = (@('RimWorldWin64.exe', 'RimWorld.exe') | ForEach-Object { Join-Path $GameDir $_ } | Where-Object { Test-Path $_ } | Select-Object -First 1)
 $Workshop   = if ($env:RIMWORLD_WORKSHOP) { $env:RIMWORLD_WORKSHOP } else { 'D:\Steam\steamapps\workshop\content\294100' }
 $ProfileDir = Join-Path $PSScriptRoot 'profile-conflict'
 $Seed       = Join-Path $PSScriptRoot 'profile'

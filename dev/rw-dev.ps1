@@ -6,7 +6,7 @@
 $ErrorActionPreference = 'Stop'
 
 $GameDir     = if ($env:RIMWORLD_DIR) { $env:RIMWORLD_DIR } else { 'D:\Steam\steamapps\common\RimWorld' }
-$GameExe     = Join-Path $GameDir 'RimWorldWin64.exe'
+$GameExe     = (@('RimWorldWin64.exe', 'RimWorld.exe') | ForEach-Object { Join-Path $GameDir $_ } | Where-Object { Test-Path $_ } | Select-Object -First 1)
 $ProfileDir  = Join-Path $PSScriptRoot 'profile'
 $ModsConfig  = Join-Path $ProfileDir 'Config\ModsConfig.xml'
 
