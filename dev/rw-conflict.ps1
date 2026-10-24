@@ -5,7 +5,7 @@ param(
     [switch]$Quick,
     [switch]$Visuals,
     [switch]$Without,
-    [ValidateSet("all","architect","astryl","reskins","tabs","text","solo")]
+    [ValidateSet("all","architect","astryl","reskins","tabs","text","colony","solo")]
     [string]$Scenario
 )
 
@@ -210,6 +210,8 @@ $Scenarios = [ordered]@{
         '3231727915', '3762441264', '2882372932', '2466336893', '1516158345'
     )
 
+    'colony' = @('2345493945')
+
     'solo' = @()
 }
 
@@ -220,6 +222,7 @@ $ScenarioNotes = @{
     'reskins'   = 'only the mods that reskin the same surfaces we do'
     'tabs'      = 'only mods that replace a whole tab or window'
     'text'      = 'only fonts, UI scale and label text'
+    'colony'    = 'Colony Groups alone, to compare with and without this mod'
     'solo'      = 'nothing but this mod'
 }
 
@@ -480,7 +483,7 @@ $sb = New-Object System.Text.StringBuilder
 [void]$sb.AppendLine('<ModsConfigData>')
 [void]$sb.AppendLine("  <version>$version</version>")
 [void]$sb.AppendLine('  <activeMods>')
-foreach ($k in $order) { [void]$sb.AppendLine("    <li>$($mods[$k].Id)</li>") }
+foreach ($k in $order) { [void]$sb.AppendLine("    <li>$($mods[$k].Id.ToLowerInvariant())</li>") }
 [void]$sb.AppendLine('  </activeMods>')
 [void]$sb.AppendLine('</ModsConfigData>')
 [IO.File]::WriteAllText((Join-Path $cfgDir 'ModsConfig.xml'), $sb.ToString(), (New-Object Text.UTF8Encoding($false)))
