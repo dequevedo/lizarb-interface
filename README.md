@@ -1,6 +1,6 @@
 # Lizarb Interface
 
-A complete reskin of RimWorld 1.6's interface: window frames, buttons, tabs, tooltips,
+A complete reskin of RimWorld's interface, for 1.6 and 1.7: window frames, buttons, tabs, tooltips,
 widgets, scrollbars, fonts and the Architect menu.
 
 ![Themes](docs/themes.png)

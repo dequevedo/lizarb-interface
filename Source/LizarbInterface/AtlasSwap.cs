@@ -636,10 +636,68 @@ namespace LizarbInterface
 
             Color previous = GUI.color;
             GUI.color = new Color(1f, 1f, 1f, settings.backgroundGrain);
-            GUI.DrawTextureWithTexCoords(
-                face, grain,
-                new Rect(0f, 0f, face.width / tileW, face.height / tileH));
+            DrawTiled(face, grain, new Rect(0f, 0f, face.width / tileW, face.height / tileH));
             GUI.color = previous;
+        }
+
+        private static bool? manualTiling;
+
+        private static bool ManualTiling
+        {
+            get
+            {
+                if (!manualTiling.HasValue)
+                {
+                    manualTiling = RimWorld.VersionControl.CurrentMajor > 1 || RimWorld.VersionControl.CurrentMinor >= 7;
+                }
+
+                return manualTiling.Value;
+            }
+        }
+
+        internal static void DrawTiled(Rect target, Texture2D tex, Rect uv)
+        {
+            if (target.width <= 0f || target.height <= 0f || uv.width <= 0f || uv.height <= 0f)
+            {
+                return;
+            }
+
+            if (!ManualTiling)
+            {
+                GUI.DrawTextureWithTexCoords(target, tex, uv);
+                return;
+            }
+
+            const float Eps = 1e-4f;
+            float pxPerU = target.width / uv.width;
+            float pxPerV = target.height / uv.height;
+
+            float x = target.x;
+            float u = uv.x;
+            for (int i = 0; i < MaxTiles && u < uv.xMax - Eps; i++)
+            {
+                float cellU = Mathf.Floor(u + Eps);
+                float uEnd = Mathf.Min(cellU + 1f, uv.xMax);
+                float w = (uEnd - u) * pxPerU;
+
+                float yBottom = target.yMax;
+                float v = uv.y;
+                for (int j = 0; j < MaxTiles && v < uv.yMax - Eps; j++)
+                {
+                    float cellV = Mathf.Floor(v + Eps);
+                    float vEnd = Mathf.Min(cellV + 1f, uv.yMax);
+                    float h = (vEnd - v) * pxPerV;
+
+                    var src = new Rect(Mathf.Max(0f, u - cellU), Mathf.Max(0f, v - cellV), uEnd - u, vEnd - v);
+                    GUI.DrawTextureWithTexCoords(new Rect(x, yBottom - h, w, h), tex, src);
+
+                    yBottom -= h;
+                    v = vEnd;
+                }
+
+                x += w;
+                u = uEnd;
+            }
         }
 
         private static void Part(Rect drawRect, Rect uv, Texture2D atlas)

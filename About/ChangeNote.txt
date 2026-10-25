@@ -1,19 +1,7 @@
-Compatibility
+RimWorld 1.7
 
-Tested against sixty eight UI mods loaded at once.
+Adds support for RimWorld 1.7.
 
-- Tabs keep working when another mod's texture is destroyed. Picking the
-  RimWorld default preset used to break them.
-- The settings page no longer goes blank when another mod throws while the
-  tabs are being drawn.
-- The plate behind icon buttons stays off portraits and pictures, and steps
-  aside when another mod is in charge of colour.
-- Better Architect Menu's category groups are drawn with the preset's
-  buttons instead of staying flat grey.
-- Text outlines are thinner on small text, where a thick ring closed up the
-  letters.
+Fixes
 
-Skins
-
-The generated skins are now one group, Legacy. New work goes into the hand
-painted ones.
+- Colony Groups: the text on its menu buttons is no longer hidden.

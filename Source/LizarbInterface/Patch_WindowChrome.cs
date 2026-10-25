@@ -86,7 +86,7 @@ namespace LizarbInterface
                 band.width / tileW,
                 band.height / tileH);
 
-            GUI.DrawTextureWithTexCoords(band, grain, uv);
+            AtlasSwap.DrawTiled(band, grain, uv);
         }
 
         [HarmonyPatch(typeof(Widgets), nameof(Widgets.DrawWindowBackground), typeof(Rect))]

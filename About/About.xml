@@ -7,6 +7,7 @@
   <url>https://github.com/dequevedo/lizarb-interface</url>
   <supportedVersions>
     <li>1.6</li>
+    <li>1.7</li>
   </supportedVersions>
   <modDependencies>
     <li>
@@ -20,7 +21,7 @@
     <li>brrainz.harmony</li>
     <li>com.bymarcin.architecticons</li>
   </loadAfter>
-  <description>A complete reskin of RimWorld's interface.
+  <description>A complete reskin of RimWorld's interface, for 1.6 and 1.7.
 
 - Presets: one click sets the textures, the typeface and its sizes, the text outline, the background pattern and how the Architect menu is coloured
 - Two presets can share one texture set and still read completely differently

@@ -1201,8 +1201,7 @@ namespace LizarbInterface
                     float unit = grain.width / AtlasSwap.DefaultScale;
                     Color previous = GUI.color;
                     GUI.color = new Color(1f, 1f, 1f, preset.backgroundGrain);
-                    GUI.DrawTextureWithTexCoords(face, grain,
-                        new Rect(0f, 0f, face.width / unit, face.height / unit));
+                    AtlasSwap.DrawTiled(face, grain, new Rect(0f, 0f, face.width / unit, face.height / unit));
                     GUI.color = previous;
                 }
             }
